@@ -1,0 +1,6 @@
+{
+    "AIR_STATE": {
+        "AIR_OPEN": 0,
+        "AIR_CLOSED": 1
+    }
+}
