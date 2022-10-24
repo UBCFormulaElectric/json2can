@@ -1,10 +1,9 @@
+import os
 import logging
 from math import ceil
 from typing import Union
 
-
 BYTE_SIZE = 8
-
 
 def bits_for_uint(num: int) -> int:
     '''
@@ -52,3 +51,18 @@ def float_to_str(f):
     # return format(d1, 'f')
     # return np.format_float_positional(f)
     return str(float(f))
+
+def write_text(text: str, output_path=str) -> None:
+    '''
+    Write the text stored in text to output_path.
+    '''
+    output_dir = os.getcwd() if os.path.dirname(output_path) == '' else os.path.dirname(output_path)
+    output_name = os.path.basename(output_path)
+
+    # Generate output folder if it doesn't exist yet
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    # Write file to disk
+    with open(os.path.join(output_dir, output_name), 'w') as fout:
+        fout.write(text)

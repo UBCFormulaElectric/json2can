@@ -1,5 +1,5 @@
 {
-    "MISSING_HEARTBEAT": {
+    "MissingHeartbeat": {
         "FALSE": 0,
         "TRUE": 1
     }

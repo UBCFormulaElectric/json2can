@@ -1,62 +1,61 @@
 {
-    "JSONCANTest_VITALS": {
+    "JCT_vitals": {
         "msg_id": 601,
         "cycle_time": 1000, 
         "description": "Heartbeat signal.",
         "signals": {
-            "HEARTBEAT": { 
+            "heartbeat": { 
                 "min": 0,
                 "max": 1,
                 "bits": 1 
             },
-            "TIMESTAMP": { "bits": 32 }
+            "timestamp": { "bits": 32 }
         }
     },  
-    "JSONCANTest_NON_CRITICAL_ERRORS": {
+    "JCT_noncriticalErrors": {
         "msg_id": 602,
-        "cycle_time": 1000, 
         "description": "Non-critical errors.",
         "num_bytes": 8,
         "signals": {
-            "WATCHDOG_TIMEOUT": { "bits": 1 },
-            "BOARD_OVERTEMP": { "bits": 1 },
-            "BOARD_OVERVOLTAGE": { "bits": 1 }
+            "watchdogTimeout": { "bits": 1 },
+            "boardOvertemp": { "bits": 1 },
+            "boardOvervoltage": { "bits": 1 }
         }
     },
-    "JSONCANTest_AIR_SHUTDOWN_ERRORS": {
+    "JCT_AIRShutdownErrors": {
         "msg_id": 603,
         "cycle_time": 1000, 
         "description": "AIR shutdown.",
         "num_bytes": 8,
         "signals": {
-            "DUMMY_AIR_SHUTDOWN": { "bits": 1 }
+            "dummyAirShutdown": { "bits": 1 }
         }
     },
-    "JSONCANTest_MOTOR_SHUTDOWN_ERRORS": {
+    "JCT_motorShutdownErrors": {
         "msg_id": 604,
         "cycle_time": 1000, 
         "description": "Motor shutdown.",
         "num_bytes": 8,
         "signals": {
-            "DUMMY_MOTOR_SHUTDOWN": { "bits": 1 }
+            "dummyMotorShutdown": { "bits": 1 }
         }
     },
-    "JSONCANTest_STATUS": {
-        "msg_id": 605,
+    "JCT_status": {
+        "msg_id": 608,
         "cycle_time": 1000, 
         "description": "Message for debugging.",
         "signals": {
-            "CONTACTORS_CLOSED": {
-                "enum": "AIR_STATE"
+            "contactorsClosed": {
+                "enum": "AirState"
             },
-            "CURRENT": {
+            "current": {
                 "start_value": 50,
                 "min": 0,
                 "max": 100,
                 "bits": 12,
                 "unit": "A"
             },
-            "VOLTAGE": {
+            "voltage": {
                 "min": 0,
                 "max": 500,
                 "bits": 12,

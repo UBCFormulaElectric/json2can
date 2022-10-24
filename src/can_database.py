@@ -1,8 +1,6 @@
 '''
 This file contains various classes to fully describes a CAN bus: The nodes, messages, and signals on the bus.
 '''
-
-
 from dataclasses import dataclass
 from enum import Enum
 from typing import List, Union
@@ -68,8 +66,8 @@ class CanSignal:
     offset: float                       # Offset for encoding/decoding
     min_val: float                      # Min allowed value
     max_val: float                      # Max allowed value
+    start_val: Union[int, float]      # Default starting value, None if doesn't specify one
     enum: Union[CanEnum, None]          # Value table, None if doesn't specify one
-    start_value: Union[int, None]       # Default starting value, None if doesn't specify one
     unit: str                           # Signal's unit
     description: str = 'N/A'            # Description of signal
 
@@ -89,12 +87,12 @@ class CanSignal:
         '''
         If this signal specifies a starting value.
         '''
-        return self.start_value is not None
+        return self.start_val is not None
 
-    def datatype_internal(self):
+    def representation_c(self):
         '''
-        How this signal should be stored in memory (specific to C).
-        For example, in C, enums and booleans are both stored internally as unsigned integers.
+        How this signal will be represented in memory (specific to C).
+        For example, in C, enums and booleans are both stored internally as unsigned ints.
         '''
         if self.enum:
             return CanSignalDatatype.UINT
@@ -106,7 +104,7 @@ class CanSignal:
         else:
             return CanSignalDatatype.DECIMAL
 
-    def datatype(self):
+    def datatype_c(self):
         '''
         The name the datatype this signal should be stored as (specific to C).
         '''
@@ -150,9 +148,9 @@ class CanMessage:
 
 
 @dataclass(frozen=True)
-class CanBusParams:
+class CanBusConfig:
     '''
-    Dataclass for holding various bus parameters.
+    Dataclass for holding bus config.
     '''
     default_receiver: str
     bus_speed: int
@@ -170,24 +168,24 @@ class CanDatabase:
     Dataclass for fully describing a CAN bus, its nodes, and their messages.
     ''' 
     nodes: List[str] # List of names of the nodes on the bus
-    bus_params: CanBusParams # Various bus params
-    messages: List[CanMessage] # All messages being sent to the bus
+    bus_config: CanBusConfig # Various bus params
+    msgs: List[CanMessage] # All messages being sent to the bus
     enums: List[CanEnum] # All enums being used by bus signals
 
-    def messages_transmitted_by_node(self, tx_node: str) -> List[CanMessage]:
+    def tx_msgs_for_node(self, tx_node: str) -> List[CanMessage]:
         '''
         Return list of all CAN messages transmitted by a specific node.
         '''                
-        return [msg for msg in self.messages if tx_node == msg.tx_node]
+        return [msg for msg in self.msgs if tx_node == msg.tx_node]
     
-    def messages_received_by_node(self, rx_node: str) -> List[CanMessage]:
+    def rx_msgs_for_node(self, rx_node: str) -> List[CanMessage]:
         '''
         Return list of all CAN messages received by a specific node.
         '''
-        return [msg for msg in self.messages if rx_node in msg.rx_nodes]
+        return [msg for msg in self.msgs if rx_node in msg.rx_nodes]
 
-    def messages_for_node(self, node: str) -> List[CanMessage]:
+    def msgs_for_node(self, node: str) -> List[CanMessage]:
         '''
         Return list of all CAN messages either transmitted or received by a specific node.
         '''
-        return self.messages_transmitted_by_node(tx_node=node) + self.messages_received_by_node(rx_node=node)
+        return self.tx_msgs_for_node(tx_node=node) + self.rx_msgs_for_node(rx_node=node)

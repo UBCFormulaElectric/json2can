@@ -2,18 +2,18 @@
 Entry point for generating CAN drivers and DBC from JSON data, as a command line utility.
 TODO: Generate callback functions for received messages? Could be cool
 '''
-
-
 import argparse
 from src.json_parsing.json_can_parsing import JsonCanParser
+from src.utils import write_text
 from src.codegen.dbc_generation.dbc_generation import DbcGenerator
-from src.codegen.c_generation.can_tx_generation import AppCanTxHeaderGenerator, AppCanTxSourceGenerator, IoCanTxHeaderGenerator, IoCanTxSourceGenerator
-from src.codegen.c_generation.can_rx_generation import AppCanRxHeaderGenerator, AppCanRxSourceGenerator, IoCanRxHeaderGenerator, IoCanRxSourceGenerator
-from src.codegen.c_generation.can_utils_generation import AppCanMsgsHeaderGenerator, AppCanUtilsSourceGenerator
+from src.codegen.c_generation.app_can_utils_module import AppCanUtilsModule
+from src.codegen.c_generation.app_can_tx_module import AppCanTxModule
+from src.codegen.c_generation.app_can_rx_module import AppCanRxModule
+from src.codegen.c_generation.io_can_rx_module import IoCanRxModule
+from src.codegen.c_generation.io_can_tx_module import IoCanTxModule
 
 
 if __name__ == '__main__':
-    # Parse args
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '--board',
@@ -57,26 +57,33 @@ if __name__ == '__main__':
         help='Path to the DBC file')
     args = parser.parse_args()
 
-    # Parse JSON and generate DBC
+    # Parse JSON
     can_db = JsonCanParser(can_data_dir=args.can_data_dir).make_database()
-    DbcGenerator(database=can_db, output_dir=args.dbc_output).generate_dbc()
 
-    # App Tx
-    AppCanTxHeaderGenerator(db=can_db, node=args.board, output_dir=args.app_can_tx_header_output).generate_header()
-    AppCanTxSourceGenerator(db=can_db, node=args.board, output_dir=args.app_can_tx_source_output).generate_source()
+    # Generate DBC file
+    write_text(DbcGenerator(database=can_db).source(), args.dbc_output)
 
-    # Io Tx
-    IoCanTxHeaderGenerator(db=can_db, node=args.board, output_dir=args.io_can_tx_header_output).generate_header()
-    IoCanTxSourceGenerator(db=can_db, node=args.board, output_dir=args.io_can_tx_source_output).generate_source()
+    # Generate App_CanUtils.h/c
+    app_can_utils_mod = AppCanUtilsModule(can_db, args.board)
+    write_text(app_can_utils_mod.header(), args.app_can_utils_header_output)
+    write_text(app_can_utils_mod.source(), args.app_can_utils_source_output)
+
+    # Generate App_CanTx.h/c
+    app_can_tx_mod = AppCanTxModule(can_db, args.board)
+    write_text(app_can_tx_mod.header(), args.app_can_tx_header_output)
+    write_text(app_can_tx_mod.source(), args.app_can_tx_source_output)
     
-    # App Rx
-    AppCanRxHeaderGenerator(db=can_db, node=args.board, output_dir=args.app_can_rx_header_output).generate_header()
-    AppCanRxSourceGenerator(db=can_db, node=args.board, output_dir=args.app_can_rx_source_output).generate_source()
+    # Generate App_CanRx.h/c
+    app_can_rx_mod = AppCanRxModule(can_db, args.board)
+    write_text(app_can_rx_mod.header(), args.app_can_rx_header_output)
+    write_text(app_can_rx_mod.source(), args.app_can_rx_source_output)
     
-    # Io Rx
-    IoCanRxHeaderGenerator(db=can_db, node=args.board, output_dir=args.io_can_rx_header_output).generate_header()
-    IoCanRxSourceGenerator(db=can_db, node=args.board, output_dir=args.io_can_rx_source_output).generate_source()
+    # Generate Io_CanTx.h/c
+    io_can_tx_mod = IoCanTxModule(can_db, args.board)
+    write_text(io_can_tx_mod.header(), args.io_can_tx_header_output)
+    write_text(io_can_tx_mod.source(), args.io_can_tx_source_output)
 
-    # App Utils
-    AppCanMsgsHeaderGenerator(db=can_db, node=args.board, output_dir=args.app_can_utils_header_output).generate_header()
-    AppCanUtilsSourceGenerator(db=can_db, node=args.board, output_dir=args.app_can_utils_source_output).generate_source()
+    # Generate Io_CanRx.h/c
+    io_can_rx_mod = IoCanRxModule(can_db, args.board)
+    write_text(io_can_rx_mod.header(), args.io_can_rx_header_output)
+    write_text(io_can_rx_mod.source(), args.io_can_rx_source_output)

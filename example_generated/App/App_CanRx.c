@@ -3,228 +3,220 @@
  */
 // clang-format off
 
-/* ---------------------------------- Includes ---------------------------------- */
+
+/* ------------------------------- Includes ------------------------------- */
 
 #include <string.h>
-#include "Io_CanRx.h"
-#include "App_CanUtils.h"
-#include "App_CanRx.h" 
+#include "App_CanRx.h"
 
-/* ---------------------------- Struct declarations ----------------------------- */
+/* -------------------------- Private Variables --------------------------- */
 
+static JCT_RxMsgs rx_table;
 
+/* ------------------------- Function Definitions ------------------------- */
 
-/* --------------------------------- Variables ---------------------------------- */
-
-JSONCANTest_RxMsgs rx_table;
-
-/* ------------------------------ Static functions ------------------------------ */
-
-
-
-/* ---------------------------- Function definitions ---------------------------- */
-
-void App_CanRx_Init(void) 
+void App_CanRx_Init()
 {
-    memset(&rx_table, 0, sizeof(JSONCANTest_RxMsgs));
-    App_CanRx_FSM_APPS_Papps_Mapped_Pedal_Percentage_UpdateValue(CANSIG_FSM_APPS_Papps_Mapped_Pedal_Percentage_START_VAL);
-    App_CanRx_FSM_APPS_Sapps_Mapped_Pedal_Percentage_UpdateValue(CANSIG_FSM_APPS_Sapps_Mapped_Pedal_Percentage_START_VAL);
-    App_CanRx_FSM_NON_CRITICAL_ERRORS_papps_out_of_range_UpdateValue(CANSIG_FSM_NON_CRITICAL_ERRORS_papps_out_of_range_START_VAL);
-    App_CanRx_FSM_NON_CRITICAL_ERRORS_sapps_out_of_range_UpdateValue(CANSIG_FSM_NON_CRITICAL_ERRORS_sapps_out_of_range_START_VAL);
-    App_CanRx_FSM_NON_CRITICAL_ERRORS_STACK_WATERMARK_ABOVE_THRESHOLD_TASK1HZ_UpdateValue(CANSIG_FSM_NON_CRITICAL_ERRORS_STACK_WATERMARK_ABOVE_THRESHOLD_TASK1HZ_START_VAL);
-    App_CanRx_FSM_NON_CRITICAL_ERRORS_STACK_WATERMARK_ABOVE_THRESHOLD_TASK1KHZ_UpdateValue(CANSIG_FSM_NON_CRITICAL_ERRORS_STACK_WATERMARK_ABOVE_THRESHOLD_TASK1KHZ_START_VAL);
-    App_CanRx_FSM_NON_CRITICAL_ERRORS_STACK_WATERMARK_ABOVE_THRESHOLD_TASKCANRX_UpdateValue(CANSIG_FSM_NON_CRITICAL_ERRORS_STACK_WATERMARK_ABOVE_THRESHOLD_TASKCANRX_START_VAL);
-    App_CanRx_FSM_NON_CRITICAL_ERRORS_STACK_WATERMARK_ABOVE_THRESHOLD_TASKCANTX_UpdateValue(CANSIG_FSM_NON_CRITICAL_ERRORS_STACK_WATERMARK_ABOVE_THRESHOLD_TASKCANTX_START_VAL);
-    App_CanRx_FSM_NON_CRITICAL_ERRORS_WATCHDOG_TIMEOUT_UpdateValue(CANSIG_FSM_NON_CRITICAL_ERRORS_WATCHDOG_TIMEOUT_START_VAL);
-    App_CanRx_FSM_NON_CRITICAL_ERRORS_BSPD_FAULT_UpdateValue(CANSIG_FSM_NON_CRITICAL_ERRORS_BSPD_FAULT_START_VAL);
-    App_CanRx_FSM_NON_CRITICAL_ERRORS_LEFT_WHEEL_SPEED_OUT_OF_RANGE_UpdateValue(CANSIG_FSM_NON_CRITICAL_ERRORS_LEFT_WHEEL_SPEED_OUT_OF_RANGE_START_VAL);
-    App_CanRx_FSM_NON_CRITICAL_ERRORS_RIGHT_WHEEL_SPEED_OUT_OF_RANGE_UpdateValue(CANSIG_FSM_NON_CRITICAL_ERRORS_RIGHT_WHEEL_SPEED_OUT_OF_RANGE_START_VAL);
-    App_CanRx_FSM_NON_CRITICAL_ERRORS_FLOW_RATE_OUT_OF_RANGE_UpdateValue(CANSIG_FSM_NON_CRITICAL_ERRORS_FLOW_RATE_OUT_OF_RANGE_START_VAL);
-    App_CanRx_FSM_NON_CRITICAL_ERRORS_STEERING_ANGLE_OUT_OF_RANGE_UpdateValue(CANSIG_FSM_NON_CRITICAL_ERRORS_STEERING_ANGLE_OUT_OF_RANGE_START_VAL);
-    App_CanRx_FSM_NON_CRITICAL_ERRORS_BRAKE_PRESSURE_OUT_OF_RANGE_UpdateValue(CANSIG_FSM_NON_CRITICAL_ERRORS_BRAKE_PRESSURE_OUT_OF_RANGE_START_VAL);
-    App_CanRx_FSM_NON_CRITICAL_ERRORS_BRAKE_PRESSURE_OPEN_SC_UpdateValue(CANSIG_FSM_NON_CRITICAL_ERRORS_BRAKE_PRESSURE_OPEN_SC_START_VAL);
-    App_CanRx_FSM_NON_CRITICAL_ERRORS_BRAKE_PRESSURE_OPEN_OC_UpdateValue(CANSIG_FSM_NON_CRITICAL_ERRORS_BRAKE_PRESSURE_OPEN_OC_START_VAL);
-    App_CanRx_FSM_NON_CRITICAL_ERRORS_STEERING_WHEEL_BROKE_UpdateValue(CANSIG_FSM_NON_CRITICAL_ERRORS_STEERING_WHEEL_BROKE_START_VAL);
+    memset(&rx_table, 0, sizeof(JCT_RxMsgs));
+    App_CanRx_FSM_apps_pappsMappedPedalPercentage_UpdateValue(CANSIG_FSM_apps_pappsMappedPedalPercentage_START_VAL);
+    App_CanRx_FSM_apps_sappsMappedPedalPercentage_UpdateValue(CANSIG_FSM_apps_sappsMappedPedalPercentage_START_VAL);
+    App_CanRx_FSM_noncriticalErrors_pappsOutOfRange_UpdateValue(CANSIG_FSM_noncriticalErrors_pappsOutOfRange_START_VAL);
+    App_CanRx_FSM_noncriticalErrors_sappsOutOfRange_UpdateValue(CANSIG_FSM_noncriticalErrors_sappsOutOfRange_START_VAL);
+    App_CanRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTask1Hz_UpdateValue(CANSIG_FSM_noncriticalErrors_stackWatermarkAboveThresholdTask1Hz_START_VAL);
+    App_CanRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTask1kHz_UpdateValue(CANSIG_FSM_noncriticalErrors_stackWatermarkAboveThresholdTask1kHz_START_VAL);
+    App_CanRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTaskCanRx_UpdateValue(CANSIG_FSM_noncriticalErrors_stackWatermarkAboveThresholdTaskCanRx_START_VAL);
+    App_CanRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTaskCanTx_UpdateValue(CANSIG_FSM_noncriticalErrors_stackWatermarkAboveThresholdTaskCanTx_START_VAL);
+    App_CanRx_FSM_noncriticalErrors_watchdogFault_UpdateValue(CANSIG_FSM_noncriticalErrors_watchdogFault_START_VAL);
+    App_CanRx_FSM_noncriticalErrors_bspdFault_UpdateValue(CANSIG_FSM_noncriticalErrors_bspdFault_START_VAL);
+    App_CanRx_FSM_noncriticalErrors_leftWheelSpeedOutOfRange_UpdateValue(CANSIG_FSM_noncriticalErrors_leftWheelSpeedOutOfRange_START_VAL);
+    App_CanRx_FSM_noncriticalErrors_rightWheelSpeedOutOfRange_UpdateValue(CANSIG_FSM_noncriticalErrors_rightWheelSpeedOutOfRange_START_VAL);
+    App_CanRx_FSM_noncriticalErrors_flowRateOutOfRange_UpdateValue(CANSIG_FSM_noncriticalErrors_flowRateOutOfRange_START_VAL);
+    App_CanRx_FSM_noncriticalErrors_steeringAngleOutOfRange_UpdateValue(CANSIG_FSM_noncriticalErrors_steeringAngleOutOfRange_START_VAL);
+    App_CanRx_FSM_noncriticalErrors_brakePressureOutOfRange_UpdateValue(CANSIG_FSM_noncriticalErrors_brakePressureOutOfRange_START_VAL);
+    App_CanRx_FSM_noncriticalErrors_brakePressureSc_UpdateValue(CANSIG_FSM_noncriticalErrors_brakePressureSc_START_VAL);
+    App_CanRx_FSM_noncriticalErrors_brakePressureOc_UpdateValue(CANSIG_FSM_noncriticalErrors_brakePressureOc_START_VAL);
+    App_CanRx_FSM_noncriticalErrors_steeringWheelBroke_UpdateValue(CANSIG_FSM_noncriticalErrors_steeringWheelBroke_START_VAL);
 }
 
-void App_CanRx_FSM_APPS_Papps_Mapped_Pedal_Percentage_UpdateValue(float value) 
+void App_CanRx_FSM_apps_pappsMappedPedalPercentage_UpdateValue(float value)
 {
-    const float tmp = value < CANSIG_FSM_APPS_Papps_Mapped_Pedal_Percentage_MIN ? CANSIG_FSM_APPS_Papps_Mapped_Pedal_Percentage_MIN : value;
-    rx_table.FSM_APPS_signals.Papps_Mapped_Pedal_Percentage_value = tmp > CANSIG_FSM_APPS_Papps_Mapped_Pedal_Percentage_MAX ? CANSIG_FSM_APPS_Papps_Mapped_Pedal_Percentage_MAX : tmp;
+    const float tmp = value < CANSIG_FSM_apps_pappsMappedPedalPercentage_MIN ? CANSIG_FSM_apps_pappsMappedPedalPercentage_MIN : value;
+    rx_table.FSM_apps_signals.pappsMappedPedalPercentage_value = tmp > CANSIG_FSM_apps_pappsMappedPedalPercentage_MAX ? CANSIG_FSM_apps_pappsMappedPedalPercentage_MAX : tmp;
 }
 
-void App_CanRx_FSM_APPS_Sapps_Mapped_Pedal_Percentage_UpdateValue(float value) 
+void App_CanRx_FSM_apps_sappsMappedPedalPercentage_UpdateValue(float value)
 {
-    const float tmp = value < CANSIG_FSM_APPS_Sapps_Mapped_Pedal_Percentage_MIN ? CANSIG_FSM_APPS_Sapps_Mapped_Pedal_Percentage_MIN : value;
-    rx_table.FSM_APPS_signals.Sapps_Mapped_Pedal_Percentage_value = tmp > CANSIG_FSM_APPS_Sapps_Mapped_Pedal_Percentage_MAX ? CANSIG_FSM_APPS_Sapps_Mapped_Pedal_Percentage_MAX : tmp;
+    const float tmp = value < CANSIG_FSM_apps_sappsMappedPedalPercentage_MIN ? CANSIG_FSM_apps_sappsMappedPedalPercentage_MIN : value;
+    rx_table.FSM_apps_signals.sappsMappedPedalPercentage_value = tmp > CANSIG_FSM_apps_sappsMappedPedalPercentage_MAX ? CANSIG_FSM_apps_sappsMappedPedalPercentage_MAX : tmp;
 }
 
-void App_CanRx_FSM_NON_CRITICAL_ERRORS_papps_out_of_range_UpdateValue(bool value) 
+void App_CanRx_FSM_noncriticalErrors_pappsOutOfRange_UpdateValue(bool value)
 {
-    rx_table.FSM_NON_CRITICAL_ERRORS_signals.papps_out_of_range_value = value;
+    rx_table.FSM_noncriticalErrors_signals.pappsOutOfRange_value = value;
 }
 
-void App_CanRx_FSM_NON_CRITICAL_ERRORS_sapps_out_of_range_UpdateValue(bool value) 
+void App_CanRx_FSM_noncriticalErrors_sappsOutOfRange_UpdateValue(bool value)
 {
-    rx_table.FSM_NON_CRITICAL_ERRORS_signals.sapps_out_of_range_value = value;
+    rx_table.FSM_noncriticalErrors_signals.sappsOutOfRange_value = value;
 }
 
-void App_CanRx_FSM_NON_CRITICAL_ERRORS_STACK_WATERMARK_ABOVE_THRESHOLD_TASK1HZ_UpdateValue(bool value) 
+void App_CanRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTask1Hz_UpdateValue(bool value)
 {
-    rx_table.FSM_NON_CRITICAL_ERRORS_signals.STACK_WATERMARK_ABOVE_THRESHOLD_TASK1HZ_value = value;
+    rx_table.FSM_noncriticalErrors_signals.stackWatermarkAboveThresholdTask1Hz_value = value;
 }
 
-void App_CanRx_FSM_NON_CRITICAL_ERRORS_STACK_WATERMARK_ABOVE_THRESHOLD_TASK1KHZ_UpdateValue(bool value) 
+void App_CanRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTask1kHz_UpdateValue(bool value)
 {
-    rx_table.FSM_NON_CRITICAL_ERRORS_signals.STACK_WATERMARK_ABOVE_THRESHOLD_TASK1KHZ_value = value;
+    rx_table.FSM_noncriticalErrors_signals.stackWatermarkAboveThresholdTask1kHz_value = value;
 }
 
-void App_CanRx_FSM_NON_CRITICAL_ERRORS_STACK_WATERMARK_ABOVE_THRESHOLD_TASKCANRX_UpdateValue(bool value) 
+void App_CanRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTaskCanRx_UpdateValue(bool value)
 {
-    rx_table.FSM_NON_CRITICAL_ERRORS_signals.STACK_WATERMARK_ABOVE_THRESHOLD_TASKCANRX_value = value;
+    rx_table.FSM_noncriticalErrors_signals.stackWatermarkAboveThresholdTaskCanRx_value = value;
 }
 
-void App_CanRx_FSM_NON_CRITICAL_ERRORS_STACK_WATERMARK_ABOVE_THRESHOLD_TASKCANTX_UpdateValue(bool value) 
+void App_CanRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTaskCanTx_UpdateValue(bool value)
 {
-    rx_table.FSM_NON_CRITICAL_ERRORS_signals.STACK_WATERMARK_ABOVE_THRESHOLD_TASKCANTX_value = value;
+    rx_table.FSM_noncriticalErrors_signals.stackWatermarkAboveThresholdTaskCanTx_value = value;
 }
 
-void App_CanRx_FSM_NON_CRITICAL_ERRORS_WATCHDOG_TIMEOUT_UpdateValue(bool value) 
+void App_CanRx_FSM_noncriticalErrors_watchdogFault_UpdateValue(bool value)
 {
-    rx_table.FSM_NON_CRITICAL_ERRORS_signals.WATCHDOG_TIMEOUT_value = value;
+    rx_table.FSM_noncriticalErrors_signals.watchdogFault_value = value;
 }
 
-void App_CanRx_FSM_NON_CRITICAL_ERRORS_BSPD_FAULT_UpdateValue(bool value) 
+void App_CanRx_FSM_noncriticalErrors_bspdFault_UpdateValue(bool value)
 {
-    rx_table.FSM_NON_CRITICAL_ERRORS_signals.BSPD_FAULT_value = value;
+    rx_table.FSM_noncriticalErrors_signals.bspdFault_value = value;
 }
 
-void App_CanRx_FSM_NON_CRITICAL_ERRORS_LEFT_WHEEL_SPEED_OUT_OF_RANGE_UpdateValue(uint32_t value) 
+void App_CanRx_FSM_noncriticalErrors_leftWheelSpeedOutOfRange_UpdateValue(uint32_t value)
 {
-    rx_table.FSM_NON_CRITICAL_ERRORS_signals.LEFT_WHEEL_SPEED_OUT_OF_RANGE_value = value > CANSIG_FSM_NON_CRITICAL_ERRORS_LEFT_WHEEL_SPEED_OUT_OF_RANGE_MAX ? CANSIG_FSM_NON_CRITICAL_ERRORS_LEFT_WHEEL_SPEED_OUT_OF_RANGE_MAX : value;
+    rx_table.FSM_noncriticalErrors_signals.leftWheelSpeedOutOfRange_value = (value > CANSIG_FSM_noncriticalErrors_leftWheelSpeedOutOfRange_MAX) ? CANSIG_FSM_noncriticalErrors_leftWheelSpeedOutOfRange_MAX : value;
 }
 
-void App_CanRx_FSM_NON_CRITICAL_ERRORS_RIGHT_WHEEL_SPEED_OUT_OF_RANGE_UpdateValue(uint32_t value) 
+void App_CanRx_FSM_noncriticalErrors_rightWheelSpeedOutOfRange_UpdateValue(uint32_t value)
 {
-    rx_table.FSM_NON_CRITICAL_ERRORS_signals.RIGHT_WHEEL_SPEED_OUT_OF_RANGE_value = value > CANSIG_FSM_NON_CRITICAL_ERRORS_RIGHT_WHEEL_SPEED_OUT_OF_RANGE_MAX ? CANSIG_FSM_NON_CRITICAL_ERRORS_RIGHT_WHEEL_SPEED_OUT_OF_RANGE_MAX : value;
+    rx_table.FSM_noncriticalErrors_signals.rightWheelSpeedOutOfRange_value = (value > CANSIG_FSM_noncriticalErrors_rightWheelSpeedOutOfRange_MAX) ? CANSIG_FSM_noncriticalErrors_rightWheelSpeedOutOfRange_MAX : value;
 }
 
-void App_CanRx_FSM_NON_CRITICAL_ERRORS_FLOW_RATE_OUT_OF_RANGE_UpdateValue(uint32_t value) 
+void App_CanRx_FSM_noncriticalErrors_flowRateOutOfRange_UpdateValue(uint32_t value)
 {
-    rx_table.FSM_NON_CRITICAL_ERRORS_signals.FLOW_RATE_OUT_OF_RANGE_value = value > CANSIG_FSM_NON_CRITICAL_ERRORS_FLOW_RATE_OUT_OF_RANGE_MAX ? CANSIG_FSM_NON_CRITICAL_ERRORS_FLOW_RATE_OUT_OF_RANGE_MAX : value;
+    rx_table.FSM_noncriticalErrors_signals.flowRateOutOfRange_value = (value > CANSIG_FSM_noncriticalErrors_flowRateOutOfRange_MAX) ? CANSIG_FSM_noncriticalErrors_flowRateOutOfRange_MAX : value;
 }
 
-void App_CanRx_FSM_NON_CRITICAL_ERRORS_STEERING_ANGLE_OUT_OF_RANGE_UpdateValue(uint32_t value) 
+void App_CanRx_FSM_noncriticalErrors_steeringAngleOutOfRange_UpdateValue(uint32_t value)
 {
-    rx_table.FSM_NON_CRITICAL_ERRORS_signals.STEERING_ANGLE_OUT_OF_RANGE_value = value > CANSIG_FSM_NON_CRITICAL_ERRORS_STEERING_ANGLE_OUT_OF_RANGE_MAX ? CANSIG_FSM_NON_CRITICAL_ERRORS_STEERING_ANGLE_OUT_OF_RANGE_MAX : value;
+    rx_table.FSM_noncriticalErrors_signals.steeringAngleOutOfRange_value = (value > CANSIG_FSM_noncriticalErrors_steeringAngleOutOfRange_MAX) ? CANSIG_FSM_noncriticalErrors_steeringAngleOutOfRange_MAX : value;
 }
 
-void App_CanRx_FSM_NON_CRITICAL_ERRORS_BRAKE_PRESSURE_OUT_OF_RANGE_UpdateValue(uint32_t value) 
+void App_CanRx_FSM_noncriticalErrors_brakePressureOutOfRange_UpdateValue(uint32_t value)
 {
-    rx_table.FSM_NON_CRITICAL_ERRORS_signals.BRAKE_PRESSURE_OUT_OF_RANGE_value = value > CANSIG_FSM_NON_CRITICAL_ERRORS_BRAKE_PRESSURE_OUT_OF_RANGE_MAX ? CANSIG_FSM_NON_CRITICAL_ERRORS_BRAKE_PRESSURE_OUT_OF_RANGE_MAX : value;
+    rx_table.FSM_noncriticalErrors_signals.brakePressureOutOfRange_value = (value > CANSIG_FSM_noncriticalErrors_brakePressureOutOfRange_MAX) ? CANSIG_FSM_noncriticalErrors_brakePressureOutOfRange_MAX : value;
 }
 
-void App_CanRx_FSM_NON_CRITICAL_ERRORS_BRAKE_PRESSURE_OPEN_SC_UpdateValue(bool value) 
+void App_CanRx_FSM_noncriticalErrors_brakePressureSc_UpdateValue(bool value)
 {
-    rx_table.FSM_NON_CRITICAL_ERRORS_signals.BRAKE_PRESSURE_OPEN_SC_value = value;
+    rx_table.FSM_noncriticalErrors_signals.brakePressureSc_value = value;
 }
 
-void App_CanRx_FSM_NON_CRITICAL_ERRORS_BRAKE_PRESSURE_OPEN_OC_UpdateValue(bool value) 
+void App_CanRx_FSM_noncriticalErrors_brakePressureOc_UpdateValue(bool value)
 {
-    rx_table.FSM_NON_CRITICAL_ERRORS_signals.BRAKE_PRESSURE_OPEN_OC_value = value;
+    rx_table.FSM_noncriticalErrors_signals.brakePressureOc_value = value;
 }
 
-void App_CanRx_FSM_NON_CRITICAL_ERRORS_STEERING_WHEEL_BROKE_UpdateValue(bool value) 
+void App_CanRx_FSM_noncriticalErrors_steeringWheelBroke_UpdateValue(bool value)
 {
-    rx_table.FSM_NON_CRITICAL_ERRORS_signals.STEERING_WHEEL_BROKE_value = value;
+    rx_table.FSM_noncriticalErrors_signals.steeringWheelBroke_value = value;
 }
 
-float App_CanRx_FSM_APPS_Papps_Mapped_Pedal_Percentage_GetValue(void) 
+float App_CanRx_FSM_apps_pappsMappedPedalPercentage_GetValue()
 {
-    return rx_table.FSM_APPS_signals.Papps_Mapped_Pedal_Percentage_value;
+    return rx_table.FSM_apps_signals.pappsMappedPedalPercentage_value;
 }
 
-float App_CanRx_FSM_APPS_Sapps_Mapped_Pedal_Percentage_GetValue(void) 
+float App_CanRx_FSM_apps_sappsMappedPedalPercentage_GetValue()
 {
-    return rx_table.FSM_APPS_signals.Sapps_Mapped_Pedal_Percentage_value;
+    return rx_table.FSM_apps_signals.sappsMappedPedalPercentage_value;
 }
 
-bool App_CanRx_FSM_NON_CRITICAL_ERRORS_papps_out_of_range_GetValue(void) 
+bool App_CanRx_FSM_noncriticalErrors_pappsOutOfRange_GetValue()
 {
-    return rx_table.FSM_NON_CRITICAL_ERRORS_signals.papps_out_of_range_value;
+    return rx_table.FSM_noncriticalErrors_signals.pappsOutOfRange_value;
 }
 
-bool App_CanRx_FSM_NON_CRITICAL_ERRORS_sapps_out_of_range_GetValue(void) 
+bool App_CanRx_FSM_noncriticalErrors_sappsOutOfRange_GetValue()
 {
-    return rx_table.FSM_NON_CRITICAL_ERRORS_signals.sapps_out_of_range_value;
+    return rx_table.FSM_noncriticalErrors_signals.sappsOutOfRange_value;
 }
 
-bool App_CanRx_FSM_NON_CRITICAL_ERRORS_STACK_WATERMARK_ABOVE_THRESHOLD_TASK1HZ_GetValue(void) 
+bool App_CanRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTask1Hz_GetValue()
 {
-    return rx_table.FSM_NON_CRITICAL_ERRORS_signals.STACK_WATERMARK_ABOVE_THRESHOLD_TASK1HZ_value;
+    return rx_table.FSM_noncriticalErrors_signals.stackWatermarkAboveThresholdTask1Hz_value;
 }
 
-bool App_CanRx_FSM_NON_CRITICAL_ERRORS_STACK_WATERMARK_ABOVE_THRESHOLD_TASK1KHZ_GetValue(void) 
+bool App_CanRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTask1kHz_GetValue()
 {
-    return rx_table.FSM_NON_CRITICAL_ERRORS_signals.STACK_WATERMARK_ABOVE_THRESHOLD_TASK1KHZ_value;
+    return rx_table.FSM_noncriticalErrors_signals.stackWatermarkAboveThresholdTask1kHz_value;
 }
 
-bool App_CanRx_FSM_NON_CRITICAL_ERRORS_STACK_WATERMARK_ABOVE_THRESHOLD_TASKCANRX_GetValue(void) 
+bool App_CanRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTaskCanRx_GetValue()
 {
-    return rx_table.FSM_NON_CRITICAL_ERRORS_signals.STACK_WATERMARK_ABOVE_THRESHOLD_TASKCANRX_value;
+    return rx_table.FSM_noncriticalErrors_signals.stackWatermarkAboveThresholdTaskCanRx_value;
 }
 
-bool App_CanRx_FSM_NON_CRITICAL_ERRORS_STACK_WATERMARK_ABOVE_THRESHOLD_TASKCANTX_GetValue(void) 
+bool App_CanRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTaskCanTx_GetValue()
 {
-    return rx_table.FSM_NON_CRITICAL_ERRORS_signals.STACK_WATERMARK_ABOVE_THRESHOLD_TASKCANTX_value;
+    return rx_table.FSM_noncriticalErrors_signals.stackWatermarkAboveThresholdTaskCanTx_value;
 }
 
-bool App_CanRx_FSM_NON_CRITICAL_ERRORS_WATCHDOG_TIMEOUT_GetValue(void) 
+bool App_CanRx_FSM_noncriticalErrors_watchdogFault_GetValue()
 {
-    return rx_table.FSM_NON_CRITICAL_ERRORS_signals.WATCHDOG_TIMEOUT_value;
+    return rx_table.FSM_noncriticalErrors_signals.watchdogFault_value;
 }
 
-bool App_CanRx_FSM_NON_CRITICAL_ERRORS_BSPD_FAULT_GetValue(void) 
+bool App_CanRx_FSM_noncriticalErrors_bspdFault_GetValue()
 {
-    return rx_table.FSM_NON_CRITICAL_ERRORS_signals.BSPD_FAULT_value;
+    return rx_table.FSM_noncriticalErrors_signals.bspdFault_value;
 }
 
-uint32_t App_CanRx_FSM_NON_CRITICAL_ERRORS_LEFT_WHEEL_SPEED_OUT_OF_RANGE_GetValue(void) 
+uint32_t App_CanRx_FSM_noncriticalErrors_leftWheelSpeedOutOfRange_GetValue()
 {
-    return rx_table.FSM_NON_CRITICAL_ERRORS_signals.LEFT_WHEEL_SPEED_OUT_OF_RANGE_value;
+    return rx_table.FSM_noncriticalErrors_signals.leftWheelSpeedOutOfRange_value;
 }
 
-uint32_t App_CanRx_FSM_NON_CRITICAL_ERRORS_RIGHT_WHEEL_SPEED_OUT_OF_RANGE_GetValue(void) 
+uint32_t App_CanRx_FSM_noncriticalErrors_rightWheelSpeedOutOfRange_GetValue()
 {
-    return rx_table.FSM_NON_CRITICAL_ERRORS_signals.RIGHT_WHEEL_SPEED_OUT_OF_RANGE_value;
+    return rx_table.FSM_noncriticalErrors_signals.rightWheelSpeedOutOfRange_value;
 }
 
-uint32_t App_CanRx_FSM_NON_CRITICAL_ERRORS_FLOW_RATE_OUT_OF_RANGE_GetValue(void) 
+uint32_t App_CanRx_FSM_noncriticalErrors_flowRateOutOfRange_GetValue()
 {
-    return rx_table.FSM_NON_CRITICAL_ERRORS_signals.FLOW_RATE_OUT_OF_RANGE_value;
+    return rx_table.FSM_noncriticalErrors_signals.flowRateOutOfRange_value;
 }
 
-uint32_t App_CanRx_FSM_NON_CRITICAL_ERRORS_STEERING_ANGLE_OUT_OF_RANGE_GetValue(void) 
+uint32_t App_CanRx_FSM_noncriticalErrors_steeringAngleOutOfRange_GetValue()
 {
-    return rx_table.FSM_NON_CRITICAL_ERRORS_signals.STEERING_ANGLE_OUT_OF_RANGE_value;
+    return rx_table.FSM_noncriticalErrors_signals.steeringAngleOutOfRange_value;
 }
 
-uint32_t App_CanRx_FSM_NON_CRITICAL_ERRORS_BRAKE_PRESSURE_OUT_OF_RANGE_GetValue(void) 
+uint32_t App_CanRx_FSM_noncriticalErrors_brakePressureOutOfRange_GetValue()
 {
-    return rx_table.FSM_NON_CRITICAL_ERRORS_signals.BRAKE_PRESSURE_OUT_OF_RANGE_value;
+    return rx_table.FSM_noncriticalErrors_signals.brakePressureOutOfRange_value;
 }
 
-bool App_CanRx_FSM_NON_CRITICAL_ERRORS_BRAKE_PRESSURE_OPEN_SC_GetValue(void) 
+bool App_CanRx_FSM_noncriticalErrors_brakePressureSc_GetValue()
 {
-    return rx_table.FSM_NON_CRITICAL_ERRORS_signals.BRAKE_PRESSURE_OPEN_SC_value;
+    return rx_table.FSM_noncriticalErrors_signals.brakePressureSc_value;
 }
 
-bool App_CanRx_FSM_NON_CRITICAL_ERRORS_BRAKE_PRESSURE_OPEN_OC_GetValue(void) 
+bool App_CanRx_FSM_noncriticalErrors_brakePressureOc_GetValue()
 {
-    return rx_table.FSM_NON_CRITICAL_ERRORS_signals.BRAKE_PRESSURE_OPEN_OC_value;
+    return rx_table.FSM_noncriticalErrors_signals.brakePressureOc_value;
 }
 
-bool App_CanRx_FSM_NON_CRITICAL_ERRORS_STEERING_WHEEL_BROKE_GetValue(void) 
+bool App_CanRx_FSM_noncriticalErrors_steeringWheelBroke_GetValue()
 {
-    return rx_table.FSM_NON_CRITICAL_ERRORS_signals.STEERING_WHEEL_BROKE_value;
+    return rx_table.FSM_noncriticalErrors_signals.steeringWheelBroke_value;
 }
+

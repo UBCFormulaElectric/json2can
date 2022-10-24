@@ -3,131 +3,136 @@
  */
 // clang-format off
 
-/* ---------------------------------- Includes ---------------------------------- */
+/* ------------------------------- Includes ------------------------------- */
 
+#include "Io_CanTx.h"
 #include <string.h>
 #include <FreeRTOS.h>
 #include <portmacro.h>
-#include "Io_CanTx.h"
 #include "Io_SharedCanMsg.h"
 #include "Io_SharedCan.h"
+#include "App_CanTx.h"
 #include "App_CanUtils.h"
-#include "App_CanTx.h" 
 
-/* ---------------------------- Struct declarations ----------------------------- */
+/* ---------------------- Static Function Prototypes ---------------------- */
 
+/**
+ * Pack and send the  TX msg JCT_vitals.
+ */
+static void app_canTx_JCT_vitals_send1Hz();
 
+/**
+ * Pack and send the  TX msg JCT_AIRShutdownErrors.
+ */
+static void app_canTx_JCT_AIRShutdownErrors_send1Hz();
 
-/* --------------------------------- Variables ---------------------------------- */
+/**
+ * Pack and send the  TX msg JCT_motorShutdownErrors.
+ */
+static void app_canTx_JCT_motorShutdownErrors_send1Hz();
 
+/**
+ * Pack and send the  TX msg JCT_status.
+ */
+static void app_canTx_JCT_status_send1Hz();
 
+/* --------------------- Public Function Definitions ---------------------- */
 
-/* ------------------------------ Static functions ------------------------------ */
-
-
-
-/* ---------------------------- Function definitions ---------------------------- */
-
-void Io_CanTx_Enqueue1kHzMessages(const uint32_t current_ms) 
+void io_canTx_enqueue100HzMsgs()
 {
-
 }
 
-void Io_CanTx_Enqueue100HzMessages(const uint32_t current_ms) 
+void io_canTx_enqueue10HzMsgs()
 {
-
 }
 
-void Io_CanTx_Enqueue10HzMessages(const uint32_t current_ms) 
+void io_canTx_enqueue1HzMsgs()
 {
-
+    app_canTx_JCT_vitals_send1Hz();
+    app_canTx_JCT_AIRShutdownErrors_send1Hz();
+    app_canTx_JCT_motorShutdownErrors_send1Hz();
+    app_canTx_JCT_status_send1Hz();
 }
 
-void Io_CanTx_Enqueue1HzMessages(const uint32_t current_ms) 
+void app_canTx_JCT_noncriticalErrors_sendAperiodic()
 {
-    App_CanTx_JSONCANTest_VITALS_Send();
-    App_CanTx_JSONCANTest_NON_CRITICAL_ERRORS_Send();
-    App_CanTx_JSONCANTest_AIR_SHUTDOWN_ERRORS_Send();
-    App_CanTx_JSONCANTest_MOTOR_SHUTDOWN_ERRORS_Send();
-    App_CanTx_JSONCANTest_STATUS_Send();
-}
-
-void App_CanTx_JSONCANTest_VITALS_Send(void) 
-{
-    // Prepare CAN message header for message JSONCANTest_VITALS
+    // Prepare msg header
     struct CanMsg tx_msg;
-    tx_msg.std_id = CANMSG_JSONCANTest_VITALS_ID;
-    tx_msg.dlc = CANMSG_JSONCANTest_VITALS_LENGTH;
-
-    // Prepare CAN message payload (The packing function isn't thread-safe so we must guard it)
+    tx_msg.std_id = CANMSG_JCT_noncriticalErrors_ID;
+    tx_msg.dlc = CANMSG_JCT_noncriticalErrors_DLC;
+    
+    // Prepare CAN msg payload (The packing function isn't thread-safe so we must guard it)
     vPortEnterCritical();
-    App_CanMsgs_JSONCANTest_VITALS_Pack(App_CanTx_JSONCANTest_VITALS_GetMessageSignals(), tx_msg.data);
+    app_canUtils_JCT_noncriticalErrors_pack(app_canTx_JCT_noncriticalErrors_getData(), tx_msg.data);
     vPortExitCritical();
-
-    // Send to back of TX FIFO
+    
+    // Enqueue msg in TX FIFO
     Io_SharedCan_TxMessageQueueSendtoBack(&tx_msg);
 }
 
-void App_CanTx_JSONCANTest_NON_CRITICAL_ERRORS_Send(void) 
+/* --------------------- Static Function Definitions ---------------------- */
+
+static void app_canTx_JCT_vitals_send1Hz()
 {
-    // Prepare CAN message header for message JSONCANTest_NON_CRITICAL_ERRORS
+    // Prepare msg header
     struct CanMsg tx_msg;
-    tx_msg.std_id = CANMSG_JSONCANTest_NON_CRITICAL_ERRORS_ID;
-    tx_msg.dlc = CANMSG_JSONCANTest_NON_CRITICAL_ERRORS_LENGTH;
-
-    // Prepare CAN message payload (The packing function isn't thread-safe so we must guard it)
+    tx_msg.std_id = CANMSG_JCT_vitals_ID;
+    tx_msg.dlc = CANMSG_JCT_vitals_DLC;
+    
+    // Prepare CAN msg payload (The packing function isn't thread-safe so we must guard it)
     vPortEnterCritical();
-    App_CanMsgs_JSONCANTest_NON_CRITICAL_ERRORS_Pack(App_CanTx_JSONCANTest_NON_CRITICAL_ERRORS_GetMessageSignals(), tx_msg.data);
+    app_canUtils_JCT_vitals_pack(app_canTx_JCT_vitals_getData(), tx_msg.data);
     vPortExitCritical();
-
-    // Send to back of TX FIFO
+    
+    // Enqueue msg in TX FIFO
     Io_SharedCan_TxMessageQueueSendtoBack(&tx_msg);
 }
 
-void App_CanTx_JSONCANTest_AIR_SHUTDOWN_ERRORS_Send(void) 
+static void app_canTx_JCT_AIRShutdownErrors_send1Hz()
 {
-    // Prepare CAN message header for message JSONCANTest_AIR_SHUTDOWN_ERRORS
+    // Prepare msg header
     struct CanMsg tx_msg;
-    tx_msg.std_id = CANMSG_JSONCANTest_AIR_SHUTDOWN_ERRORS_ID;
-    tx_msg.dlc = CANMSG_JSONCANTest_AIR_SHUTDOWN_ERRORS_LENGTH;
-
-    // Prepare CAN message payload (The packing function isn't thread-safe so we must guard it)
+    tx_msg.std_id = CANMSG_JCT_AIRShutdownErrors_ID;
+    tx_msg.dlc = CANMSG_JCT_AIRShutdownErrors_DLC;
+    
+    // Prepare CAN msg payload (The packing function isn't thread-safe so we must guard it)
     vPortEnterCritical();
-    App_CanMsgs_JSONCANTest_AIR_SHUTDOWN_ERRORS_Pack(App_CanTx_JSONCANTest_AIR_SHUTDOWN_ERRORS_GetMessageSignals(), tx_msg.data);
+    app_canUtils_JCT_AIRShutdownErrors_pack(app_canTx_JCT_AIRShutdownErrors_getData(), tx_msg.data);
     vPortExitCritical();
-
-    // Send to back of TX FIFO
+    
+    // Enqueue msg in TX FIFO
     Io_SharedCan_TxMessageQueueSendtoBack(&tx_msg);
 }
 
-void App_CanTx_JSONCANTest_MOTOR_SHUTDOWN_ERRORS_Send(void) 
+static void app_canTx_JCT_motorShutdownErrors_send1Hz()
 {
-    // Prepare CAN message header for message JSONCANTest_MOTOR_SHUTDOWN_ERRORS
+    // Prepare msg header
     struct CanMsg tx_msg;
-    tx_msg.std_id = CANMSG_JSONCANTest_MOTOR_SHUTDOWN_ERRORS_ID;
-    tx_msg.dlc = CANMSG_JSONCANTest_MOTOR_SHUTDOWN_ERRORS_LENGTH;
-
-    // Prepare CAN message payload (The packing function isn't thread-safe so we must guard it)
+    tx_msg.std_id = CANMSG_JCT_motorShutdownErrors_ID;
+    tx_msg.dlc = CANMSG_JCT_motorShutdownErrors_DLC;
+    
+    // Prepare CAN msg payload (The packing function isn't thread-safe so we must guard it)
     vPortEnterCritical();
-    App_CanMsgs_JSONCANTest_MOTOR_SHUTDOWN_ERRORS_Pack(App_CanTx_JSONCANTest_MOTOR_SHUTDOWN_ERRORS_GetMessageSignals(), tx_msg.data);
+    app_canUtils_JCT_motorShutdownErrors_pack(app_canTx_JCT_motorShutdownErrors_getData(), tx_msg.data);
     vPortExitCritical();
-
-    // Send to back of TX FIFO
+    
+    // Enqueue msg in TX FIFO
     Io_SharedCan_TxMessageQueueSendtoBack(&tx_msg);
 }
 
-void App_CanTx_JSONCANTest_STATUS_Send(void) 
+static void app_canTx_JCT_status_send1Hz()
 {
-    // Prepare CAN message header for message JSONCANTest_STATUS
+    // Prepare msg header
     struct CanMsg tx_msg;
-    tx_msg.std_id = CANMSG_JSONCANTest_STATUS_ID;
-    tx_msg.dlc = CANMSG_JSONCANTest_STATUS_LENGTH;
-
-    // Prepare CAN message payload (The packing function isn't thread-safe so we must guard it)
+    tx_msg.std_id = CANMSG_JCT_status_ID;
+    tx_msg.dlc = CANMSG_JCT_status_DLC;
+    
+    // Prepare CAN msg payload (The packing function isn't thread-safe so we must guard it)
     vPortEnterCritical();
-    App_CanMsgs_JSONCANTest_STATUS_Pack(App_CanTx_JSONCANTest_STATUS_GetMessageSignals(), tx_msg.data);
+    app_canUtils_JCT_status_pack(app_canTx_JCT_status_getData(), tx_msg.data);
     vPortExitCritical();
-
-    // Send to back of TX FIFO
+    
+    // Enqueue msg in TX FIFO
     Io_SharedCan_TxMessageQueueSendtoBack(&tx_msg);
 }
+

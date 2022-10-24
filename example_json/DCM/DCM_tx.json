@@ -1,67 +1,67 @@
 {
-    "DCM_VITALS": {
+    "DCM_vitals": {
         "msg_id": 200,
         "cycle_time": 1000, 
         "signals": {
-            "HEARTBEAT": { "enum": "MISSING_HEARTBEAT" }
+            "heartbeat": { "enum": "MissingHeartbeat" }
         }
     },
-    "DCM_CAN_FIFO_OVERFLOW": {
+    "DCM_canFifoOverflow": {
         "msg_id": 201,
         "cycle_time": 1000, 
         "signals": {
-            "tx_overflow_count": { "bits": 32 },
-            "rx_overflow_count": { "bits": 32 }
+            "txOverflowCount": { "bits": 32 },
+            "rxOverflowCount": { "bits": 32 }
         }
     }, 
-    "DCM_WATCHDOG_TIMEOUT": {
+    "DCM_watchdogTimeout": {
         "msg_id": 203, 
-        "cycle_time": 10000,
+        "cycle_time": 1000,
         "signals": {
-            "TASK_NAME": { "bits": 32 }
+            "taskName": { "bits": 32 }
         }
     }, 
-    "DCM_NON_CRITICAL_ERRORS": {
+    "DCM_noncriticalErrors": {
         "msg_id": 204, 
         "cycle_time": 1000,
         "signals": {
-            "STACK_WATERMARK_ABOVE_THRESHOLD_TASK1HZ": { "bits": 1 },
-            "STACK_WATERMARK_ABOVE_THRESHOLD_TASK1KHZ": { "bits": 1 },
-            "STACK_WATERMARK_ABOVE_THRESHOLD_TASKCANRX": { "bits": 1 },
-            "STACK_WATERMARK_ABOVE_THRESHOLD_TASKCANTX": { "bits": 1 },
-            "WATCHDOG_TIMEOUT": { "bits": 1 },
-            "ACCELERATION_X_OUT_OF_RANGE": { "bits": 1 },
-            "ACCELERATION_Y_OUT_OF_RANGE": { "bits": 1 },
-            "ACCELERATION_Z_OUT_OF_RANGE": { "bits": 1 }
+            "stackWatermarkAboveThresholdTask1Hz": { "bits": 1 },
+            "stackWatermarkAboveThresholdTask1kHz": { "bits": 1 },
+            "stackWatermarkAboveThresholdTaskCanRx": { "bits": 1 },
+            "stackWatermarkAboveThresholdTaskCanTx": { "bits": 1 },
+            "watchdogTimeout": { "bits": 1 },
+            "accelXOutofRange": { "bits": 1 },
+            "accelYOutofRange": { "bits": 1 },
+            "accelZOutofRange": { "bits": 1 }
         }
     }, 
-    "DCM_STATE_MACHINE": {
+    "DCM_stateMachine": {
         "msg_id": 205, 
         "cycle_time": 1000,
         "signals": {
-            "State": { "bits": 8 }
+            "state": { "bits": 8 }
         }
     },
-    "DCM_AIR_SHUTDOWN_ERRORS": {
+    "DCM_AIRShutdownErrors": {
         "msg_id": 207, 
         "cycle_time": 1000,
         "signals": {
-            "MISSING_HEARTBEAT": { "bits": 1 }
+            "missingHeartbeat": { "bits": 1 }
         }
     },
-    "DCM_MOTOR_SHUTDOWN_ERRORS": {
+    "DCM_motorShutdownErrors": {
         "msg_id": 208, 
         "cycle_time": 1000,
         "signals": {
-            "MISSING_HEARTBEAT": { "bits": 1 }
+            "missingHeartbeat": { "bits": 1 }
         }
     },
-    "DCM_INVERTER_SWITCHES": {
+    "DCM_inverterSwitches": {
         "msg_id": 212, 
         "cycle_time": 1000,
         "signals": {
-            "Right_Inverter_Switch": { "bits": 1 },
-            "Left_Inverter_Switch": { "bits": 1 }
+            "rightInverterSwitch": { "bits": 1 },
+            "leftInverterSwitch": { "bits": 1 }
         }
     }
 }
