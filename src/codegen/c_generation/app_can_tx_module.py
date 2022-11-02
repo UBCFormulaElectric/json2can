@@ -26,7 +26,7 @@ class AppCanTxModule(CModule):
         for msg in self._db.tx_msgs_for_node(self._node):
             for signal in msg.signals:
                 init_func.body.add_line(
-                    f"{CFuncsCfg.APP_TX_SET_SIGNAL.format(msg=msg, signal=signal.name)}({CMacrosCfgs.START_VAL.format(msg=msg, signal=signal.name)});"
+                    f"{CFuncsCfg.APP_TX_SET_SIGNAL.format(msg=msg.name, signal=signal.name)}({CMacrosCfgs.START_VAL.format(msg=msg.name, signal=signal.name)});"
                 )
         funcs.append(init_func)
 
@@ -34,19 +34,21 @@ class AppCanTxModule(CModule):
         for msg in self._db.tx_msgs_for_node(self._node):
             for signal in msg.signals:
                 func = CFunc(
-                    CFuncsCfg.APP_TX_SET_SIGNAL.format(msg=msg, signal=signal.name),
+                    CFuncsCfg.APP_TX_SET_SIGNAL.format(
+                        msg=msg.name, signal=signal.name
+                    ),
                     "void",
                     args=[
                         CVar("value", signal.datatype()),
                     ],
-                    comment=f"Update value stored in TX table of signal {signal.name} in msg {msg}.",
+                    comment=f"Update value stored in TX table of signal {signal.name} in msg {msg.name}.",
                 )
 
                 func.body.add_code(
                     clamp_signal_code(
                         signal,
                         msg,
-                        f"{CVarsCfg.TX_TABLE}.{CVarsCfg.MSG_STRUCT.format(msg=msg)}.{CVarsCfg.SIGNAL_VALUE.format(signal=signal.name)}",
+                        f"{CVarsCfg.TX_TABLE}.{CVarsCfg.MSG_STRUCT.format(msg=msg.name)}.{CVarsCfg.SIGNAL_VALUE.format(signal=signal.name)}",
                         "value",
                     )
                 )
