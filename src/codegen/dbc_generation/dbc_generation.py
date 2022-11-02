@@ -26,7 +26,7 @@ BS_:
 """
 DBC_BOARD_LIST = "BU_: {node_names}\n"
 DBC_MESSAGE_TEMPLATE = "BO_ {id} {name}: {num_bytes} {tx_node}\n"
-DBC_SIGNAL_TEMPLATE = "SG_ {name} : {bit_start}|{num_bits}{endianness}{signed} ({scale},{offset}) [{min_val}|{max_val}] \"{unit}\" {rx_node_names}\n"
+DBC_SIGNAL_TEMPLATE = 'SG_ {name} : {bit_start}|{num_bits}{endianness}{signed} ({scale},{offset}) [{min_val}|{max_val}] "{unit}" {rx_node_names}\n'
 DBC_ATTRIBUTE_DEFINITONS_TEMPLATE = """\
 BA_DEF_  "BusType" STRING ;
 BA_DEF_ BO_  "GenMsgCycleTime" INT {cycle_time_min} {cycle_time_max};
@@ -38,14 +38,17 @@ BA_DEF_DEF_  "GenSigStartValue" {start_value_default};
 
 BA_ "BusType" "CAN";
 """
-DBC_ATTRIBUTE_TEMPLATE = "BA_ \"{attr_name}\" {attr_operand} {id} {signal_name} {value};\n" 
+DBC_ATTRIBUTE_TEMPLATE = (
+    'BA_ "{attr_name}" {attr_operand} {id} {signal_name} {value};\n'
+)
 DBC_VALUE_TABLE_TEMPLATE = "VAL_ {id} {signal_name} {entries};\n"
 
 
-class DbcGenerator():
+class DbcGenerator:
     """
     Class for generating a DBC file from a CanDatabase object.
     """
+
     def __init__(self, database: CanDatabase):
         self._db = database
 
@@ -77,7 +80,9 @@ class DbcGenerator():
 
                 # Generate text for signal value table, if it has one
                 if signal.enum:
-                    value_tables_text += self._dbc_value_table(signal=signal, msg_id=msg.id)
+                    value_tables_text += self._dbc_value_table(
+                        signal=signal, msg_id=msg.id
+                    )
 
                 # Generate text for non-default start value
                 if signal.has_non_default_start_val():
@@ -87,7 +92,7 @@ class DbcGenerator():
                     )
 
             msgs_text += "\n"
-        
+
         # Write final file output text to file
         return DBC_TEMPLATE.format(
             nodes=nodes_text,
@@ -102,27 +107,22 @@ class DbcGenerator():
         """
         Return space-delimitted list of all boards on the bus.
         """
-        return DBC_BOARD_LIST.format(
-            node_names=" ".join(self._db.nodes)
-        )
+        return DBC_BOARD_LIST.format(node_names=" ".join(self._db.nodes))
 
     def _dbc_message(self, msg: CanMessage, tx_node: str) -> str:
         """
         Format and return DBC message definition.
         """
         return DBC_MESSAGE_TEMPLATE.format(
-            id=msg.id, 
-            name=msg.name, 
-            num_bytes=msg.bytes(),
-            tx_node=tx_node
+            id=msg.id, name=msg.name, num_bytes=msg.bytes(), tx_node=tx_node
         )
 
-    def _dbc_signal(self, signal: CanSignal, rx_nodes: List[str]) -> str: 
+    def _dbc_signal(self, signal: CanSignal, rx_nodes: List[str]) -> str:
         """
         Format and return DBC signal definition.
         """
         return DBC_SIGNAL_TEMPLATE.format(
-            name=signal.name, 
+            name=signal.name,
             bit_start=signal.start_bit,
             num_bits=signal.bits,
             scale=signal.scale,
@@ -130,9 +130,9 @@ class DbcGenerator():
             min_val=signal.min_val,
             max_val=signal.max_val,
             unit=signal.unit,
-            rx_node_names = ",".join(rx_nodes),
-            endianness = f"@1", # TODO: Big endianness
-            signed="+" # TODO: Signed data
+            rx_node_names=",".join(rx_nodes),
+            endianness=f"@1",  # TODO: Big endianness
+            signed="+",  # TODO: Signed data
         )
 
     def _attribute_definitions(self) -> str:
@@ -179,10 +179,8 @@ class DbcGenerator():
         """
         entries_text = ""
         for enum_entry in signal.enum.items:
-            entries_text += f"{enum_entry.value} \"{enum_entry.name}\""
+            entries_text += f'{enum_entry.value} "{enum_entry.name}"'
 
         return DBC_VALUE_TABLE_TEMPLATE.format(
-            id=msg_id,
-            signal_name=signal.name,
-            entries=entries_text
+            id=msg_id, signal_name=signal.name, entries=entries_text
         )

@@ -120,7 +120,7 @@ SG_ dummyAirShutdown : 0|1@1+ (1,0) [0|1] "" DEBUG
 BO_ 604 JCT_motorShutdownErrors: 1 JCT
 SG_ dummyMotorShutdown : 0|1@1+ (1,0) [0|1] "" DEBUG
 
-BO_ 605 JCT_status: 4 JCT
+BO_ 608 JCT_status: 4 JCT
 SG_ contactorsClosed : 0|1@1+ (1,0) [0|1] "" DEBUG
 SG_ current : 1|12@1+ (0.02442002442002442,0) [0|100] "A" DEBUG
 SG_ voltage : 13|12@1+ (0.1221001221001221,0) [0|500] "V" DEBUG
@@ -129,7 +129,7 @@ SG_ voltage : 13|12@1+ (0.1221001221001221,0) [0|500] "V" DEBUG
 
 BA_DEF_  "BusType" STRING ;
 BA_DEF_ BO_  "GenMsgCycleTime" INT 0 65535;
-BA_DEF_ SG_  "GenSigStartValue" INT 0 2147483647;
+BA_DEF_ SG_  "GenSigStartValue" INT 0 10000;
 
 BA_DEF_DEF_  "BusType" "CAN";
 BA_DEF_DEF_  "GenMsgCycleTime" 0;
@@ -200,9 +200,9 @@ BA_ "GenSigStartValue" SG_ 602 boardOvertemp 0;
 BA_ "GenSigStartValue" SG_ 602 boardOvervoltage 0;
 BA_ "GenSigStartValue" SG_ 603 dummyAirShutdown 0;
 BA_ "GenSigStartValue" SG_ 604 dummyMotorShutdown 0;
-BA_ "GenSigStartValue" SG_ 605 contactorsClosed 0;
-BA_ "GenSigStartValue" SG_ 605 current 50;
-BA_ "GenSigStartValue" SG_ 605 voltage 0;
+BA_ "GenSigStartValue" SG_ 608 contactorsClosed 0;
+BA_ "GenSigStartValue" SG_ 608 current 50;
+BA_ "GenSigStartValue" SG_ 608 voltage 0;
 
 
 BA_ "GenMsgCycleTime" BO_ 200  1000;
@@ -231,11 +231,11 @@ BA_ "GenMsgCycleTime" BO_ 601  1000;
 BA_ "GenMsgCycleTime" BO_ 602  None;
 BA_ "GenMsgCycleTime" BO_ 603  1000;
 BA_ "GenMsgCycleTime" BO_ 604  1000;
-BA_ "GenMsgCycleTime" BO_ 605  1000;
+BA_ "GenMsgCycleTime" BO_ 608  1000;
 
 
 VAL_ 200 heartbeat 0 "FALSE"1 "TRUE";
 VAL_ 301 heartbeat 0 "FALSE"1 "TRUE";
-VAL_ 605 contactorsClosed 0 "AIR_OPEN"1 "AIR_CLOSED";
+VAL_ 608 contactorsClosed 0 "AIR_OPEN"1 "AIR_CLOSED";
 
 

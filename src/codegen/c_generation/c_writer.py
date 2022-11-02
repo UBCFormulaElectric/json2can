@@ -21,6 +21,7 @@ class CModule(ABC):
     """
     ABC for a C module (i.e. pair of header .h and source .c files)
     """
+
     def header() -> str:
         ...
 
@@ -29,7 +30,7 @@ class CModule(ABC):
 
 
 @dataclass
-class CVar: 
+class CVar:
     name: str
     type: Optional[str] = ""
     value: Optional[Union[int, float, str]] = 0
@@ -56,7 +57,14 @@ class CStruct:
 
 
 class CFunc:
-    def __init__(self, name: str, return_type: str, args: List[CVar], qualifier: Optional[str] = "", comment: Optional[str] = ""):
+    def __init__(
+        self,
+        name: str,
+        return_type: str,
+        args: List[CVar],
+        qualifier: Optional[str] = "",
+        comment: Optional[str] = "",
+    ):
         self.name = name
         self.return_type = return_type
         self.arguments = args
@@ -69,6 +77,7 @@ class CWriter:
     """
     Class for generating C code. Define it as an object and call the public functions to add C constructs, indentation, etc.
     """
+
     def __init__(self):
         self._indent_level = 0
         self.indent_text = INDENT_4_SPACES
@@ -116,7 +125,13 @@ class CWriter:
     def add_include(self, name: str) -> None:
         self.add_line(f"#include {name}")
 
-    def add_macro(self, name: str, value: str, args: Optional[str] = None, comment: Optional[str] = "") -> None:
+    def add_macro(
+        self,
+        name: str,
+        value: str,
+        args: Optional[str] = None,
+        comment: Optional[str] = "",
+    ) -> None:
         if args:
             if comment != "":
                 self.start_comment()
@@ -139,7 +154,7 @@ class CWriter:
         self.add_line("typedef enum")
         self.add_line("{")
         self.indent()
-        for enum_val in enum.values: 
+        for enum_val in enum.values:
             self.add_line(f"{enum_val.name} = {enum_val.value},")
         self.unindent()
         self.add_line(f"}} {enum.name};")
@@ -154,7 +169,7 @@ class CWriter:
         self.add_line("{")
         self.indent()
 
-        for member in struct.members: 
+        for member in struct.members:
             if member.comment != "":
                 self.start_comment()
                 self.add_lines(member.comment, prefix=" * ")
@@ -174,7 +189,9 @@ class CWriter:
         qualifier = f"{func.qualifier} " if func.qualifier else ""
         self.add_line(f"{qualifier}{func.return_type} {func.name}({arguments});")
 
-    def add_function_definition(self, func: CFunc, add_comment: Optional[bool] = False) -> None:
+    def add_function_definition(
+        self, func: CFunc, add_comment: Optional[bool] = False
+    ) -> None:
         if add_comment and func.comment != "":
             self.start_comment()
             self.add_lines(func.comment, prefix=" * ")
@@ -211,7 +228,7 @@ class CWriter:
 
     def end_switch(self) -> None:
         self.unindent()
-        self.add_line("}")        
+        self.add_line("}")
 
 
 def clamp_signal_code(signal: CanSignal, msg: CanMessage, dest: str, src: str) -> str:
@@ -223,21 +240,24 @@ def clamp_signal_code(signal: CanSignal, msg: CanMessage, dest: str, src: str) -
     min = CMacrosCfgs.MIN.format(msg=msg.name, signal=signal.name)
     max = CMacrosCfgs.MAX.format(msg=msg.name, signal=signal.name)
 
-    if any([
-        # Don't need to clamp booleans
-        signal.datatype_c() == CanSignalDatatype.BOOL,
-        # Get a warning if trying to clamp less than the max val for uint32
-        signal.representation_c() == CanSignalDatatype.UINT and signal.max_val == max_uint_for_bits(32), 
-    ]):
+    if any(
+        [
+            # Don't need to clamp booleans
+            signal.datatype() == CanSignalDatatype.BOOL,
+            # Get a warning if trying to clamp less than the max val for uint32
+            signal.representation() == CanSignalDatatype.UINT
+            and signal.max_val == max_uint_for_bits(32),
+        ]
+    ):
         cw.add_line(f"{dest} = {src};")
 
     # Uints set a warning if clamping > 0 (since they're >0 by definition)
-    elif signal.representation_c() == CanSignalDatatype.UINT and signal.min_val == 0:
+    elif signal.representation() == CanSignalDatatype.UINT and signal.min_val == 0:
         cw.add_line(f"{dest} = ({src} > {max}) ? {max} : {src};")
 
     # Otherwise, clamp between min and max
-    else: 
-        cw.add_line(f"const {signal.datatype_c()} tmp = {src} < {min} ? {min} : {src};")
+    else:
+        cw.add_line(f"const {signal.datatype()} tmp = {src} < {min} ? {min} : {src};")
         cw.add_line(f"{dest} = tmp > {max} ? {max} : tmp;")
 
     return str(cw)

@@ -3,6 +3,7 @@ from ...utils import *
 from .c_config import *
 from .c_writer import *
 
+
 class IoCanRxModule(CModule):
     def __init__(self, db: CanDatabase, node: str):
         self._db = db
@@ -10,9 +11,14 @@ class IoCanRxModule(CModule):
         self._functions = self._filter_id_func()
 
     def _filter_id_func(self) -> CFunc:
-        func = CFunc(CFuncsCfg.IO_RX_FILTER_ID, "bool", args=[
-            CVar("std_id", "uint32_t"),
-        ], comment=f"Returns true if {self._node} receives the specified message ID.")
+        func = CFunc(
+            CFuncsCfg.IO_RX_FILTER_ID,
+            "bool",
+            args=[
+                CVar("std_id", "uint32_t"),
+            ],
+            comment=f"Returns true if {self._node} receives the specified message ID.",
+        )
 
         # Add cases
         func.body.add_line("bool is_found = false;")
@@ -38,9 +44,14 @@ class IoCanRxModule(CModule):
         return func
 
     def _update_rx_table_func(self) -> CFunc:
-        func = CFunc(CFuncsCfg.IO_RX_UPDATE_TABLE, "void", args=[
-            CVar("msg", "struct CanMsg*"),
-        ], comment=f"Unpack a received message and update the CAN RX table.")
+        func = CFunc(
+            CFuncsCfg.IO_RX_UPDATE_TABLE,
+            "void",
+            args=[
+                CVar("msg", "struct CanMsg*"),
+            ],
+            comment=f"Unpack a received message and update the CAN RX table.",
+        )
 
         func.body.start_switch("msg->std_id")
         for msg in self._db.rx_msgs_for_node(self._node):
@@ -48,13 +59,19 @@ class IoCanRxModule(CModule):
             func.body.start_switch_case()
 
             # Unpack RXed message
-            func.body.add_var_declaration(CVar("out_msg", CStructsCfg.MSG_STRUCT.format(msg=msg.name)))
-            func.body.add_line(f"{CFuncsCfg.UTILS_UNPACK.format(msg=msg.name)}(msg->data, &out_msg);")
+            func.body.add_var_declaration(
+                CVar("out_msg", CStructsCfg.MSG_STRUCT.format(msg=msg.name))
+            )
+            func.body.add_line(
+                f"{CFuncsCfg.UTILS_UNPACK.format(msg=msg.name)}(msg->data, &out_msg);"
+            )
             func.body.add_line()
 
             # Update RX table signals
             for signal in msg.signals:
-                func.body.add_line(f"{CFuncsCfg.APP_RX_SET_SIGNAL.format(msg=msg.name, signal=signal.name)}(out_msg.{CVarsCfg.SIGNAL_VALUE.format(signal=signal.name)});")
+                func.body.add_line(
+                    f"{CFuncsCfg.APP_RX_SET_SIGNAL.format(msg=msg.name, signal=signal.name)}(out_msg.{CVarsCfg.SIGNAL_VALUE.format(signal=signal.name)});"
+                )
             func.body.add_switch_break()
 
         # Msg id not received by this node, do nothing
@@ -64,7 +81,7 @@ class IoCanRxModule(CModule):
         func.body.add_switch_break()
         func.body.end_switch()
         return func
-    
+
     def header(self):
         cw = CWriter()
         cw.add_preamble()
@@ -75,8 +92,8 @@ class IoCanRxModule(CModule):
         cw.add_line()
         cw.add_header_comment("Includes")
         cw.add_line()
-        cw.add_include('<stdint.h>')
-        cw.add_include('<stdbool.h>')
+        cw.add_include("<stdint.h>")
+        cw.add_include("<stdbool.h>")
         cw.add_include('"Io_SharedCanMsg.h"')
 
         # Add function prototypes

@@ -1,3 +1,4 @@
+from unicodedata import name
 from ...can_database import *
 from ...utils import *
 from .c_config import *
@@ -14,6 +15,7 @@ DECODE_MACRO = "DECODE_SIGNAL"
 PACK_TEMPLATE = "out_data[{byte_index}] |= {func}({value}, {shift}, {mask});   // Packs bits {bits_comment} of byte {byte_index}"
 UNPACK_TEMPLATE = "{var_name} |= {func}({value}, {shift}, {mask});   // Unpacks bits {bits_comment} of msg byte {byte_index}"
 
+
 class AppCanUtilsModule(CModule):
     def __init__(self, db: CanDatabase, node: str):
         self._db = db
@@ -25,13 +27,23 @@ class AppCanUtilsModule(CModule):
 
         # Generate all packing functions for TX CAN msgs
         for msg in self._db.tx_msgs_for_node(self._node):
-            func = CFunc(CFuncsCfg.UTILS_PACK.format(msg=msg.name), "void", args=[
-                CVar("in_msg", f"const {CStructsCfg.MSG_STRUCT.format(msg=msg.name)}* const"),
-                CVar("out_data", "uint8_t* const"),
-            ], comment=f"Pack signals into CAN payload for {msg.name}.")
-            func.body.add_comment(f"Pack {msg.bytes()}-byte payload for message {msg.name}.")
+            func = CFunc(
+                CFuncsCfg.UTILS_PACK.format(msg=msg.name),
+                "void",
+                args=[
+                    CVar(
+                        "in_msg",
+                        f"const {CStructsCfg.MSG_STRUCT.format(msg=msg.name)}* const",
+                    ),
+                    CVar("out_data", "uint8_t* const"),
+                ],
+                comment=f"Pack signals into CAN payload for {msg.name}.",
+            )
+            func.body.add_comment(
+                f"Pack {msg.bytes()}-byte payload for message {msg.name}."
+            )
             func.body.add_line()
-            
+
             for signal in msg.signals:
                 func.body.add_lines(pack_signal_code(signal, msg))
                 func.body.add_line()
@@ -40,11 +52,21 @@ class AppCanUtilsModule(CModule):
 
         # Generate all unpacking functions for RX CAN msgs
         for msg in self._db.rx_msgs_for_node(self._node):
-            func = CFunc(CFuncsCfg.UTILS_UNPACK.format(msg=msg.name), "void", args=[
-                CVar("in_data", "const uint8_t* const"),
-                CVar("out_msg", f"{CStructsCfg.MSG_STRUCT.format(msg=msg.name)}* const"),
-            ], comment=f"Unpack signals from CAN payload for {msg.name}.")
-            func.body.add_comment(f"Unpack {msg.bytes()}-byte payload for message {msg.name}.")
+            func = CFunc(
+                CFuncsCfg.UTILS_UNPACK.format(msg=msg.name),
+                "void",
+                args=[
+                    CVar("in_data", "const uint8_t* const"),
+                    CVar(
+                        "out_msg",
+                        f"{CStructsCfg.MSG_STRUCT.format(msg=msg.name)}* const",
+                    ),
+                ],
+                comment=f"Unpack signals from CAN payload for {msg.name}.",
+            )
+            func.body.add_comment(
+                f"Unpack {msg.bytes()}-byte payload for message {msg.name}."
+            )
             func.body.add_line()
 
             for signal in msg.signals:
@@ -60,48 +82,92 @@ class AppCanUtilsModule(CModule):
 
         # Msg ID macros
         cw.add_comment("Msg IDs")
-        for msg in self._db.msgs_for_node(self._node):  
-            cw.add_macro(CMacrosCfgs.ID.format(msg=msg.name), msg.id) 
+        for msg in self._db.msgs_for_node(self._node):
+            cw.add_macro(
+                CMacrosCfgs.ID.format(msg=pascal_to_screaming_snake_case(msg.name)),
+                msg.id,
+            )
         cw.add_line()
 
         # Tx Msg length macros
         cw.add_comment("Msg lengths (in bytes)")
         for msg in self._db.tx_msgs_for_node(self._node):
-            cw.add_macro(CMacrosCfgs.BYTES.format(msg=msg.name), msg.bytes())
+            cw.add_macro(
+                CMacrosCfgs.BYTES.format(msg=pascal_to_screaming_snake_case(msg.name)),
+                msg.bytes(),
+            )
         cw.add_line()
-            
+
         # Tx Msg cycle time macros
         cw.add_comment("Periodic msg cycle times (in MS)")
         for msg in self._db.tx_msgs_for_node(self._node):
             if msg.is_periodic():
-                cw.add_macro(CMacrosCfgs.CYCLE_TIME.format(msg=msg.name), msg.cycle_time)
+                cw.add_macro(
+                    CMacrosCfgs.CYCLE_TIME.format(
+                        msg=pascal_to_screaming_snake_case(msg.name)
+                    ),
+                    msg.cycle_time,
+                )
         cw.add_line()
 
         # Signal initial value macros
         cw.add_comment("Signal starting values")
         for msg in self._db.msgs_for_node(self._node):
             for signal in msg.signals:
-                cw.add_macro(CMacrosCfgs.START_VAL.format(msg=msg.name, signal=signal.name), signal.start_val, comment=signal.unit)
+                cw.add_macro(
+                    CMacrosCfgs.START_VAL.format(
+                        msg=pascal_to_screaming_snake_case(msg.name),
+                        signal=pascal_to_screaming_snake_case(signal.name),
+                    ),
+                    signal.start_val,
+                    comment=signal.unit,
+                )
         cw.add_line()
 
         # Tx scale + offset macros
         cw.add_comment("Scale/offset values for encoding/decoding signals")
         for msg in self._db.msgs_for_node(self._node):
             for signal in msg.signals:
-                cw.add_macro(CMacrosCfgs.SCALE.format(msg=msg.name, signal=signal.name), signal.scale)
-                cw.add_macro(CMacrosCfgs.OFFSET.format(msg=msg.name, signal=signal.name), signal.offset)
+                cw.add_macro(
+                    CMacrosCfgs.SCALE.format(
+                        msg=pascal_to_screaming_snake_case(msg.name),
+                        signal=pascal_to_screaming_snake_case(signal.name),
+                    ),
+                    signal.scale,
+                )
+                cw.add_macro(
+                    CMacrosCfgs.OFFSET.format(
+                        msg=pascal_to_screaming_snake_case(msg.name),
+                        signal=pascal_to_screaming_snake_case(signal.name),
+                    ),
+                    signal.offset,
+                )
         cw.add_line()
 
         # Minimum/maximum value macros
         cw.add_comment("Min/max allowed values for signals")
         for msg in self._db.msgs_for_node(self._node):
             for signal in msg.signals:
-                cw.add_macro(CMacrosCfgs.MIN.format(msg=msg.name, signal=signal.name), signal.min_val, comment=signal.unit)
-                cw.add_macro(CMacrosCfgs.MAX.format(msg=msg.name, signal=signal.name), signal.max_val, comment=signal.unit)
+                cw.add_macro(
+                    CMacrosCfgs.MIN.format(
+                        msg=pascal_to_screaming_snake_case(msg.name),
+                        signal=pascal_to_screaming_snake_case(signal.name),
+                    ),
+                    signal.min_val,
+                    comment=signal.unit,
+                )
+                cw.add_macro(
+                    CMacrosCfgs.MAX.format(
+                        msg=pascal_to_screaming_snake_case(msg.name),
+                        signal=pascal_to_screaming_snake_case(signal.name),
+                    ),
+                    signal.max_val,
+                    comment=signal.unit,
+                )
         cw.add_line()
 
         return str(cw)
-    
+
     def header(self):
         cw = CWriter()
         cw.add_preamble()
@@ -147,12 +213,21 @@ class AppCanUtilsModule(CModule):
         cw.add_line()
 
         for msg in self._db.msgs_for_node(self._node):
-            struct = CStruct(CStructsCfg.MSG_STRUCT.format(msg=msg.name), comment=f"Signals in CAN msg {msg.name}.")
+            struct = CStruct(
+                CStructsCfg.MSG_STRUCT.format(msg=msg.name),
+                comment=f"Signals in CAN msg {msg.name}.",
+            )
             for signal in msg.signals:
-                signal_comment = f'''\
+                signal_comment = f"""\
 Description: {signal.description}
-Range: {signal.min_val}{signal.unit} to {signal.max_val}{signal.unit}'''
-                struct.add_member(CVar(CVarsCfg.SIGNAL_VALUE.format(signal=signal.name), signal.datatype_c(), comment=signal_comment))
+Range: {signal.min_val}{signal.unit} to {signal.max_val}{signal.unit}"""
+                struct.add_member(
+                    CVar(
+                        CVarsCfg.SIGNAL_VALUE.format(signal=signal.name),
+                        signal.datatype(),
+                        comment=signal_comment,
+                    )
+                )
 
             cw.add_struct(struct)
             cw.add_line()
@@ -178,30 +253,66 @@ Range: {signal.min_val}{signal.unit} to {signal.max_val}{signal.unit}'''
         cw.add_line()
         cw.add_header_comment("Static Packing/Unpacking Functions")
         cw.add_line()
-        
-        pack_left = CFunc(PACK_SHIFT_LEFT_FUNC, "uint8_t", args=[
-            CVar("input", "uint32_t"), CVar("shift", "uint8_t"), CVar("mask", "uint8_t")],
-            comment="Shift input left and apply mask, for packing.", qualifier="static",
-        )
-        pack_left.body.add_code("return (uint8_t)((uint8_t)(input << shift) & (uint8_t)mask);")
 
-        pack_right = CFunc(PACK_SHIFT_RIGHT_FUNC, "uint8_t", args=[
-            CVar("input", "uint32_t"), CVar("shift", "uint8_t"), CVar("mask", "uint8_t")],
-            comment="Shift input right and apply mask, for packing.", qualifier="static",
+        pack_left = CFunc(
+            PACK_SHIFT_LEFT_FUNC,
+            "uint8_t",
+            args=[
+                CVar("input", "uint32_t"),
+                CVar("shift", "uint8_t"),
+                CVar("mask", "uint8_t"),
+            ],
+            comment="Shift input left and apply mask, for packing.",
+            qualifier="static",
         )
-        pack_right.body.add_code("return (uint8_t)((uint8_t)(input >> shift) & (uint8_t)mask);")
+        pack_left.body.add_code(
+            "return (uint8_t)((uint8_t)(input << shift) & (uint8_t)mask);"
+        )
 
-        unpack_left = CFunc(UNPACK_SHIFT_LEFT_FUNC, "uint32_t", args=[
-            CVar("input", "uint8_t"), CVar("shift", "uint8_t"), CVar("mask", "uint8_t")],
-            comment="Apply mask, then shift input left by shift bits, for unpacking.", qualifier="static",
+        pack_right = CFunc(
+            PACK_SHIFT_RIGHT_FUNC,
+            "uint8_t",
+            args=[
+                CVar("input", "uint32_t"),
+                CVar("shift", "uint8_t"),
+                CVar("mask", "uint8_t"),
+            ],
+            comment="Shift input right and apply mask, for packing.",
+            qualifier="static",
         )
-        unpack_left.body.add_code("return (uint32_t)((uint32_t)(input & mask) << shift);")
+        pack_right.body.add_code(
+            "return (uint8_t)((uint8_t)(input >> shift) & (uint8_t)mask);"
+        )
 
-        unpack_right = CFunc(UNPACK_SHIFT_RIGHT_FUNC, "uint32_t", args=[
-            CVar("input", "uint8_t"), CVar("shift", "uint8_t"), CVar("mask", "uint8_t")],
-            comment="Apply mask, then shift input left by shift bits, for unpacking.", qualifier="static",
+        unpack_left = CFunc(
+            UNPACK_SHIFT_LEFT_FUNC,
+            "uint32_t",
+            args=[
+                CVar("input", "uint8_t"),
+                CVar("shift", "uint8_t"),
+                CVar("mask", "uint8_t"),
+            ],
+            comment="Apply mask, then shift input left by shift bits, for unpacking.",
+            qualifier="static",
         )
-        unpack_right.body.add_code("return (uint32_t)((uint32_t)(input & mask) >> shift);")
+        unpack_left.body.add_code(
+            "return (uint32_t)((uint32_t)(input & mask) << shift);"
+        )
+
+        unpack_right = CFunc(
+            UNPACK_SHIFT_RIGHT_FUNC,
+            "uint32_t",
+            args=[
+                CVar("input", "uint8_t"),
+                CVar("shift", "uint8_t"),
+                CVar("mask", "uint8_t"),
+            ],
+            comment="Apply mask, then shift input left by shift bits, for unpacking.",
+            qualifier="static",
+        )
+        unpack_right.body.add_code(
+            "return (uint32_t)((uint32_t)(input & mask) >> shift);"
+        )
 
         cw.add_function_definition(pack_left, add_comment=True)
         cw.add_line()
@@ -212,19 +323,23 @@ Range: {signal.min_val}{signal.unit} to {signal.max_val}{signal.unit}'''
         cw.add_function_definition(unpack_right, add_comment=True)
         cw.add_line()
 
-         # Add encoding/decoding macros
+        # Add encoding/decoding macros
         cw.add_line()
         cw.add_header_comment("Encoding/Decoding Macros")
         cw.add_line()
 
-        cw.add_macro(ENCODE_MACRO, "(uint32_t)((type)(input - offset) / (type)scale)", 
+        cw.add_macro(
+            ENCODE_MACRO,
+            "(uint32_t)((type)(input - offset) / (type)scale)",
             args=["input", "scale", "offset", "type"],
             comment="Encode real signal value to payload representation, w/ scale and offset.",
         )
         cw.add_line()
-        cw.add_macro(DECODE_MACRO, "(type)((type)input * (type)scale + (type)offset)", 
+        cw.add_macro(
+            DECODE_MACRO,
+            "(type)((type)input * (type)scale + (type)offset)",
             args=["input", "scale", "offset", "type"],
-            comment="Decode payload representation of signal to signal value, w/ scale and offset."
+            comment="Decode payload representation of signal to signal value, w/ scale and offset.",
         )
         cw.add_line()
 
@@ -241,27 +356,35 @@ Range: {signal.min_val}{signal.unit} to {signal.max_val}{signal.unit}'''
 
 
 def pack_signal_code(signal: CanSignal, msg: CanMessage):
-    '''
+    """
     Generate code for packing a signal into raw msg payload.
-    '''
+    """
     starting_byte = signal.start_bit // BYTE_SIZE
     packed_bits = 0
-    bit_start = signal.start_bit - (starting_byte * BYTE_SIZE) # Bit position signal will begin on the first byte it occupies
+    bit_start = signal.start_bit - (
+        starting_byte * BYTE_SIZE
+    )  # Bit position signal will begin on the first byte it occupies
 
-    signal_val_var_name = f'{signal.name}_val'
-    signal_raw_var_name = f'{signal.name}_raw'
+    signal_val_var_name = f"{signal.name}_val"
+    signal_raw_var_name = f"{signal.name}_raw"
 
     cw = CWriter()
-    cw.add_comment(f"Pack {signal.bits}-bit signal {signal.name} into payload (at bit {signal.start_bit} to bit {signal.start_bit+signal.bits}).")
-    cw.add_line(f"const {signal.datatype_c()} {signal_val_var_name} = in_msg->{signal.name}_value;")
+    cw.add_comment(
+        f"Pack {signal.bits}-bit signal {signal.name} into payload (at bit {signal.start_bit} to bit {signal.start_bit+signal.bits})."
+    )
+    cw.add_line(
+        f"const {signal.datatype()} {signal_val_var_name} = in_msg->{signal.name}_value;"
+    )
 
     # Encode signal value
     scale_macro = CMacrosCfgs.SCALE.format(msg=msg.name, signal=signal.name)
     offset_macro = CMacrosCfgs.OFFSET.format(msg=msg.name, signal=signal.name)
-    cw.add_line(f"const uint32_t {signal_raw_var_name} = {ENCODE_MACRO}({signal_val_var_name}, {scale_macro}, {offset_macro}, {signal.datatype_c()});")
+    cw.add_line(
+        f"const uint32_t {signal_raw_var_name} = {ENCODE_MACRO}({signal_val_var_name}, {scale_macro}, {offset_macro}, {signal.datatype()});"
+    )
 
     while packed_bits < signal.bits:
-        # Bits to pack this iteration is either how many bits can fit in current byte (8 - start) 
+        # Bits to pack this iteration is either how many bits can fit in current byte (8 - start)
         # or the remaining unpacked bits (length in bits - packed bits) (whichever is lower)
         bits_to_pack = min(BYTE_SIZE - bit_start, signal.bits - packed_bits)
 
@@ -275,43 +398,50 @@ def pack_signal_code(signal: CanSignal, msg: CanMessage):
         mask_text = hex(mask)
 
         # Make comment
-        comment_data = ['_'] * BYTE_SIZE
+        comment_data = ["_"] * BYTE_SIZE
         for i in range(bit_start, bit_start + bits_to_pack):
-            comment_data[i] = '#'
+            comment_data[i] = "#"
 
         # Format and add shift function
-        cw.add_line(PACK_TEMPLATE.format(
-            byte_index=starting_byte,
-            func=PACK_SHIFT_RIGHT_FUNC if shift >= 0 else PACK_SHIFT_LEFT_FUNC,
-            value=signal_raw_var_name,
-            shift=abs(shift),
-            mask=mask_text,
-            bits_comment=''.join(reversed(comment_data)),
-        ))
+        cw.add_line(
+            PACK_TEMPLATE.format(
+                byte_index=starting_byte,
+                func=PACK_SHIFT_RIGHT_FUNC if shift >= 0 else PACK_SHIFT_LEFT_FUNC,
+                value=signal_raw_var_name,
+                shift=abs(shift),
+                mask=mask_text,
+                bits_comment="".join(reversed(comment_data)),
+            )
+        )
 
-        bit_start = 0 # After first iteration, further packings all start at bit 0
+        bit_start = 0  # After first iteration, further packings all start at bit 0
         packed_bits += bits_to_pack
-        starting_byte += 1 
+        starting_byte += 1
 
     return str(cw)
 
+
 def unpack_signal_code(signal: CanSignal, msg: CanMessage):
-    '''
+    """
     Generate code for unpacking a signal from raw msg payload.
-    '''
+    """
     starting_byte = signal.start_bit // BYTE_SIZE
     unpacked_bits = 0
-    bit_start = signal.start_bit - starting_byte * BYTE_SIZE # Bit position signal will begin on the first byte it occupies
+    bit_start = (
+        signal.start_bit - starting_byte * BYTE_SIZE
+    )  # Bit position signal will begin on the first byte it occupies
 
-    signal_val_var_name = f'{signal.name}_val'
-    signal_raw_var_name = f'{signal.name}_raw'
+    signal_val_var_name = f"{signal.name}_val"
+    signal_raw_var_name = f"{signal.name}_raw"
 
     cw = CWriter()
-    cw.add_comment(f"Unpack {signal.bits}-bit signal {signal.name} from payload (at bit {signal.start_bit} to bit {signal.start_bit + signal.bits}).")
+    cw.add_comment(
+        f"Unpack {signal.bits}-bit signal {signal.name} from payload (at bit {signal.start_bit} to bit {signal.start_bit + signal.bits})."
+    )
     cw.add_line(f"uint32_t {signal_raw_var_name} = 0;")
 
     while unpacked_bits < signal.bits:
-        # Bits to unpack this iteration is either how many bits can get from the current byte (8 - start) 
+        # Bits to unpack this iteration is either how many bits can get from the current byte (8 - start)
         # or the remaining packed bits (length in bits - unpacked bits) (whichever is lower)
         bits_to_unpack = min(BYTE_SIZE - bit_start, signal.bits - unpacked_bits)
 
@@ -321,33 +451,39 @@ def unpack_signal_code(signal: CanSignal, msg: CanMessage):
         shift = bit_start - unpacked_bits
 
         # Make mask: 1 at each digit we're unpacking, 0 everywhere else
-        mask = max_uint_for_bits(bits_to_unpack) << bit_start # TODO: Confirm this works in Python like C
+        mask = (
+            max_uint_for_bits(bits_to_unpack) << bit_start
+        )  # TODO: Confirm this works in Python like C
         mask_text = hex(mask)
 
         # Make comment
-        comment_data = ['_'] * BYTE_SIZE
+        comment_data = ["_"] * BYTE_SIZE
         for i in range(bit_start, bit_start + bits_to_unpack):
-            comment_data[i] = '#'
+            comment_data[i] = "#"
 
         # Format shift function and append
-        cw.add_line(UNPACK_TEMPLATE.format(
-            byte_index=starting_byte,
-            var_name=signal_raw_var_name,
-            func=UNPACK_SHIFT_RIGHT_FUNC if shift >= 0 else UNPACK_SHIFT_LEFT_FUNC,
-            value=f'in_data[{starting_byte}]',
-            shift=abs(shift),
-            mask=mask_text,
-            bits_comment=''.join(reversed(comment_data)),
-        ))
+        cw.add_line(
+            UNPACK_TEMPLATE.format(
+                byte_index=starting_byte,
+                var_name=signal_raw_var_name,
+                func=UNPACK_SHIFT_RIGHT_FUNC if shift >= 0 else UNPACK_SHIFT_LEFT_FUNC,
+                value=f"in_data[{starting_byte}]",
+                shift=abs(shift),
+                mask=mask_text,
+                bits_comment="".join(reversed(comment_data)),
+            )
+        )
 
-        bit_start = 0 # After first iteration, further packings all start at bit 0
+        bit_start = 0  # After first iteration, further packings all start at bit 0
         unpacked_bits += bits_to_unpack
-        starting_byte += 1 
+        starting_byte += 1
 
     # Decode raw payload bits
     scale_macro = CMacrosCfgs.SCALE.format(msg=msg.name, signal=signal.name)
     offset_macro = CMacrosCfgs.OFFSET.format(msg=msg.name, signal=signal.name)
-    cw.add_line(f"const {signal.datatype_c()} {signal_val_var_name} = {DECODE_MACRO}({signal_raw_var_name}, {scale_macro}, {offset_macro}, {signal.representation_c()});")
+    cw.add_line(
+        f"const {signal.datatype()} {signal_val_var_name} = {DECODE_MACRO}({signal_raw_var_name}, {scale_macro}, {offset_macro}, {signal.representation()});"
+    )
 
     # Assign variable in output ptr
     cw.add_line(f"out_msg->{signal.name}_value = {signal_val_var_name};")
