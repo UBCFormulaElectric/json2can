@@ -60,6 +60,11 @@
                 "max": 500,
                 "bits": 12,
                 "unit": "V"
+            },
+            "unsigned_tester": {
+                "bits": 12,
+                "unit": "V",
+                "signed": true
             }
         }
     }

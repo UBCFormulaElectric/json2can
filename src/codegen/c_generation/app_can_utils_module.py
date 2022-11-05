@@ -42,6 +42,7 @@ class AppCanUtilsModule(CModule):
             func.body.add_comment(
                 f"Pack {msg.bytes()}-byte payload for message {msg.name}."
             )
+            func.body.add_comment(signal_placement_comment(msg))
             func.body.add_line()
 
             for signal in msg.signals:
@@ -67,6 +68,7 @@ class AppCanUtilsModule(CModule):
             func.body.add_comment(
                 f"Unpack {msg.bytes()}-byte payload for message {msg.name}."
             )
+            func.body.add_comment(signal_placement_comment(msg))
             func.body.add_line()
 
             for signal in msg.signals:
@@ -353,6 +355,18 @@ Range: {signal.min_val}{signal.unit} to {signal.max_val}{signal.unit}"""
             cw.add_line()
 
         return str(cw)
+
+
+def signal_placement_comment(msg: CanMessage):
+    chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    signals = ["_"] * (msg.bytes() * 8)
+    signals.extend(["x"] * ((8 - msg.bytes()) * 8))
+    for signal_cnt, signal in enumerate(msg.signals):
+        for i in range(signal.start_bit, signal.start_bit + signal.bits):
+            signals[i] = chars[signal_cnt % len(chars)]
+
+    signals = list(reversed(signals))
+    return f'|{"|".join("".join(signals[i*8:(i+1)*8]) for i in range(0, 8))}|'
 
 
 def pack_signal_code(signal: CanSignal, msg: CanMessage):

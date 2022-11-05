@@ -120,10 +120,11 @@ SG_ dummyAirShutdown : 0|1@1+ (1,0) [0|1] "" DEBUG
 BO_ 604 JCT_motorShutdownErrors: 1 JCT
 SG_ dummyMotorShutdown : 0|1@1+ (1,0) [0|1] "" DEBUG
 
-BO_ 608 JCT_status: 4 JCT
+BO_ 608 JCT_status: 5 JCT
 SG_ contactorsClosed : 0|1@1+ (1,0) [0|1] "" DEBUG
 SG_ current : 1|12@1+ (0.02442002442002442,0) [0|100] "A" DEBUG
 SG_ voltage : 13|12@1+ (0.1221001221001221,0) [0|500] "V" DEBUG
+SG_ unsigned_tester : 25|12@1- (1,0) [-2047|2046] "V" DEBUG
 
 
 
@@ -203,6 +204,7 @@ BA_ "GenSigStartValue" SG_ 604 dummyMotorShutdown 0;
 BA_ "GenSigStartValue" SG_ 608 contactorsClosed 0;
 BA_ "GenSigStartValue" SG_ 608 current 50;
 BA_ "GenSigStartValue" SG_ 608 voltage 0;
+BA_ "GenSigStartValue" SG_ 608 unsigned_tester 0;
 
 
 BA_ "GenMsgCycleTime" BO_ 200  1000;

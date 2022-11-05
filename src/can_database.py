@@ -54,7 +54,7 @@ class CanSignalDatatype(str, Enum):
     BOOL = "bool"
     INT = "int"
     UINT = "uint32_t"
-    DECIMAL = "float"
+    FLOAT = "float"
 
 
 @dataclass(frozen=True)
@@ -73,6 +73,7 @@ class CanSignal:
     start_val: Union[int, float]  # Default starting value, None if doesn't specify one
     enum: Union[CanEnum, None]  # Value table, None if doesn't specify one
     unit: str  # Signal's unit
+    signed: bool  # Whether or not signal is represented as signed or unsigned
     description: str = "N/A"  # Description of signal
 
     def represent_as_integer(self):
@@ -106,7 +107,7 @@ class CanSignal:
             else:
                 return CanSignalDatatype.INT
         else:
-            return CanSignalDatatype.DECIMAL
+            return CanSignalDatatype.FLOAT
 
     def datatype(self):
         """
@@ -122,7 +123,7 @@ class CanSignal:
             else:
                 return CanSignalDatatype.INT
         else:
-            return CanSignalDatatype.DECIMAL
+            return CanSignalDatatype.FLOAT
 
     def __str__(self):
         return self.name

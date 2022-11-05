@@ -58,6 +58,7 @@ static uint32_t unpackShiftRight(uint8_t input, uint8_t shift, uint8_t mask)
 void app_canUtils_JCT_vitals_pack(const JCT_vitals_Signals* const in_msg, uint8_t* const out_data)
 {
     // Pack 5-byte payload for message JCT_vitals.
+    // |xxxxxxxx|xxxxxxxx|xxxxxxxx|_______B|BBBBBBBB|BBBBBBBB|BBBBBBBB|BBBBBBBA|
     
     // Pack 1-bit signal heartbeat into payload (at bit 0 to bit 1).
     const bool heartbeat_val = in_msg->heartbeat_value;
@@ -78,6 +79,7 @@ void app_canUtils_JCT_vitals_pack(const JCT_vitals_Signals* const in_msg, uint8_
 void app_canUtils_JCT_noncriticalErrors_pack(const JCT_noncriticalErrors_Signals* const in_msg, uint8_t* const out_data)
 {
     // Pack 1-byte payload for message JCT_noncriticalErrors.
+    // |xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|_____CBA|
     
     // Pack 1-bit signal watchdogTimeout into payload (at bit 0 to bit 1).
     const bool watchdogTimeout_val = in_msg->watchdogTimeout_value;
@@ -99,6 +101,7 @@ void app_canUtils_JCT_noncriticalErrors_pack(const JCT_noncriticalErrors_Signals
 void app_canUtils_JCT_AIRShutdownErrors_pack(const JCT_AIRShutdownErrors_Signals* const in_msg, uint8_t* const out_data)
 {
     // Pack 1-byte payload for message JCT_AIRShutdownErrors.
+    // |xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|_______A|
     
     // Pack 1-bit signal dummyAirShutdown into payload (at bit 0 to bit 1).
     const bool dummyAirShutdown_val = in_msg->dummyAirShutdown_value;
@@ -110,6 +113,7 @@ void app_canUtils_JCT_AIRShutdownErrors_pack(const JCT_AIRShutdownErrors_Signals
 void app_canUtils_JCT_motorShutdownErrors_pack(const JCT_motorShutdownErrors_Signals* const in_msg, uint8_t* const out_data)
 {
     // Pack 1-byte payload for message JCT_motorShutdownErrors.
+    // |xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|_______A|
     
     // Pack 1-bit signal dummyMotorShutdown into payload (at bit 0 to bit 1).
     const bool dummyMotorShutdown_val = in_msg->dummyMotorShutdown_value;
@@ -120,7 +124,8 @@ void app_canUtils_JCT_motorShutdownErrors_pack(const JCT_motorShutdownErrors_Sig
 
 void app_canUtils_JCT_status_pack(const JCT_status_Signals* const in_msg, uint8_t* const out_data)
 {
-    // Pack 4-byte payload for message JCT_status.
+    // Pack 5-byte payload for message JCT_status.
+    // |xxxxxxxx|xxxxxxxx|xxxxxxxx|___DDDDD|DDDDDDDC|CCCCCCCC|CCCBBBBB|BBBBBBBA|
     
     // Pack 1-bit signal contactorsClosed into payload (at bit 0 to bit 1).
     const AirState contactorsClosed_val = in_msg->contactorsClosed_value;
@@ -140,11 +145,18 @@ void app_canUtils_JCT_status_pack(const JCT_status_Signals* const in_msg, uint8_
     out_data[2] |= packShiftRight(voltage_raw, 3, 0xff);   // Packs bits ######## of byte 2
     out_data[3] |= packShiftRight(voltage_raw, 11, 0x1);   // Packs bits _______# of byte 3
     
+    // Pack 12-bit signal unsigned_tester into payload (at bit 25 to bit 37).
+    const int unsigned_tester_val = in_msg->unsigned_tester_value;
+    const uint32_t unsigned_tester_raw = ENCODE_SIGNAL(unsigned_tester_val, CANSIG_JCT_status_unsigned_tester_SCALE, CANSIG_JCT_status_unsigned_tester_OFFSET, int);
+    out_data[3] |= packShiftLeft(unsigned_tester_raw, 1, 0xfe);   // Packs bits #######_ of byte 3
+    out_data[4] |= packShiftRight(unsigned_tester_raw, 7, 0x1f);   // Packs bits ___##### of byte 4
+    
 }
 
 void app_canUtils_FSM_apps_unpack(const uint8_t* const in_data, FSM_apps_Signals* const out_msg)
 {
     // Unpack 8-byte payload for message FSM_apps.
+    // |BBBBBBBB|BBBBBBBB|BBBBBBBB|BBBBBBBB|AAAAAAAA|AAAAAAAA|AAAAAAAA|AAAAAAAA|
     
     // Unpack 32-bit signal pappsMappedPedalPercentage from payload (at bit 0 to bit 32).
     uint32_t pappsMappedPedalPercentage_raw = 0;
@@ -169,6 +181,7 @@ void app_canUtils_FSM_apps_unpack(const uint8_t* const in_data, FSM_apps_Signals
 void app_canUtils_FSM_noncriticalErrors_unpack(const uint8_t* const in_data, FSM_noncriticalErrors_Signals* const out_msg)
 {
     // Unpack 3-byte payload for message FSM_noncriticalErrors.
+    // |xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|___PONMM|LLKKJJII|HGFEDCBA|
     
     // Unpack 1-bit signal pappsOutOfRange from payload (at bit 0 to bit 1).
     uint32_t pappsOutOfRange_raw = 0;

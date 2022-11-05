@@ -273,10 +273,22 @@ class JsonCanParser:
         # Option 4: Just provide bits, and will be considered to be an unsigned int of however many bits.
         elif "bits" in signal_json_data:
             bits = signal_json_data["bits"]
-            max_val = max_uint_for_bits(bits)
-            min_val = 0
+            if signed:
+                max_val = max_uint_for_bits(bits - 1) - 1
+                min_val = -max_uint_for_bits(bits - 1)
+            else:
+                max_val = max_uint_for_bits(bits)
+                min_val = 0
             scale = 1
             offset = 0
+
+        # Option 5: Provide DBC data
+        elif "bits" in signal_json_data:
+            bits = signal_json_data["bits"]
+            max_val = signal_json_data["max"]
+            min_val = signal_json_data["min"]
+            scale = signal_json_data["scale"]
+            offset = signal_json_data["offset"]
 
         # Otherwise, payload data was not inputted correctly
         else:
@@ -293,15 +305,16 @@ class JsonCanParser:
         return (
             CanSignal(
                 name=signal_name,
-                start_bit=start_bit,
                 bits=bits,
                 scale=scale,
                 offset=offset,
                 min_val=min_val,
                 max_val=max_val,
+                start_bit=start_bit,
                 unit=unit,
                 enum=enum,
                 start_val=start_val,
+                signed=signed,
             ),
             specified_start_bit,
         )

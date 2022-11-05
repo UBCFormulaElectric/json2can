@@ -16,6 +16,7 @@ tx_signal_schema = Schema(
             Optional("unit"): str,
             Optional("start_value"): int,
             Optional("start_bit"): int,
+            Optional("signed"): bool,
         },
         {
             # Bits/min/max, and signal will range from min to max in X bits, scale/offset will be calculated accordingly
@@ -25,7 +26,6 @@ tx_signal_schema = Schema(
             Optional("unit"): str,
             Optional("start_value"): Or(int, float),
             Optional("start_bit"): int,
-            Optional("signed"): str,
         },
         {
             # Resolution/min/max, and signal will range from min to max such that scale=resolution, bits/offset will be calculated accordingly
@@ -35,13 +35,23 @@ tx_signal_schema = Schema(
             Optional("unit"): str,
             Optional("start_value"): Or(int, float),
             Optional("start_bit"): int,
-            Optional("signed"): str,
         },
         {
             # Enum, signal will be generated with minimum # of bits to hold all possible enum values
             "enum": str,
             Optional("start_value"): str,
             Optional("start_bit"): int,
+        },
+        {
+            # Scale/offset/bits/signedness: Basically if you want to configure like a DBC file
+            "scale": Or(int, float),
+            "offset": Or(int, float),
+            "bits": int,
+            "min": Or(int, float),
+            "max": Or(int, float),
+            Optional("start_value"): str,
+            Optional("start_bit"): int,
+            Optional("signed"): bool,
         },
     )
 )

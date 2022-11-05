@@ -83,6 +83,11 @@ void app_canTx_JCT_status_current_set(float value);
 void app_canTx_JCT_status_voltage_set(float value);
 
 /**
+ * Update value stored in TX table of signal unsigned_tester in msg JCT_status.
+ */
+void app_canTx_JCT_status_unsigned_tester_set(int value);
+
+/**
  * Return value from TX table of signal heartbeat in msg JCT_vitals.
  */
 bool app_canTx_JCT_vitals_heartbeat_get();
@@ -131,6 +136,11 @@ float app_canTx_JCT_status_current_get();
  * Return value from TX table of signal voltage in msg JCT_status.
  */
 float app_canTx_JCT_status_voltage_get();
+
+/**
+ * Return value from TX table of signal unsigned_tester in msg JCT_status.
+ */
+int app_canTx_JCT_status_unsigned_tester_get();
 
 /**
  * Returns pointer to the struct of msg JCT_vitals signals in the TX table.

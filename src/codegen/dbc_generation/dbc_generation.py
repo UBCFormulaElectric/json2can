@@ -132,7 +132,7 @@ class DbcGenerator:
             unit=signal.unit,
             rx_node_names=",".join(rx_nodes),
             endianness=f"@1",  # TODO: Big endianness
-            signed="+",  # TODO: Signed data
+            signed="-" if signal.signed else "+",
         )
 
     def _attribute_definitions(self) -> str:

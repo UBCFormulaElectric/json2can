@@ -26,6 +26,7 @@ void app_canTx_init()
     app_canTx_JCT_status_contactorsClosed_set(CANSIG_JCT_status_contactorsClosed_START_VAL);
     app_canTx_JCT_status_current_set(CANSIG_JCT_status_current_START_VAL);
     app_canTx_JCT_status_voltage_set(CANSIG_JCT_status_voltage_START_VAL);
+    app_canTx_JCT_status_unsigned_tester_set(CANSIG_JCT_status_unsigned_tester_START_VAL);
 }
 
 void app_canTx_JCT_vitals_heartbeat_set(bool value)
@@ -80,6 +81,12 @@ void app_canTx_JCT_status_voltage_set(float value)
     tx_table.JCT_status_signals.voltage_value = tmp > CANSIG_JCT_status_voltage_MAX ? CANSIG_JCT_status_voltage_MAX : tmp;
 }
 
+void app_canTx_JCT_status_unsigned_tester_set(int value)
+{
+    const int tmp = value < CANSIG_JCT_status_unsigned_tester_MIN ? CANSIG_JCT_status_unsigned_tester_MIN : value;
+    tx_table.JCT_status_signals.unsigned_tester_value = tmp > CANSIG_JCT_status_unsigned_tester_MAX ? CANSIG_JCT_status_unsigned_tester_MAX : tmp;
+}
+
 bool app_canTx_JCT_vitals_heartbeat_get()
 {
     return tx_table.JCT_vitals_signals.heartbeat_value;
@@ -128,6 +135,11 @@ float app_canTx_JCT_status_current_get()
 float app_canTx_JCT_status_voltage_get()
 {
     return tx_table.JCT_status_signals.voltage_value;
+}
+
+int app_canTx_JCT_status_unsigned_tester_get()
+{
+    return tx_table.JCT_status_signals.unsigned_tester_value;
 }
 
 const JCT_vitals_Signals* app_canTx_JCT_vitals_getData()
