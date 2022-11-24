@@ -220,9 +220,7 @@ class AppCanUtilsModule(CModule):
                 comment=f"Signals in CAN msg {msg.name}.",
             )
             for signal in msg.signals:
-                signal_comment = f"""\
-Description: {signal.description}
-Range: {signal.min_val}{signal.unit} to {signal.max_val}{signal.unit}"""
+                signal_comment = f"Range: {signal.min_val}{signal.unit} to {signal.max_val}{signal.unit}"
                 struct.add_member(
                     CVar(
                         CVarsCfg.SIGNAL_VALUE.format(signal=signal.name),

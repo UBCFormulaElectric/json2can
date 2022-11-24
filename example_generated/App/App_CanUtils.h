@@ -1,5 +1,5 @@
 /**
- * @note This file is auto-generated. !!! Do not modify !!!
+ * @note This file is auto-generated. Do not modify!
  */
 // clang-format off
 
@@ -226,12 +226,10 @@ typedef enum
 typedef struct
 {
     /**
-     * Description: N/A
      * Range: 0 to 1
      */
     bool heartbeat_value;
     /**
-     * Description: N/A
      * Range: 0 to 4294967295
      */
     uint32_t timestamp_value;
@@ -243,17 +241,14 @@ typedef struct
 typedef struct
 {
     /**
-     * Description: N/A
      * Range: 0 to 1
      */
     bool watchdogTimeout_value;
     /**
-     * Description: N/A
      * Range: 0 to 1
      */
     bool boardOvertemp_value;
     /**
-     * Description: N/A
      * Range: 0 to 1
      */
     bool boardOvervoltage_value;
@@ -265,7 +260,6 @@ typedef struct
 typedef struct
 {
     /**
-     * Description: N/A
      * Range: 0 to 1
      */
     bool dummyAirShutdown_value;
@@ -277,7 +271,6 @@ typedef struct
 typedef struct
 {
     /**
-     * Description: N/A
      * Range: 0 to 1
      */
     bool dummyMotorShutdown_value;
@@ -289,22 +282,18 @@ typedef struct
 typedef struct
 {
     /**
-     * Description: N/A
      * Range: 0 to 2
      */
     AirState contactorsClosed_value;
     /**
-     * Description: N/A
      * Range: 0A to 100A
      */
     float current_value;
     /**
-     * Description: N/A
      * Range: 0V to 500V
      */
     float voltage_value;
     /**
-     * Description: N/A
      * Range: -2047V to 2046V
      */
     int unsigned_tester_value;
@@ -316,7 +305,6 @@ typedef struct
 typedef struct
 {
     /**
-     * Description: N/A
      * Range: 0 to 7
      */
     JCT_Alert JCT_AlertSet_value;
@@ -328,7 +316,6 @@ typedef struct
 typedef struct
 {
     /**
-     * Description: N/A
      * Range: 0 to 7
      */
     JCT_Alert JCT_AlertCleared_value;
@@ -340,12 +327,10 @@ typedef struct
 typedef struct
 {
     /**
-     * Description: N/A
      * Range: 0% to 100%
      */
     float pappsMappedPedalPercentage_value;
     /**
-     * Description: N/A
      * Range: 0% to 100%
      */
     float sappsMappedPedalPercentage_value;
@@ -357,82 +342,66 @@ typedef struct
 typedef struct
 {
     /**
-     * Description: N/A
      * Range: 0 to 1
      */
     bool pappsOutOfRange_value;
     /**
-     * Description: N/A
      * Range: 0 to 1
      */
     bool sappsOutOfRange_value;
     /**
-     * Description: N/A
      * Range: 0 to 1
      */
     bool stackWatermarkAboveThresholdTask1Hz_value;
     /**
-     * Description: N/A
      * Range: 0 to 1
      */
     bool stackWatermarkAboveThresholdTask1kHz_value;
     /**
-     * Description: N/A
      * Range: 0 to 1
      */
     bool stackWatermarkAboveThresholdTaskCanRx_value;
     /**
-     * Description: N/A
      * Range: 0 to 1
      */
     bool stackWatermarkAboveThresholdTaskCanTx_value;
     /**
-     * Description: N/A
      * Range: 0 to 1
      */
     bool watchdogFault_value;
     /**
-     * Description: N/A
      * Range: 0 to 1
      */
     bool bspdFault_value;
     /**
-     * Description: N/A
      * Range: 0 to 3
      */
     uint32_t leftWheelSpeedOutOfRange_value;
     /**
-     * Description: N/A
      * Range: 0 to 3
      */
     uint32_t rightWheelSpeedOutOfRange_value;
     /**
-     * Description: N/A
      * Range: 0 to 3
      */
     uint32_t flowRateOutOfRange_value;
     /**
-     * Description: N/A
      * Range: 0 to 3
      */
     uint32_t steeringAngleOutOfRange_value;
     /**
-     * Description: N/A
      * Range: 0 to 3
      */
     uint32_t brakePressureOutOfRange_value;
     /**
-     * Description: N/A
      * Range: 0 to 1
      */
     bool brakePressureSc_value;
     /**
-     * Description: N/A
      * Range: 0 to 1
      */
     bool brakePressureOc_value;
     /**
-     * Description: N/A
      * Range: 0 to 1
      */
     bool steeringWheelBroke_value;

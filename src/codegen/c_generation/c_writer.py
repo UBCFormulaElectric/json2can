@@ -12,7 +12,7 @@ from .c_config import *
 INDENT_4_SPACES = "    "
 PREAMBLE = """\
 /**
- * @note This file is auto-generated. !!! Do not modify !!!
+ * @note This file is auto-generated. Do not modify!
  */
 // clang-format off"""
 
