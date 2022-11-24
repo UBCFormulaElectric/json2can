@@ -140,7 +140,7 @@ class CanMessage:
     description: str  # Message description
     cycle_time: Union[
         int, None
-    ]  # Interval that this message should be transmitted at, if periodic. None if not periodic.
+    ]  # Interval that this message should be transmitted at, if periodic. None if aperiodic.
     signals: List[CanSignal]  # All signals that make up this message
     tx_node: str  # The node that transmits this message
     rx_nodes: List[str]  # All nodes which receive this message

@@ -18,6 +18,8 @@
 #define CANMSG_JCT_AIR_SHUTDOWN_ERRORS_ID (603)
 #define CANMSG_JCT_MOTOR_SHUTDOWN_ERRORS_ID (604)
 #define CANMSG_JCT_STATUS_ID (608)
+#define CANMSG_JCT_ALERT_SET_ID (40)
+#define CANMSG_JCT_ALERT_CLEARED_ID (41)
 #define CANMSG_FSM_APPS_ID (151)
 #define CANMSG_FSM_NONCRITICAL_ERRORS_ID (300)
 
@@ -27,6 +29,8 @@
 #define CANMSG_JCT_AIR_SHUTDOWN_ERRORS_DLC (1)
 #define CANMSG_JCT_MOTOR_SHUTDOWN_ERRORS_DLC (1)
 #define CANMSG_JCT_STATUS_DLC (5)
+#define CANMSG_JCT_ALERT_SET_DLC (1)
+#define CANMSG_JCT_ALERT_CLEARED_DLC (1)
 
 // Periodic msg cycle times (in MS)
 #define CANMSG_JCT_VITALS_CYCLE_TIME_MS (1000)
@@ -46,6 +50,8 @@
 #define CANSIG_JCT_STATUS_CURRENT_START_VAL (50) // A
 #define CANSIG_JCT_STATUS_VOLTAGE_START_VAL (0) // V
 #define CANSIG_JCT_STATUS_UNSIGNED_TESTER_START_VAL (0) // V
+#define CANSIG_JCT_ALERT_SET_JCT_ALERT_SET_START_VAL (0)
+#define CANSIG_JCT_ALERT_CLEARED_JCT_ALERT_CLEARED_START_VAL (0)
 #define CANSIG_FSM_APPS_PAPPS_MAPPED_PEDAL_PERCENTAGE_START_VAL (0) // %
 #define CANSIG_FSM_APPS_SAPPS_MAPPED_PEDAL_PERCENTAGE_START_VAL (0) // %
 #define CANSIG_FSM_NONCRITICAL_ERRORS_PAPPS_OUT_OF_RANGE_START_VAL (0)
@@ -66,7 +72,7 @@
 #define CANSIG_FSM_NONCRITICAL_ERRORS_STEERING_WHEEL_BROKE_START_VAL (0)
 
 // Scale/offset values for encoding/decoding signals
-#define CANSIG_JCT_VITALS_HEARTBEAT_SCALE (1.0)
+#define CANSIG_JCT_VITALS_HEARTBEAT_SCALE (1.0f)
 #define CANSIG_JCT_VITALS_HEARTBEAT_OFFSET (0)
 #define CANSIG_JCT_VITALS_TIMESTAMP_SCALE (1)
 #define CANSIG_JCT_VITALS_TIMESTAMP_OFFSET (0)
@@ -82,15 +88,19 @@
 #define CANSIG_JCT_MOTOR_SHUTDOWN_ERRORS_DUMMY_MOTOR_SHUTDOWN_OFFSET (0)
 #define CANSIG_JCT_STATUS_CONTACTORS_CLOSED_SCALE (1)
 #define CANSIG_JCT_STATUS_CONTACTORS_CLOSED_OFFSET (0)
-#define CANSIG_JCT_STATUS_CURRENT_SCALE (0.02442002442002442)
+#define CANSIG_JCT_STATUS_CURRENT_SCALE (0.02442002442002442f)
 #define CANSIG_JCT_STATUS_CURRENT_OFFSET (0)
-#define CANSIG_JCT_STATUS_VOLTAGE_SCALE (0.1221001221001221)
+#define CANSIG_JCT_STATUS_VOLTAGE_SCALE (0.1221001221001221f)
 #define CANSIG_JCT_STATUS_VOLTAGE_OFFSET (0)
 #define CANSIG_JCT_STATUS_UNSIGNED_TESTER_SCALE (1)
 #define CANSIG_JCT_STATUS_UNSIGNED_TESTER_OFFSET (0)
-#define CANSIG_FSM_APPS_PAPPS_MAPPED_PEDAL_PERCENTAGE_SCALE (2.3283064370807974e-08)
+#define CANSIG_JCT_ALERT_SET_JCT_ALERT_SET_SCALE (1)
+#define CANSIG_JCT_ALERT_SET_JCT_ALERT_SET_OFFSET (0)
+#define CANSIG_JCT_ALERT_CLEARED_JCT_ALERT_CLEARED_SCALE (1)
+#define CANSIG_JCT_ALERT_CLEARED_JCT_ALERT_CLEARED_OFFSET (0)
+#define CANSIG_FSM_APPS_PAPPS_MAPPED_PEDAL_PERCENTAGE_SCALE (2.3283064370807974e-08f)
 #define CANSIG_FSM_APPS_PAPPS_MAPPED_PEDAL_PERCENTAGE_OFFSET (0)
-#define CANSIG_FSM_APPS_SAPPS_MAPPED_PEDAL_PERCENTAGE_SCALE (2.3283064370807974e-08)
+#define CANSIG_FSM_APPS_SAPPS_MAPPED_PEDAL_PERCENTAGE_SCALE (2.3283064370807974e-08f)
 #define CANSIG_FSM_APPS_SAPPS_MAPPED_PEDAL_PERCENTAGE_OFFSET (0)
 #define CANSIG_FSM_NONCRITICAL_ERRORS_PAPPS_OUT_OF_RANGE_SCALE (1)
 #define CANSIG_FSM_NONCRITICAL_ERRORS_PAPPS_OUT_OF_RANGE_OFFSET (0)
@@ -141,13 +151,17 @@
 #define CANSIG_JCT_MOTOR_SHUTDOWN_ERRORS_DUMMY_MOTOR_SHUTDOWN_MIN (0)
 #define CANSIG_JCT_MOTOR_SHUTDOWN_ERRORS_DUMMY_MOTOR_SHUTDOWN_MAX (1)
 #define CANSIG_JCT_STATUS_CONTACTORS_CLOSED_MIN (0)
-#define CANSIG_JCT_STATUS_CONTACTORS_CLOSED_MAX (1)
+#define CANSIG_JCT_STATUS_CONTACTORS_CLOSED_MAX (2)
 #define CANSIG_JCT_STATUS_CURRENT_MIN (0) // A
 #define CANSIG_JCT_STATUS_CURRENT_MAX (100) // A
 #define CANSIG_JCT_STATUS_VOLTAGE_MIN (0) // V
 #define CANSIG_JCT_STATUS_VOLTAGE_MAX (500) // V
 #define CANSIG_JCT_STATUS_UNSIGNED_TESTER_MIN (-2047) // V
 #define CANSIG_JCT_STATUS_UNSIGNED_TESTER_MAX (2046) // V
+#define CANSIG_JCT_ALERT_SET_JCT_ALERT_SET_MIN (0)
+#define CANSIG_JCT_ALERT_SET_JCT_ALERT_SET_MAX (7)
+#define CANSIG_JCT_ALERT_CLEARED_JCT_ALERT_CLEARED_MIN (0)
+#define CANSIG_JCT_ALERT_CLEARED_JCT_ALERT_CLEARED_MAX (7)
 #define CANSIG_FSM_APPS_PAPPS_MAPPED_PEDAL_PERCENTAGE_MIN (0) // %
 #define CANSIG_FSM_APPS_PAPPS_MAPPED_PEDAL_PERCENTAGE_MAX (100) // %
 #define CANSIG_FSM_APPS_SAPPS_MAPPED_PEDAL_PERCENTAGE_MIN (0) // %
@@ -192,7 +206,16 @@ typedef enum
 {
     AIR_OPEN = 0,
     AIR_CLOSED = 1,
+    NUM_AIR_STATE_CHOICES = 2,
 } AirState;
+
+typedef enum
+{
+    JCT_OVERTEMP = 0,
+    JCT_UNDERTEMP = 1,
+    JCT_GO_TO_INIT = 2,
+    NUM_JCT_ALERTS = 3,
+} JCT_Alert;
 
 
 /* ------------------------------- Structs -------------------------------- */
@@ -267,7 +290,7 @@ typedef struct
 {
     /**
      * Description: N/A
-     * Range: 0 to 1
+     * Range: 0 to 2
      */
     AirState contactorsClosed_value;
     /**
@@ -286,6 +309,30 @@ typedef struct
      */
     int unsigned_tester_value;
 } JCT_status_Signals;
+
+/**
+ * Signals in CAN msg JCT_AlertSet.
+ */
+typedef struct
+{
+    /**
+     * Description: N/A
+     * Range: 0 to 7
+     */
+    JCT_Alert JCT_AlertSet_value;
+} JCT_AlertSet_Signals;
+
+/**
+ * Signals in CAN msg JCT_AlertCleared.
+ */
+typedef struct
+{
+    /**
+     * Description: N/A
+     * Range: 0 to 7
+     */
+    JCT_Alert JCT_AlertCleared_value;
+} JCT_AlertCleared_Signals;
 
 /**
  * Signals in CAN msg FSM_apps.
@@ -397,35 +444,45 @@ typedef struct
 /**
  * Pack signals into CAN payload for JCT_vitals.
  */
-void app_canUtils_JCT_vitals_pack(const JCT_vitals_Signals* const in_msg, uint8_t* const out_data);
+void App_CanUtils_JCT_vitals_Pack(const JCT_vitals_Signals* const in_msg, uint8_t* const out_data);
 
 /**
  * Pack signals into CAN payload for JCT_noncriticalErrors.
  */
-void app_canUtils_JCT_noncriticalErrors_pack(const JCT_noncriticalErrors_Signals* const in_msg, uint8_t* const out_data);
+void App_CanUtils_JCT_noncriticalErrors_Pack(const JCT_noncriticalErrors_Signals* const in_msg, uint8_t* const out_data);
 
 /**
  * Pack signals into CAN payload for JCT_AIRShutdownErrors.
  */
-void app_canUtils_JCT_AIRShutdownErrors_pack(const JCT_AIRShutdownErrors_Signals* const in_msg, uint8_t* const out_data);
+void App_CanUtils_JCT_AIRShutdownErrors_Pack(const JCT_AIRShutdownErrors_Signals* const in_msg, uint8_t* const out_data);
 
 /**
  * Pack signals into CAN payload for JCT_motorShutdownErrors.
  */
-void app_canUtils_JCT_motorShutdownErrors_pack(const JCT_motorShutdownErrors_Signals* const in_msg, uint8_t* const out_data);
+void App_CanUtils_JCT_motorShutdownErrors_Pack(const JCT_motorShutdownErrors_Signals* const in_msg, uint8_t* const out_data);
 
 /**
  * Pack signals into CAN payload for JCT_status.
  */
-void app_canUtils_JCT_status_pack(const JCT_status_Signals* const in_msg, uint8_t* const out_data);
+void App_CanUtils_JCT_status_Pack(const JCT_status_Signals* const in_msg, uint8_t* const out_data);
+
+/**
+ * Pack signals into CAN payload for JCT_AlertSet.
+ */
+void App_CanUtils_JCT_AlertSet_Pack(const JCT_AlertSet_Signals* const in_msg, uint8_t* const out_data);
+
+/**
+ * Pack signals into CAN payload for JCT_AlertCleared.
+ */
+void App_CanUtils_JCT_AlertCleared_Pack(const JCT_AlertCleared_Signals* const in_msg, uint8_t* const out_data);
 
 /**
  * Unpack signals from CAN payload for FSM_apps.
  */
-void app_canUtils_FSM_apps_unpack(const uint8_t* const in_data, FSM_apps_Signals* const out_msg);
+void App_CanUtils_FSM_apps_Unpack(const uint8_t* const in_data, FSM_apps_Signals* const out_msg);
 
 /**
  * Unpack signals from CAN payload for FSM_noncriticalErrors.
  */
-void app_canUtils_FSM_noncriticalErrors_unpack(const uint8_t* const in_data, FSM_noncriticalErrors_Signals* const out_msg);
+void App_CanUtils_FSM_noncriticalErrors_Unpack(const uint8_t* const in_data, FSM_noncriticalErrors_Signals* const out_msg);
 

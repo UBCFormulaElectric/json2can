@@ -121,7 +121,7 @@ class AppCanUtilsModule(CModule):
                         msg=pascal_to_screaming_snake_case(msg.name),
                         signal=pascal_to_screaming_snake_case(signal.name),
                     ),
-                    signal.start_val,
+                    str(CLiteral(signal.start_val)),
                     comment=signal.unit,
                 )
         cw.add_line()
@@ -135,14 +135,14 @@ class AppCanUtilsModule(CModule):
                         msg=pascal_to_screaming_snake_case(msg.name),
                         signal=pascal_to_screaming_snake_case(signal.name),
                     ),
-                    signal.scale,
+                    str(CLiteral(signal.scale)),
                 )
                 cw.add_macro(
                     CMacrosCfgs.OFFSET.format(
                         msg=pascal_to_screaming_snake_case(msg.name),
                         signal=pascal_to_screaming_snake_case(signal.name),
                     ),
-                    signal.offset,
+                    str(CLiteral(signal.offset)),
                 )
         cw.add_line()
 
@@ -155,7 +155,7 @@ class AppCanUtilsModule(CModule):
                         msg=pascal_to_screaming_snake_case(msg.name),
                         signal=pascal_to_screaming_snake_case(signal.name),
                     ),
-                    signal.min_val,
+                    str(CLiteral(signal.min_val)),
                     comment=signal.unit,
                 )
                 cw.add_macro(
@@ -163,7 +163,7 @@ class AppCanUtilsModule(CModule):
                         msg=pascal_to_screaming_snake_case(msg.name),
                         signal=pascal_to_screaming_snake_case(signal.name),
                     ),
-                    signal.max_val,
+                    str(CLiteral(signal.max_val)),
                     comment=signal.unit,
                 )
         cw.add_line()
@@ -394,7 +394,7 @@ def pack_signal_code(signal: CanSignal, msg: CanMessage):
     scale_macro = CMacrosCfgs.SCALE.format(msg=msg.name, signal=signal.name)
     offset_macro = CMacrosCfgs.OFFSET.format(msg=msg.name, signal=signal.name)
     cw.add_line(
-        f"const uint32_t {signal_raw_var_name} = {ENCODE_MACRO}({signal_val_var_name}, {scale_macro}, {offset_macro}, {signal.datatype()});"
+        f"const uint32_t {signal_raw_var_name} = {ENCODE_MACRO}({signal_val_var_name}, {scale_macro}, {offset_macro}, {signal.representation()});"
     )
 
     while packed_bits < signal.bits:

@@ -19,42 +19,42 @@
 /**
  * Pack and send the  TX msg JCT_vitals.
  */
-static void app_canTx_JCT_vitals_send1Hz();
+static void App_CanTx_JCT_vitals_Send1Hz();
 
 /**
  * Pack and send the  TX msg JCT_AIRShutdownErrors.
  */
-static void app_canTx_JCT_AIRShutdownErrors_send1Hz();
+static void App_CanTx_JCT_AIRShutdownErrors_Send1Hz();
 
 /**
  * Pack and send the  TX msg JCT_motorShutdownErrors.
  */
-static void app_canTx_JCT_motorShutdownErrors_send1Hz();
+static void App_CanTx_JCT_motorShutdownErrors_Send1Hz();
 
 /**
  * Pack and send the  TX msg JCT_status.
  */
-static void app_canTx_JCT_status_send1Hz();
+static void App_CanTx_JCT_status_Send1Hz();
 
 /* --------------------- Public Function Definitions ---------------------- */
 
-void io_canTx_enqueue100HzMsgs()
+void Io_CanTx_Enqueue100HzMsgs()
 {
 }
 
-void io_canTx_enqueue10HzMsgs()
+void Io_CanTx_Enqueue10HzMsgs()
 {
 }
 
-void io_canTx_enqueue1HzMsgs()
+void Io_CanTx_Enqueue1HzMsgs()
 {
-    app_canTx_JCT_vitals_send1Hz();
-    app_canTx_JCT_AIRShutdownErrors_send1Hz();
-    app_canTx_JCT_motorShutdownErrors_send1Hz();
-    app_canTx_JCT_status_send1Hz();
+    App_CanTx_JCT_vitals_Send1Hz();
+    App_CanTx_JCT_AIRShutdownErrors_Send1Hz();
+    App_CanTx_JCT_motorShutdownErrors_Send1Hz();
+    App_CanTx_JCT_status_Send1Hz();
 }
 
-void app_canTx_JCT_noncriticalErrors_sendAperiodic()
+void App_CanTx_JCT_noncriticalErrors_SendAperiodic()
 {
     // Prepare msg header
     struct CanMsg tx_msg;
@@ -63,7 +63,39 @@ void app_canTx_JCT_noncriticalErrors_sendAperiodic()
     
     // Prepare CAN msg payload (The packing function isn't thread-safe so we must guard it)
     vPortEnterCritical();
-    app_canUtils_JCT_noncriticalErrors_pack(app_canTx_JCT_noncriticalErrors_getData(), tx_msg.data);
+    App_CanUtils_JCT_noncriticalErrors_Pack(App_CanTx_JCT_noncriticalErrors_GetData(), tx_msg.data);
+    vPortExitCritical();
+    
+    // Enqueue msg in TX FIFO
+    Io_SharedCan_TxMessageQueueSendtoBack(&tx_msg);
+}
+
+void App_CanTx_JCT_AlertSet_SendAperiodic()
+{
+    // Prepare msg header
+    struct CanMsg tx_msg;
+    tx_msg.std_id = CANMSG_JCT_AlertSet_ID;
+    tx_msg.dlc = CANMSG_JCT_AlertSet_DLC;
+    
+    // Prepare CAN msg payload (The packing function isn't thread-safe so we must guard it)
+    vPortEnterCritical();
+    App_CanUtils_JCT_AlertSet_Pack(App_CanTx_JCT_AlertSet_GetData(), tx_msg.data);
+    vPortExitCritical();
+    
+    // Enqueue msg in TX FIFO
+    Io_SharedCan_TxMessageQueueSendtoBack(&tx_msg);
+}
+
+void App_CanTx_JCT_AlertCleared_SendAperiodic()
+{
+    // Prepare msg header
+    struct CanMsg tx_msg;
+    tx_msg.std_id = CANMSG_JCT_AlertCleared_ID;
+    tx_msg.dlc = CANMSG_JCT_AlertCleared_DLC;
+    
+    // Prepare CAN msg payload (The packing function isn't thread-safe so we must guard it)
+    vPortEnterCritical();
+    App_CanUtils_JCT_AlertCleared_Pack(App_CanTx_JCT_AlertCleared_GetData(), tx_msg.data);
     vPortExitCritical();
     
     // Enqueue msg in TX FIFO
@@ -72,7 +104,7 @@ void app_canTx_JCT_noncriticalErrors_sendAperiodic()
 
 /* --------------------- Static Function Definitions ---------------------- */
 
-static void app_canTx_JCT_vitals_send1Hz()
+static void App_CanTx_JCT_vitals_Send1Hz()
 {
     // Prepare msg header
     struct CanMsg tx_msg;
@@ -81,14 +113,14 @@ static void app_canTx_JCT_vitals_send1Hz()
     
     // Prepare CAN msg payload (The packing function isn't thread-safe so we must guard it)
     vPortEnterCritical();
-    app_canUtils_JCT_vitals_pack(app_canTx_JCT_vitals_getData(), tx_msg.data);
+    App_CanUtils_JCT_vitals_Pack(App_CanTx_JCT_vitals_GetData(), tx_msg.data);
     vPortExitCritical();
     
     // Enqueue msg in TX FIFO
     Io_SharedCan_TxMessageQueueSendtoBack(&tx_msg);
 }
 
-static void app_canTx_JCT_AIRShutdownErrors_send1Hz()
+static void App_CanTx_JCT_AIRShutdownErrors_Send1Hz()
 {
     // Prepare msg header
     struct CanMsg tx_msg;
@@ -97,14 +129,14 @@ static void app_canTx_JCT_AIRShutdownErrors_send1Hz()
     
     // Prepare CAN msg payload (The packing function isn't thread-safe so we must guard it)
     vPortEnterCritical();
-    app_canUtils_JCT_AIRShutdownErrors_pack(app_canTx_JCT_AIRShutdownErrors_getData(), tx_msg.data);
+    App_CanUtils_JCT_AIRShutdownErrors_Pack(App_CanTx_JCT_AIRShutdownErrors_GetData(), tx_msg.data);
     vPortExitCritical();
     
     // Enqueue msg in TX FIFO
     Io_SharedCan_TxMessageQueueSendtoBack(&tx_msg);
 }
 
-static void app_canTx_JCT_motorShutdownErrors_send1Hz()
+static void App_CanTx_JCT_motorShutdownErrors_Send1Hz()
 {
     // Prepare msg header
     struct CanMsg tx_msg;
@@ -113,14 +145,14 @@ static void app_canTx_JCT_motorShutdownErrors_send1Hz()
     
     // Prepare CAN msg payload (The packing function isn't thread-safe so we must guard it)
     vPortEnterCritical();
-    app_canUtils_JCT_motorShutdownErrors_pack(app_canTx_JCT_motorShutdownErrors_getData(), tx_msg.data);
+    App_CanUtils_JCT_motorShutdownErrors_Pack(App_CanTx_JCT_motorShutdownErrors_GetData(), tx_msg.data);
     vPortExitCritical();
     
     // Enqueue msg in TX FIFO
     Io_SharedCan_TxMessageQueueSendtoBack(&tx_msg);
 }
 
-static void app_canTx_JCT_status_send1Hz()
+static void App_CanTx_JCT_status_Send1Hz()
 {
     // Prepare msg header
     struct CanMsg tx_msg;
@@ -129,7 +161,7 @@ static void app_canTx_JCT_status_send1Hz()
     
     // Prepare CAN msg payload (The packing function isn't thread-safe so we must guard it)
     vPortEnterCritical();
-    app_canUtils_JCT_status_pack(app_canTx_JCT_status_getData(), tx_msg.data);
+    App_CanUtils_JCT_status_Pack(App_CanTx_JCT_status_GetData(), tx_msg.data);
     vPortExitCritical();
     
     // Enqueue msg in TX FIFO

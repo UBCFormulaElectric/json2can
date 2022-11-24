@@ -6,8 +6,8 @@ from typing import Dict, Tuple
 import json
 from math import ceil
 from ..can_database import *
-from .schema_validation import validate_bus_json, validate_enum_json, validate_tx_json
-from ..utils import max_uint_for_bits
+from .schema_validation import validate_bus_json, validate_enum_json, validate_tx_json, validate_alerts_json
+from ..utils import max_uint_for_bits, pascal_to_screaming_snake_case
 
 
 class InvalidCanJson(Exception):
@@ -87,9 +87,10 @@ class JsonCanParser:
             )
             self._enums[enum_name] = can_enum
 
-        # Parse node"s tx and enum JSON
+        # Parse node's tx, alerts, and enum JSON
         self._nodes = [f.name for f in os.scandir(dir) if f.is_dir()]
         for node in self._nodes:
+            # Parse JSON files
             raw_node_tx_json_data = self._get_raw_json_data_from_file(
                 f"{dir}/{node}/{node}_tx"
             )
@@ -100,7 +101,12 @@ class JsonCanParser:
             )
             node_enum_json_data = validate_enum_json(raw_node_enum_json_data)
 
-            # Parse node"s enums
+            raw_node_alerts_json_data = self._get_raw_json_data_from_file(
+                f"{dir}/{node}/{node}_alerts"
+            )
+            node_alerts_json_data = validate_alerts_json(raw_node_alerts_json_data)
+
+            # Parse node's enums
             for enum_name, enum_data in node_enum_json_data.items():
                 # Check if this enum name is a duplicate
                 if enum_name in self._enums:
@@ -113,7 +119,7 @@ class JsonCanParser:
                 )
                 self._enums[enum_name] = can_enum
 
-            # Parse node"s tx messages
+            # Parse node's tx messages
             for tx_msg_name, msg_data in node_tx_json_data.items():
                 # Check if this message name is a duplicate
                 if tx_msg_name in self._messages:
@@ -126,7 +132,13 @@ class JsonCanParser:
                 )
                 self._messages[tx_msg_name] = can_msg
 
-        # Parse node"s RX JSON (have to do this last so all messages on this bus are already found, from TX JSON)
+            # Parse node's alerts
+            if(len(node_alerts_json_data) > 0):
+                alert_set_msg, alert_cleared_msg = self._parse_node_alerts(node, node_alerts_json_data)
+                self._messages[alert_set_msg.name] = alert_set_msg
+                self._messages[alert_cleared_msg.name] = alert_cleared_msg
+
+        # Parse node's RX JSON (have to do this last so all messages on this bus are already found, from TX JSON)
         for node in self._nodes:
             node_rx_json_data = self._get_raw_json_data_from_file(
                 f"{dir}/{node}/{node}_rx"
@@ -181,7 +193,7 @@ class JsonCanParser:
                     f"Signal '{signal.name}' in '{msg_name}' must specify a start bit positions, because other signals in this message have specified start bits."
                 )
 
-            # Mark a signal"s bits as occupied, by inserting the signal"s name
+            # Mark a signal's bits as occupied, by inserting the signal's name
             for idx in range(signal.start_bit, signal.start_bit + signal.bits):
                 if idx < 0 or idx > 63:
                     raise InvalidCanJson(
@@ -336,12 +348,100 @@ class JsonCanParser:
                 )
 
             items.append(CanEnumItem(name=name, value=value))
+        
+        items.append(CanEnumItem(
+            name=f"NUM_{pascal_to_screaming_snake_case(enum_name)}_CHOICES",
+            value=len(items)
+        ))
 
         if 0 not in {item.value for item in items}:
             raise InvalidCanJson(f"Enum '{enum_name}' must start at 0.")
 
         return CanEnum(name=enum_name, items=items)
 
+    def _parse_node_alerts(self, node: str, alerts_json: Dict) -> None:
+        """
+        Parse JSON data dictionary representing a node's alerts, and return the 
+        created set and cleared CAN messages.
+        """
+        alerts = alerts_json["alerts"]
+        # Number of alerts can't exceed 64
+        if len(alerts) > 64:
+            raise InvalidCanJson(
+                f"Number of alerts for node '{node}' cannot exceed 64."
+            )
+
+        # Make enum for the alerts
+        alerts_enum = CanEnum(
+            name=f"{node}_Alert",
+            items=[CanEnumItem(alert, idx) for idx, alert in enumerate(alerts)]
+        )
+        alerts_enum.items.append(CanEnumItem(f"NUM_{node}_ALERTS", len(alerts)))
+
+        set_signal = CanSignal(
+            f"{node}_AlertSet",
+            start_bit=0,
+            bits=len(alerts),
+            scale=1,
+            offset=0,
+            min_val=0,
+            max_val=max_uint_for_bits(len(alerts)),
+            start_val=0,
+            enum=alerts_enum,
+            unit="",
+            signed=False,
+        )   
+        cleared_signal = CanSignal(
+            f"{node}_AlertCleared",
+            start_bit=0,
+            bits=len(alerts),
+            scale=1,
+            offset=0,
+            min_val=0,
+            max_val=max_uint_for_bits(len(alerts)),
+            start_val=0,
+            enum=alerts_enum,
+            unit="",
+            signed=False,
+        )
+
+        # Check if alert message ID is unique
+        set_id = alerts_json["alert_set_msg_id"]
+        cleared_id = alerts_json["alert_cleared_msg_id"]
+        if set_id in {msg.id for msg in self._messages.values()} or cleared_id in {msg.id for msg in self._messages.values()}:
+            raise InvalidCanJson(
+                f"ID for alerts message transmitted by '{node}' is a duplicate, messages must have unique IDs."
+            )
+        
+        # Check if message name is unique
+        set_msg_name = f"{node}_AlertSet"
+        cleared_msg_name = f"{node}_AlertCleared"
+        if set_msg_name in self._messages or cleared_msg_name in self._messages:
+            raise InvalidCanJson(
+                f"Name for alerts message transmitted by '{node}' is a duplicate, messages must have unique names."
+            )
+
+        set_msg = CanMessage(
+            name=set_msg_name,
+            id=set_id,
+            description=f"Bitmask of aperiodic alerts set for the {node}",
+            cycle_time=None,
+            signals=[set_signal],
+            tx_node=node,
+            rx_nodes=[self._bus_cfg.default_receiver]
+        )
+        cleared_msg = CanMessage(
+            name=cleared_msg_name,
+            id=cleared_id,
+            description=f"Bitmask of aperiodic alerts set for the {node}",
+            cycle_time=None,
+            signals=[cleared_signal],
+            tx_node=node,
+            rx_nodes=[self._bus_cfg.default_receiver]
+        )
+
+        return set_msg, cleared_msg
+        
     def _get_raw_json_data_from_file(self, file_path: str) -> Dict:
         """
         Load an individual JSON file from specified path.

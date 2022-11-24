@@ -55,14 +55,14 @@ static uint32_t unpackShiftRight(uint8_t input, uint8_t shift, uint8_t mask)
 
 /* ------------------------- Function Definitions ------------------------- */
 
-void app_canUtils_JCT_vitals_pack(const JCT_vitals_Signals* const in_msg, uint8_t* const out_data)
+void App_CanUtils_JCT_vitals_Pack(const JCT_vitals_Signals* const in_msg, uint8_t* const out_data)
 {
     // Pack 5-byte payload for message JCT_vitals.
     // |xxxxxxxx|xxxxxxxx|xxxxxxxx|_______B|BBBBBBBB|BBBBBBBB|BBBBBBBB|BBBBBBBA|
     
     // Pack 1-bit signal heartbeat into payload (at bit 0 to bit 1).
     const bool heartbeat_val = in_msg->heartbeat_value;
-    const uint32_t heartbeat_raw = ENCODE_SIGNAL(heartbeat_val, CANSIG_JCT_vitals_heartbeat_SCALE, CANSIG_JCT_vitals_heartbeat_OFFSET, bool);
+    const uint32_t heartbeat_raw = ENCODE_SIGNAL(heartbeat_val, CANSIG_JCT_vitals_heartbeat_SCALE, CANSIG_JCT_vitals_heartbeat_OFFSET, uint32_t);
     out_data[0] |= packShiftRight(heartbeat_raw, 0, 0x1);   // Packs bits _______# of byte 0
     
     // Pack 32-bit signal timestamp into payload (at bit 1 to bit 33).
@@ -76,84 +76,108 @@ void app_canUtils_JCT_vitals_pack(const JCT_vitals_Signals* const in_msg, uint8_
     
 }
 
-void app_canUtils_JCT_noncriticalErrors_pack(const JCT_noncriticalErrors_Signals* const in_msg, uint8_t* const out_data)
+void App_CanUtils_JCT_noncriticalErrors_Pack(const JCT_noncriticalErrors_Signals* const in_msg, uint8_t* const out_data)
 {
     // Pack 1-byte payload for message JCT_noncriticalErrors.
     // |xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|_____CBA|
     
     // Pack 1-bit signal watchdogTimeout into payload (at bit 0 to bit 1).
     const bool watchdogTimeout_val = in_msg->watchdogTimeout_value;
-    const uint32_t watchdogTimeout_raw = ENCODE_SIGNAL(watchdogTimeout_val, CANSIG_JCT_noncriticalErrors_watchdogTimeout_SCALE, CANSIG_JCT_noncriticalErrors_watchdogTimeout_OFFSET, bool);
+    const uint32_t watchdogTimeout_raw = ENCODE_SIGNAL(watchdogTimeout_val, CANSIG_JCT_noncriticalErrors_watchdogTimeout_SCALE, CANSIG_JCT_noncriticalErrors_watchdogTimeout_OFFSET, uint32_t);
     out_data[0] |= packShiftRight(watchdogTimeout_raw, 0, 0x1);   // Packs bits _______# of byte 0
     
     // Pack 1-bit signal boardOvertemp into payload (at bit 1 to bit 2).
     const bool boardOvertemp_val = in_msg->boardOvertemp_value;
-    const uint32_t boardOvertemp_raw = ENCODE_SIGNAL(boardOvertemp_val, CANSIG_JCT_noncriticalErrors_boardOvertemp_SCALE, CANSIG_JCT_noncriticalErrors_boardOvertemp_OFFSET, bool);
+    const uint32_t boardOvertemp_raw = ENCODE_SIGNAL(boardOvertemp_val, CANSIG_JCT_noncriticalErrors_boardOvertemp_SCALE, CANSIG_JCT_noncriticalErrors_boardOvertemp_OFFSET, uint32_t);
     out_data[0] |= packShiftLeft(boardOvertemp_raw, 1, 0x2);   // Packs bits ______#_ of byte 0
     
     // Pack 1-bit signal boardOvervoltage into payload (at bit 2 to bit 3).
     const bool boardOvervoltage_val = in_msg->boardOvervoltage_value;
-    const uint32_t boardOvervoltage_raw = ENCODE_SIGNAL(boardOvervoltage_val, CANSIG_JCT_noncriticalErrors_boardOvervoltage_SCALE, CANSIG_JCT_noncriticalErrors_boardOvervoltage_OFFSET, bool);
+    const uint32_t boardOvervoltage_raw = ENCODE_SIGNAL(boardOvervoltage_val, CANSIG_JCT_noncriticalErrors_boardOvervoltage_SCALE, CANSIG_JCT_noncriticalErrors_boardOvervoltage_OFFSET, uint32_t);
     out_data[0] |= packShiftLeft(boardOvervoltage_raw, 2, 0x4);   // Packs bits _____#__ of byte 0
     
 }
 
-void app_canUtils_JCT_AIRShutdownErrors_pack(const JCT_AIRShutdownErrors_Signals* const in_msg, uint8_t* const out_data)
+void App_CanUtils_JCT_AIRShutdownErrors_Pack(const JCT_AIRShutdownErrors_Signals* const in_msg, uint8_t* const out_data)
 {
     // Pack 1-byte payload for message JCT_AIRShutdownErrors.
     // |xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|_______A|
     
     // Pack 1-bit signal dummyAirShutdown into payload (at bit 0 to bit 1).
     const bool dummyAirShutdown_val = in_msg->dummyAirShutdown_value;
-    const uint32_t dummyAirShutdown_raw = ENCODE_SIGNAL(dummyAirShutdown_val, CANSIG_JCT_AIRShutdownErrors_dummyAirShutdown_SCALE, CANSIG_JCT_AIRShutdownErrors_dummyAirShutdown_OFFSET, bool);
+    const uint32_t dummyAirShutdown_raw = ENCODE_SIGNAL(dummyAirShutdown_val, CANSIG_JCT_AIRShutdownErrors_dummyAirShutdown_SCALE, CANSIG_JCT_AIRShutdownErrors_dummyAirShutdown_OFFSET, uint32_t);
     out_data[0] |= packShiftRight(dummyAirShutdown_raw, 0, 0x1);   // Packs bits _______# of byte 0
     
 }
 
-void app_canUtils_JCT_motorShutdownErrors_pack(const JCT_motorShutdownErrors_Signals* const in_msg, uint8_t* const out_data)
+void App_CanUtils_JCT_motorShutdownErrors_Pack(const JCT_motorShutdownErrors_Signals* const in_msg, uint8_t* const out_data)
 {
     // Pack 1-byte payload for message JCT_motorShutdownErrors.
     // |xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|_______A|
     
     // Pack 1-bit signal dummyMotorShutdown into payload (at bit 0 to bit 1).
     const bool dummyMotorShutdown_val = in_msg->dummyMotorShutdown_value;
-    const uint32_t dummyMotorShutdown_raw = ENCODE_SIGNAL(dummyMotorShutdown_val, CANSIG_JCT_motorShutdownErrors_dummyMotorShutdown_SCALE, CANSIG_JCT_motorShutdownErrors_dummyMotorShutdown_OFFSET, bool);
+    const uint32_t dummyMotorShutdown_raw = ENCODE_SIGNAL(dummyMotorShutdown_val, CANSIG_JCT_motorShutdownErrors_dummyMotorShutdown_SCALE, CANSIG_JCT_motorShutdownErrors_dummyMotorShutdown_OFFSET, uint32_t);
     out_data[0] |= packShiftRight(dummyMotorShutdown_raw, 0, 0x1);   // Packs bits _______# of byte 0
     
 }
 
-void app_canUtils_JCT_status_pack(const JCT_status_Signals* const in_msg, uint8_t* const out_data)
+void App_CanUtils_JCT_status_Pack(const JCT_status_Signals* const in_msg, uint8_t* const out_data)
 {
     // Pack 5-byte payload for message JCT_status.
-    // |xxxxxxxx|xxxxxxxx|xxxxxxxx|___DDDDD|DDDDDDDC|CCCCCCCC|CCCBBBBB|BBBBBBBA|
+    // |xxxxxxxx|xxxxxxxx|xxxxxxxx|__DDDDDD|DDDDDDCC|CCCCCCCC|CCBBBBBB|BBBBBBAA|
     
-    // Pack 1-bit signal contactorsClosed into payload (at bit 0 to bit 1).
+    // Pack 2-bit signal contactorsClosed into payload (at bit 0 to bit 2).
     const AirState contactorsClosed_val = in_msg->contactorsClosed_value;
-    const uint32_t contactorsClosed_raw = ENCODE_SIGNAL(contactorsClosed_val, CANSIG_JCT_status_contactorsClosed_SCALE, CANSIG_JCT_status_contactorsClosed_OFFSET, AirState);
-    out_data[0] |= packShiftRight(contactorsClosed_raw, 0, 0x1);   // Packs bits _______# of byte 0
+    const uint32_t contactorsClosed_raw = ENCODE_SIGNAL(contactorsClosed_val, CANSIG_JCT_status_contactorsClosed_SCALE, CANSIG_JCT_status_contactorsClosed_OFFSET, uint32_t);
+    out_data[0] |= packShiftRight(contactorsClosed_raw, 0, 0x3);   // Packs bits ______## of byte 0
     
-    // Pack 12-bit signal current into payload (at bit 1 to bit 13).
+    // Pack 12-bit signal current into payload (at bit 2 to bit 14).
     const float current_val = in_msg->current_value;
     const uint32_t current_raw = ENCODE_SIGNAL(current_val, CANSIG_JCT_status_current_SCALE, CANSIG_JCT_status_current_OFFSET, float);
-    out_data[0] |= packShiftLeft(current_raw, 1, 0xfe);   // Packs bits #######_ of byte 0
-    out_data[1] |= packShiftRight(current_raw, 7, 0x1f);   // Packs bits ___##### of byte 1
+    out_data[0] |= packShiftLeft(current_raw, 2, 0xfc);   // Packs bits ######__ of byte 0
+    out_data[1] |= packShiftRight(current_raw, 6, 0x3f);   // Packs bits __###### of byte 1
     
-    // Pack 12-bit signal voltage into payload (at bit 13 to bit 25).
+    // Pack 12-bit signal voltage into payload (at bit 14 to bit 26).
     const float voltage_val = in_msg->voltage_value;
     const uint32_t voltage_raw = ENCODE_SIGNAL(voltage_val, CANSIG_JCT_status_voltage_SCALE, CANSIG_JCT_status_voltage_OFFSET, float);
-    out_data[1] |= packShiftLeft(voltage_raw, 5, 0xe0);   // Packs bits ###_____ of byte 1
-    out_data[2] |= packShiftRight(voltage_raw, 3, 0xff);   // Packs bits ######## of byte 2
-    out_data[3] |= packShiftRight(voltage_raw, 11, 0x1);   // Packs bits _______# of byte 3
+    out_data[1] |= packShiftLeft(voltage_raw, 6, 0xc0);   // Packs bits ##______ of byte 1
+    out_data[2] |= packShiftRight(voltage_raw, 2, 0xff);   // Packs bits ######## of byte 2
+    out_data[3] |= packShiftRight(voltage_raw, 10, 0x3);   // Packs bits ______## of byte 3
     
-    // Pack 12-bit signal unsigned_tester into payload (at bit 25 to bit 37).
+    // Pack 12-bit signal unsigned_tester into payload (at bit 26 to bit 38).
     const int unsigned_tester_val = in_msg->unsigned_tester_value;
     const uint32_t unsigned_tester_raw = ENCODE_SIGNAL(unsigned_tester_val, CANSIG_JCT_status_unsigned_tester_SCALE, CANSIG_JCT_status_unsigned_tester_OFFSET, int);
-    out_data[3] |= packShiftLeft(unsigned_tester_raw, 1, 0xfe);   // Packs bits #######_ of byte 3
-    out_data[4] |= packShiftRight(unsigned_tester_raw, 7, 0x1f);   // Packs bits ___##### of byte 4
+    out_data[3] |= packShiftLeft(unsigned_tester_raw, 2, 0xfc);   // Packs bits ######__ of byte 3
+    out_data[4] |= packShiftRight(unsigned_tester_raw, 6, 0x3f);   // Packs bits __###### of byte 4
     
 }
 
-void app_canUtils_FSM_apps_unpack(const uint8_t* const in_data, FSM_apps_Signals* const out_msg)
+void App_CanUtils_JCT_AlertSet_Pack(const JCT_AlertSet_Signals* const in_msg, uint8_t* const out_data)
+{
+    // Pack 1-byte payload for message JCT_AlertSet.
+    // |xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|_____AAA|
+    
+    // Pack 3-bit signal JCT_AlertSet into payload (at bit 0 to bit 3).
+    const JCT_Alert JCT_AlertSet_val = in_msg->JCT_AlertSet_value;
+    const uint32_t JCT_AlertSet_raw = ENCODE_SIGNAL(JCT_AlertSet_val, CANSIG_JCT_AlertSet_JCT_AlertSet_SCALE, CANSIG_JCT_AlertSet_JCT_AlertSet_OFFSET, uint32_t);
+    out_data[0] |= packShiftRight(JCT_AlertSet_raw, 0, 0x7);   // Packs bits _____### of byte 0
+    
+}
+
+void App_CanUtils_JCT_AlertCleared_Pack(const JCT_AlertCleared_Signals* const in_msg, uint8_t* const out_data)
+{
+    // Pack 1-byte payload for message JCT_AlertCleared.
+    // |xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|_____AAA|
+    
+    // Pack 3-bit signal JCT_AlertCleared into payload (at bit 0 to bit 3).
+    const JCT_Alert JCT_AlertCleared_val = in_msg->JCT_AlertCleared_value;
+    const uint32_t JCT_AlertCleared_raw = ENCODE_SIGNAL(JCT_AlertCleared_val, CANSIG_JCT_AlertCleared_JCT_AlertCleared_SCALE, CANSIG_JCT_AlertCleared_JCT_AlertCleared_OFFSET, uint32_t);
+    out_data[0] |= packShiftRight(JCT_AlertCleared_raw, 0, 0x7);   // Packs bits _____### of byte 0
+    
+}
+
+void App_CanUtils_FSM_apps_Unpack(const uint8_t* const in_data, FSM_apps_Signals* const out_msg)
 {
     // Unpack 8-byte payload for message FSM_apps.
     // |BBBBBBBB|BBBBBBBB|BBBBBBBB|BBBBBBBB|AAAAAAAA|AAAAAAAA|AAAAAAAA|AAAAAAAA|
@@ -178,7 +202,7 @@ void app_canUtils_FSM_apps_unpack(const uint8_t* const in_data, FSM_apps_Signals
     
 }
 
-void app_canUtils_FSM_noncriticalErrors_unpack(const uint8_t* const in_data, FSM_noncriticalErrors_Signals* const out_msg)
+void App_CanUtils_FSM_noncriticalErrors_Unpack(const uint8_t* const in_data, FSM_noncriticalErrors_Signals* const out_msg)
 {
     // Unpack 3-byte payload for message FSM_noncriticalErrors.
     // |xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|___PONMM|LLKKJJII|HGFEDCBA|

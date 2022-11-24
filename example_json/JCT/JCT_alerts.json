@@ -1,0 +1,9 @@
+{
+    "alert_set_msg_id": 40,
+    "alert_cleared_msg_id": 41,
+    "alerts": [
+        "JCT_OVERTEMP",
+        "JCT_UNDERTEMP",
+        "JCT_GO_TO_INIT"
+    ]
+}

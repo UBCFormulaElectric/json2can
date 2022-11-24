@@ -26,185 +26,185 @@ typedef struct
 /**
  * Initialize RX signals to their starting values.
  */
-void app_canRx_init();
+void App_CanRx_Init();
 
 /**
  * Update value stored in RX table of signal pappsMappedPedalPercentage in msg FSM_apps.
  */
-void app_canRx_FSM_apps_pappsMappedPedalPercentage_updateValue(float value);
+void App_CanRx_FSM_apps_pappsMappedPedalPercentage_UpdateValue(float value);
 
 /**
  * Update value stored in RX table of signal sappsMappedPedalPercentage in msg FSM_apps.
  */
-void app_canRx_FSM_apps_sappsMappedPedalPercentage_updateValue(float value);
+void App_CanRx_FSM_apps_sappsMappedPedalPercentage_UpdateValue(float value);
 
 /**
  * Update value stored in RX table of signal pappsOutOfRange in msg FSM_noncriticalErrors.
  */
-void app_canRx_FSM_noncriticalErrors_pappsOutOfRange_updateValue(bool value);
+void App_CanRx_FSM_noncriticalErrors_pappsOutOfRange_UpdateValue(bool value);
 
 /**
  * Update value stored in RX table of signal sappsOutOfRange in msg FSM_noncriticalErrors.
  */
-void app_canRx_FSM_noncriticalErrors_sappsOutOfRange_updateValue(bool value);
+void App_CanRx_FSM_noncriticalErrors_sappsOutOfRange_UpdateValue(bool value);
 
 /**
  * Update value stored in RX table of signal stackWatermarkAboveThresholdTask1Hz in msg FSM_noncriticalErrors.
  */
-void app_canRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTask1Hz_updateValue(bool value);
+void App_CanRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTask1Hz_UpdateValue(bool value);
 
 /**
  * Update value stored in RX table of signal stackWatermarkAboveThresholdTask1kHz in msg FSM_noncriticalErrors.
  */
-void app_canRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTask1kHz_updateValue(bool value);
+void App_CanRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTask1kHz_UpdateValue(bool value);
 
 /**
  * Update value stored in RX table of signal stackWatermarkAboveThresholdTaskCanRx in msg FSM_noncriticalErrors.
  */
-void app_canRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTaskCanRx_updateValue(bool value);
+void App_CanRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTaskCanRx_UpdateValue(bool value);
 
 /**
  * Update value stored in RX table of signal stackWatermarkAboveThresholdTaskCanTx in msg FSM_noncriticalErrors.
  */
-void app_canRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTaskCanTx_updateValue(bool value);
+void App_CanRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTaskCanTx_UpdateValue(bool value);
 
 /**
  * Update value stored in RX table of signal watchdogFault in msg FSM_noncriticalErrors.
  */
-void app_canRx_FSM_noncriticalErrors_watchdogFault_updateValue(bool value);
+void App_CanRx_FSM_noncriticalErrors_watchdogFault_UpdateValue(bool value);
 
 /**
  * Update value stored in RX table of signal bspdFault in msg FSM_noncriticalErrors.
  */
-void app_canRx_FSM_noncriticalErrors_bspdFault_updateValue(bool value);
+void App_CanRx_FSM_noncriticalErrors_bspdFault_UpdateValue(bool value);
 
 /**
  * Update value stored in RX table of signal leftWheelSpeedOutOfRange in msg FSM_noncriticalErrors.
  */
-void app_canRx_FSM_noncriticalErrors_leftWheelSpeedOutOfRange_updateValue(uint32_t value);
+void App_CanRx_FSM_noncriticalErrors_leftWheelSpeedOutOfRange_UpdateValue(uint32_t value);
 
 /**
  * Update value stored in RX table of signal rightWheelSpeedOutOfRange in msg FSM_noncriticalErrors.
  */
-void app_canRx_FSM_noncriticalErrors_rightWheelSpeedOutOfRange_updateValue(uint32_t value);
+void App_CanRx_FSM_noncriticalErrors_rightWheelSpeedOutOfRange_UpdateValue(uint32_t value);
 
 /**
  * Update value stored in RX table of signal flowRateOutOfRange in msg FSM_noncriticalErrors.
  */
-void app_canRx_FSM_noncriticalErrors_flowRateOutOfRange_updateValue(uint32_t value);
+void App_CanRx_FSM_noncriticalErrors_flowRateOutOfRange_UpdateValue(uint32_t value);
 
 /**
  * Update value stored in RX table of signal steeringAngleOutOfRange in msg FSM_noncriticalErrors.
  */
-void app_canRx_FSM_noncriticalErrors_steeringAngleOutOfRange_updateValue(uint32_t value);
+void App_CanRx_FSM_noncriticalErrors_steeringAngleOutOfRange_UpdateValue(uint32_t value);
 
 /**
  * Update value stored in RX table of signal brakePressureOutOfRange in msg FSM_noncriticalErrors.
  */
-void app_canRx_FSM_noncriticalErrors_brakePressureOutOfRange_updateValue(uint32_t value);
+void App_CanRx_FSM_noncriticalErrors_brakePressureOutOfRange_UpdateValue(uint32_t value);
 
 /**
  * Update value stored in RX table of signal brakePressureSc in msg FSM_noncriticalErrors.
  */
-void app_canRx_FSM_noncriticalErrors_brakePressureSc_updateValue(bool value);
+void App_CanRx_FSM_noncriticalErrors_brakePressureSc_UpdateValue(bool value);
 
 /**
  * Update value stored in RX table of signal brakePressureOc in msg FSM_noncriticalErrors.
  */
-void app_canRx_FSM_noncriticalErrors_brakePressureOc_updateValue(bool value);
+void App_CanRx_FSM_noncriticalErrors_brakePressureOc_UpdateValue(bool value);
 
 /**
  * Update value stored in RX table of signal steeringWheelBroke in msg FSM_noncriticalErrors.
  */
-void app_canRx_FSM_noncriticalErrors_steeringWheelBroke_updateValue(bool value);
+void App_CanRx_FSM_noncriticalErrors_steeringWheelBroke_UpdateValue(bool value);
 
 /**
  * Return value from RX table of signal pappsMappedPedalPercentage in msg FSM_apps.
  */
-float app_canRx_FSM_apps_pappsMappedPedalPercentage_getValue();
+float App_CanRx_FSM_apps_pappsMappedPedalPercentage_GetValue();
 
 /**
  * Return value from RX table of signal sappsMappedPedalPercentage in msg FSM_apps.
  */
-float app_canRx_FSM_apps_sappsMappedPedalPercentage_getValue();
+float App_CanRx_FSM_apps_sappsMappedPedalPercentage_GetValue();
 
 /**
  * Return value from RX table of signal pappsOutOfRange in msg FSM_noncriticalErrors.
  */
-bool app_canRx_FSM_noncriticalErrors_pappsOutOfRange_getValue();
+bool App_CanRx_FSM_noncriticalErrors_pappsOutOfRange_GetValue();
 
 /**
  * Return value from RX table of signal sappsOutOfRange in msg FSM_noncriticalErrors.
  */
-bool app_canRx_FSM_noncriticalErrors_sappsOutOfRange_getValue();
+bool App_CanRx_FSM_noncriticalErrors_sappsOutOfRange_GetValue();
 
 /**
  * Return value from RX table of signal stackWatermarkAboveThresholdTask1Hz in msg FSM_noncriticalErrors.
  */
-bool app_canRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTask1Hz_getValue();
+bool App_CanRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTask1Hz_GetValue();
 
 /**
  * Return value from RX table of signal stackWatermarkAboveThresholdTask1kHz in msg FSM_noncriticalErrors.
  */
-bool app_canRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTask1kHz_getValue();
+bool App_CanRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTask1kHz_GetValue();
 
 /**
  * Return value from RX table of signal stackWatermarkAboveThresholdTaskCanRx in msg FSM_noncriticalErrors.
  */
-bool app_canRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTaskCanRx_getValue();
+bool App_CanRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTaskCanRx_GetValue();
 
 /**
  * Return value from RX table of signal stackWatermarkAboveThresholdTaskCanTx in msg FSM_noncriticalErrors.
  */
-bool app_canRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTaskCanTx_getValue();
+bool App_CanRx_FSM_noncriticalErrors_stackWatermarkAboveThresholdTaskCanTx_GetValue();
 
 /**
  * Return value from RX table of signal watchdogFault in msg FSM_noncriticalErrors.
  */
-bool app_canRx_FSM_noncriticalErrors_watchdogFault_getValue();
+bool App_CanRx_FSM_noncriticalErrors_watchdogFault_GetValue();
 
 /**
  * Return value from RX table of signal bspdFault in msg FSM_noncriticalErrors.
  */
-bool app_canRx_FSM_noncriticalErrors_bspdFault_getValue();
+bool App_CanRx_FSM_noncriticalErrors_bspdFault_GetValue();
 
 /**
  * Return value from RX table of signal leftWheelSpeedOutOfRange in msg FSM_noncriticalErrors.
  */
-uint32_t app_canRx_FSM_noncriticalErrors_leftWheelSpeedOutOfRange_getValue();
+uint32_t App_CanRx_FSM_noncriticalErrors_leftWheelSpeedOutOfRange_GetValue();
 
 /**
  * Return value from RX table of signal rightWheelSpeedOutOfRange in msg FSM_noncriticalErrors.
  */
-uint32_t app_canRx_FSM_noncriticalErrors_rightWheelSpeedOutOfRange_getValue();
+uint32_t App_CanRx_FSM_noncriticalErrors_rightWheelSpeedOutOfRange_GetValue();
 
 /**
  * Return value from RX table of signal flowRateOutOfRange in msg FSM_noncriticalErrors.
  */
-uint32_t app_canRx_FSM_noncriticalErrors_flowRateOutOfRange_getValue();
+uint32_t App_CanRx_FSM_noncriticalErrors_flowRateOutOfRange_GetValue();
 
 /**
  * Return value from RX table of signal steeringAngleOutOfRange in msg FSM_noncriticalErrors.
  */
-uint32_t app_canRx_FSM_noncriticalErrors_steeringAngleOutOfRange_getValue();
+uint32_t App_CanRx_FSM_noncriticalErrors_steeringAngleOutOfRange_GetValue();
 
 /**
  * Return value from RX table of signal brakePressureOutOfRange in msg FSM_noncriticalErrors.
  */
-uint32_t app_canRx_FSM_noncriticalErrors_brakePressureOutOfRange_getValue();
+uint32_t App_CanRx_FSM_noncriticalErrors_brakePressureOutOfRange_GetValue();
 
 /**
  * Return value from RX table of signal brakePressureSc in msg FSM_noncriticalErrors.
  */
-bool app_canRx_FSM_noncriticalErrors_brakePressureSc_getValue();
+bool App_CanRx_FSM_noncriticalErrors_brakePressureSc_GetValue();
 
 /**
  * Return value from RX table of signal brakePressureOc in msg FSM_noncriticalErrors.
  */
-bool app_canRx_FSM_noncriticalErrors_brakePressureOc_getValue();
+bool App_CanRx_FSM_noncriticalErrors_brakePressureOc_GetValue();
 
 /**
  * Return value from RX table of signal steeringWheelBroke in msg FSM_noncriticalErrors.
  */
-bool app_canRx_FSM_noncriticalErrors_steeringWheelBroke_getValue();
+bool App_CanRx_FSM_noncriticalErrors_steeringWheelBroke_GetValue();
 

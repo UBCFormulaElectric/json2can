@@ -73,6 +73,17 @@ class CFunc:
         self.body = CWriter()
 
 
+@dataclass
+class CLiteral:
+    value: Union[int, float]
+
+    def __str__(self) -> str:
+        if isinstance(self.value, float):
+            return f"{self.value}f"
+        else:
+            return str(self.value)
+
+
 class CWriter:
     """
     Class for generating C code. Define it as an object and call the public functions to add C constructs, indentation, etc.

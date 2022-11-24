@@ -2,7 +2,7 @@
 Functions to validate the CAN JSON schema.
 """
 from typing import Dict
-from schema import Schema, Optional, Or
+from schema import Schema, Optional, Or, And
 
 """
 Tx file schemas
@@ -58,7 +58,7 @@ tx_signal_schema = Schema(
 
 tx_msg_schema = Schema(
     {
-        "msg_id": Or(int, lambda x: x >= 0),
+        "msg_id": And(int, lambda x: x >= 0),
         "signals": {
             str: tx_signal_schema,
         },
@@ -71,17 +71,17 @@ tx_msg_schema = Schema(
 tx_schema = Schema({str: tx_msg_schema})
 
 """
-Rx file schemas
+Rx file schema
 """
 rx_schema = Schema({"messages": [str]})
 
 """
-Enum file schemas
+Enum file schema
 """
 enum_schema = Schema(Or({str: {str: int}}, {}))  # If the node doesn"t define any enums
 
 """
-Bus file schemas
+Bus file schema
 """
 bus_schema = Schema(
     {
@@ -97,18 +97,34 @@ bus_schema = Schema(
     }
 )
 
+"""
+Alerts file schema
+"""
+alerts_schema = Schema(
+    Or(
+        {
+            "alert_set_msg_id": And(int, lambda x: x >= 0),
+            "alert_cleared_msg_id": And(int, lambda x: x >= 0),
+            "alerts": [str],
+        },
+        {}
+    )
+)
 
-def validate_tx_json(tx_json: Dict) -> Dict:
-    return tx_schema.validate(tx_json)
+def validate_tx_json(json: Dict) -> Dict:
+    return tx_schema.validate(json)
 
 
-def validate_rx_json(rx_json: Dict) -> Dict:
-    return rx_schema.validate(rx_json)
+def validate_rx_json(json: Dict) -> Dict:
+    return rx_schema.validate(json)
 
 
-def validate_enum_json(enum_json: Dict) -> Dict:
-    return enum_schema.validate(enum_json)
+def validate_enum_json(json: Dict) -> Dict:
+    return enum_schema.validate(json)
 
 
-def validate_bus_json(bus_json: Dict) -> Dict:
-    return bus_schema.validate(bus_json)
+def validate_bus_json(json: Dict) -> Dict:
+    return bus_schema.validate(json)
+
+def validate_alerts_json(json: Dict) -> Dict:
+    return alerts_schema.validate(json)

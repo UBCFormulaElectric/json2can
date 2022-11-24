@@ -13,157 +13,189 @@ static JCT_TxMsgs tx_table;
 
 /* ------------------------- Function Definitions ------------------------- */
 
-void app_canTx_init()
+void App_CanTx_Init()
 {
     memset(&tx_table, 0, sizeof(JCT_TxMsgs));
-    app_canTx_JCT_vitals_heartbeat_set(CANSIG_JCT_vitals_heartbeat_START_VAL);
-    app_canTx_JCT_vitals_timestamp_set(CANSIG_JCT_vitals_timestamp_START_VAL);
-    app_canTx_JCT_noncriticalErrors_watchdogTimeout_set(CANSIG_JCT_noncriticalErrors_watchdogTimeout_START_VAL);
-    app_canTx_JCT_noncriticalErrors_boardOvertemp_set(CANSIG_JCT_noncriticalErrors_boardOvertemp_START_VAL);
-    app_canTx_JCT_noncriticalErrors_boardOvervoltage_set(CANSIG_JCT_noncriticalErrors_boardOvervoltage_START_VAL);
-    app_canTx_JCT_AIRShutdownErrors_dummyAirShutdown_set(CANSIG_JCT_AIRShutdownErrors_dummyAirShutdown_START_VAL);
-    app_canTx_JCT_motorShutdownErrors_dummyMotorShutdown_set(CANSIG_JCT_motorShutdownErrors_dummyMotorShutdown_START_VAL);
-    app_canTx_JCT_status_contactorsClosed_set(CANSIG_JCT_status_contactorsClosed_START_VAL);
-    app_canTx_JCT_status_current_set(CANSIG_JCT_status_current_START_VAL);
-    app_canTx_JCT_status_voltage_set(CANSIG_JCT_status_voltage_START_VAL);
-    app_canTx_JCT_status_unsigned_tester_set(CANSIG_JCT_status_unsigned_tester_START_VAL);
+    App_CanTx_JCT_vitals_heartbeat_Set(CANSIG_JCT_vitals_heartbeat_START_VAL);
+    App_CanTx_JCT_vitals_timestamp_Set(CANSIG_JCT_vitals_timestamp_START_VAL);
+    App_CanTx_JCT_noncriticalErrors_watchdogTimeout_Set(CANSIG_JCT_noncriticalErrors_watchdogTimeout_START_VAL);
+    App_CanTx_JCT_noncriticalErrors_boardOvertemp_Set(CANSIG_JCT_noncriticalErrors_boardOvertemp_START_VAL);
+    App_CanTx_JCT_noncriticalErrors_boardOvervoltage_Set(CANSIG_JCT_noncriticalErrors_boardOvervoltage_START_VAL);
+    App_CanTx_JCT_AIRShutdownErrors_dummyAirShutdown_Set(CANSIG_JCT_AIRShutdownErrors_dummyAirShutdown_START_VAL);
+    App_CanTx_JCT_motorShutdownErrors_dummyMotorShutdown_Set(CANSIG_JCT_motorShutdownErrors_dummyMotorShutdown_START_VAL);
+    App_CanTx_JCT_status_contactorsClosed_Set(CANSIG_JCT_status_contactorsClosed_START_VAL);
+    App_CanTx_JCT_status_current_Set(CANSIG_JCT_status_current_START_VAL);
+    App_CanTx_JCT_status_voltage_Set(CANSIG_JCT_status_voltage_START_VAL);
+    App_CanTx_JCT_status_unsigned_tester_Set(CANSIG_JCT_status_unsigned_tester_START_VAL);
+    App_CanTx_JCT_AlertSet_JCT_AlertSet_Set(CANSIG_JCT_AlertSet_JCT_AlertSet_START_VAL);
+    App_CanTx_JCT_AlertCleared_JCT_AlertCleared_Set(CANSIG_JCT_AlertCleared_JCT_AlertCleared_START_VAL);
 }
 
-void app_canTx_JCT_vitals_heartbeat_set(bool value)
+void App_CanTx_JCT_vitals_heartbeat_Set(bool value)
 {
     tx_table.JCT_vitals_signals.heartbeat_value = value;
 }
 
-void app_canTx_JCT_vitals_timestamp_set(uint32_t value)
+void App_CanTx_JCT_vitals_timestamp_Set(uint32_t value)
 {
     tx_table.JCT_vitals_signals.timestamp_value = value;
 }
 
-void app_canTx_JCT_noncriticalErrors_watchdogTimeout_set(bool value)
+void App_CanTx_JCT_noncriticalErrors_watchdogTimeout_Set(bool value)
 {
     tx_table.JCT_noncriticalErrors_signals.watchdogTimeout_value = value;
 }
 
-void app_canTx_JCT_noncriticalErrors_boardOvertemp_set(bool value)
+void App_CanTx_JCT_noncriticalErrors_boardOvertemp_Set(bool value)
 {
     tx_table.JCT_noncriticalErrors_signals.boardOvertemp_value = value;
 }
 
-void app_canTx_JCT_noncriticalErrors_boardOvervoltage_set(bool value)
+void App_CanTx_JCT_noncriticalErrors_boardOvervoltage_Set(bool value)
 {
     tx_table.JCT_noncriticalErrors_signals.boardOvervoltage_value = value;
 }
 
-void app_canTx_JCT_AIRShutdownErrors_dummyAirShutdown_set(bool value)
+void App_CanTx_JCT_AIRShutdownErrors_dummyAirShutdown_Set(bool value)
 {
     tx_table.JCT_AIRShutdownErrors_signals.dummyAirShutdown_value = value;
 }
 
-void app_canTx_JCT_motorShutdownErrors_dummyMotorShutdown_set(bool value)
+void App_CanTx_JCT_motorShutdownErrors_dummyMotorShutdown_Set(bool value)
 {
     tx_table.JCT_motorShutdownErrors_signals.dummyMotorShutdown_value = value;
 }
 
-void app_canTx_JCT_status_contactorsClosed_set(AirState value)
+void App_CanTx_JCT_status_contactorsClosed_Set(AirState value)
 {
     tx_table.JCT_status_signals.contactorsClosed_value = (value > CANSIG_JCT_status_contactorsClosed_MAX) ? CANSIG_JCT_status_contactorsClosed_MAX : value;
 }
 
-void app_canTx_JCT_status_current_set(float value)
+void App_CanTx_JCT_status_current_Set(float value)
 {
     const float tmp = value < CANSIG_JCT_status_current_MIN ? CANSIG_JCT_status_current_MIN : value;
     tx_table.JCT_status_signals.current_value = tmp > CANSIG_JCT_status_current_MAX ? CANSIG_JCT_status_current_MAX : tmp;
 }
 
-void app_canTx_JCT_status_voltage_set(float value)
+void App_CanTx_JCT_status_voltage_Set(float value)
 {
     const float tmp = value < CANSIG_JCT_status_voltage_MIN ? CANSIG_JCT_status_voltage_MIN : value;
     tx_table.JCT_status_signals.voltage_value = tmp > CANSIG_JCT_status_voltage_MAX ? CANSIG_JCT_status_voltage_MAX : tmp;
 }
 
-void app_canTx_JCT_status_unsigned_tester_set(int value)
+void App_CanTx_JCT_status_unsigned_tester_Set(int value)
 {
     const int tmp = value < CANSIG_JCT_status_unsigned_tester_MIN ? CANSIG_JCT_status_unsigned_tester_MIN : value;
     tx_table.JCT_status_signals.unsigned_tester_value = tmp > CANSIG_JCT_status_unsigned_tester_MAX ? CANSIG_JCT_status_unsigned_tester_MAX : tmp;
 }
 
-bool app_canTx_JCT_vitals_heartbeat_get()
+void App_CanTx_JCT_AlertSet_JCT_AlertSet_Set(JCT_Alert value)
+{
+    tx_table.JCT_AlertSet_signals.JCT_AlertSet_value = (value > CANSIG_JCT_AlertSet_JCT_AlertSet_MAX) ? CANSIG_JCT_AlertSet_JCT_AlertSet_MAX : value;
+}
+
+void App_CanTx_JCT_AlertCleared_JCT_AlertCleared_Set(JCT_Alert value)
+{
+    tx_table.JCT_AlertCleared_signals.JCT_AlertCleared_value = (value > CANSIG_JCT_AlertCleared_JCT_AlertCleared_MAX) ? CANSIG_JCT_AlertCleared_JCT_AlertCleared_MAX : value;
+}
+
+bool App_CanTx_JCT_vitals_heartbeat_Get()
 {
     return tx_table.JCT_vitals_signals.heartbeat_value;
 }
 
-uint32_t app_canTx_JCT_vitals_timestamp_get()
+uint32_t App_CanTx_JCT_vitals_timestamp_Get()
 {
     return tx_table.JCT_vitals_signals.timestamp_value;
 }
 
-bool app_canTx_JCT_noncriticalErrors_watchdogTimeout_get()
+bool App_CanTx_JCT_noncriticalErrors_watchdogTimeout_Get()
 {
     return tx_table.JCT_noncriticalErrors_signals.watchdogTimeout_value;
 }
 
-bool app_canTx_JCT_noncriticalErrors_boardOvertemp_get()
+bool App_CanTx_JCT_noncriticalErrors_boardOvertemp_Get()
 {
     return tx_table.JCT_noncriticalErrors_signals.boardOvertemp_value;
 }
 
-bool app_canTx_JCT_noncriticalErrors_boardOvervoltage_get()
+bool App_CanTx_JCT_noncriticalErrors_boardOvervoltage_Get()
 {
     return tx_table.JCT_noncriticalErrors_signals.boardOvervoltage_value;
 }
 
-bool app_canTx_JCT_AIRShutdownErrors_dummyAirShutdown_get()
+bool App_CanTx_JCT_AIRShutdownErrors_dummyAirShutdown_Get()
 {
     return tx_table.JCT_AIRShutdownErrors_signals.dummyAirShutdown_value;
 }
 
-bool app_canTx_JCT_motorShutdownErrors_dummyMotorShutdown_get()
+bool App_CanTx_JCT_motorShutdownErrors_dummyMotorShutdown_Get()
 {
     return tx_table.JCT_motorShutdownErrors_signals.dummyMotorShutdown_value;
 }
 
-AirState app_canTx_JCT_status_contactorsClosed_get()
+AirState App_CanTx_JCT_status_contactorsClosed_Get()
 {
     return tx_table.JCT_status_signals.contactorsClosed_value;
 }
 
-float app_canTx_JCT_status_current_get()
+float App_CanTx_JCT_status_current_Get()
 {
     return tx_table.JCT_status_signals.current_value;
 }
 
-float app_canTx_JCT_status_voltage_get()
+float App_CanTx_JCT_status_voltage_Get()
 {
     return tx_table.JCT_status_signals.voltage_value;
 }
 
-int app_canTx_JCT_status_unsigned_tester_get()
+int App_CanTx_JCT_status_unsigned_tester_Get()
 {
     return tx_table.JCT_status_signals.unsigned_tester_value;
 }
 
-const JCT_vitals_Signals* app_canTx_JCT_vitals_getData()
+JCT_Alert App_CanTx_JCT_AlertSet_JCT_AlertSet_Get()
+{
+    return tx_table.JCT_AlertSet_signals.JCT_AlertSet_value;
+}
+
+JCT_Alert App_CanTx_JCT_AlertCleared_JCT_AlertCleared_Get()
+{
+    return tx_table.JCT_AlertCleared_signals.JCT_AlertCleared_value;
+}
+
+const JCT_vitals_Signals* App_CanTx_JCT_vitals_GetData()
 {
     return &tx_table.JCT_vitals_signals;
 }
 
-const JCT_noncriticalErrors_Signals* app_canTx_JCT_noncriticalErrors_getData()
+const JCT_noncriticalErrors_Signals* App_CanTx_JCT_noncriticalErrors_GetData()
 {
     return &tx_table.JCT_noncriticalErrors_signals;
 }
 
-const JCT_AIRShutdownErrors_Signals* app_canTx_JCT_AIRShutdownErrors_getData()
+const JCT_AIRShutdownErrors_Signals* App_CanTx_JCT_AIRShutdownErrors_GetData()
 {
     return &tx_table.JCT_AIRShutdownErrors_signals;
 }
 
-const JCT_motorShutdownErrors_Signals* app_canTx_JCT_motorShutdownErrors_getData()
+const JCT_motorShutdownErrors_Signals* App_CanTx_JCT_motorShutdownErrors_GetData()
 {
     return &tx_table.JCT_motorShutdownErrors_signals;
 }
 
-const JCT_status_Signals* app_canTx_JCT_status_getData()
+const JCT_status_Signals* App_CanTx_JCT_status_GetData()
 {
     return &tx_table.JCT_status_signals;
+}
+
+const JCT_AlertSet_Signals* App_CanTx_JCT_AlertSet_GetData()
+{
+    return &tx_table.JCT_AlertSet_signals;
+}
+
+const JCT_AlertCleared_Signals* App_CanTx_JCT_AlertCleared_GetData()
+{
+    return &tx_table.JCT_AlertCleared_signals;
 }
 

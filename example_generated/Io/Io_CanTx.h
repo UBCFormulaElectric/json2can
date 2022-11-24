@@ -14,20 +14,30 @@
 /**
  * Enqeue periodic CAN msgs of period 10ms.
  */
-void io_canTx_enqueue100HzMsgs();
+void Io_CanTx_Enqueue100HzMsgs();
 
 /**
  * Enqeue periodic CAN msgs of period 100ms.
  */
-void io_canTx_enqueue10HzMsgs();
+void Io_CanTx_Enqueue10HzMsgs();
 
 /**
  * Enqeue periodic CAN msgs of period 1000ms.
  */
-void io_canTx_enqueue1HzMsgs();
+void Io_CanTx_Enqueue1HzMsgs();
 
 /**
  * Pack and send the aperiodic TX msg JCT_noncriticalErrors.
  */
-void app_canTx_JCT_noncriticalErrors_sendAperiodic();
+void App_CanTx_JCT_noncriticalErrors_SendAperiodic();
+
+/**
+ * Pack and send the aperiodic TX msg JCT_AlertSet.
+ */
+void App_CanTx_JCT_AlertSet_SendAperiodic();
+
+/**
+ * Pack and send the aperiodic TX msg JCT_AlertCleared.
+ */
+void App_CanTx_JCT_AlertCleared_SendAperiodic();
 

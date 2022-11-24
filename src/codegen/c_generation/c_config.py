@@ -6,27 +6,27 @@ from enum import Enum
 
 class CFuncsCfg(str, Enum):
     # Io Tx
-    IO_TX_ENQUEUE_PERIODIC = "io_canTx_enqueue{freq}Msgs"
-    IO_TX_SEND = "app_canTx_{msg}_send{mode}"
+    IO_TX_ENQUEUE_PERIODIC = "Io_CanTx_Enqueue{freq}Msgs"
+    IO_TX_SEND = "App_CanTx_{msg}_Send{mode}"
 
     # App Tx
-    APP_TX_INIT = "app_canTx_init"
-    APP_TX_SET_SIGNAL = "app_canTx_{msg}_{signal}_set"
-    APP_TX_GET_SIGNAL = "app_canTx_{msg}_{signal}_get"
-    APP_TX_GET_MSG = "app_canTx_{msg}_getData"
+    APP_TX_INIT = "App_CanTx_Init"
+    APP_TX_SET_SIGNAL = "App_CanTx_{msg}_{signal}_Set"
+    APP_TX_GET_SIGNAL = "App_CanTx_{msg}_{signal}_Get"
+    APP_TX_GET_MSG = "App_CanTx_{msg}_GetData"
 
     # Io Rx
     IO_RX_UPDATE_TABLE = "Io_CanRx_UpdateRxTableWithMessage"
     IO_RX_FILTER_ID = "Io_CanRx_FilterMessageId"
 
     # App Rx
-    APP_RX_INIT = "app_canRx_init"
-    APP_RX_SET_SIGNAL = "app_canRx_{msg}_{signal}_updateValue"
-    APP_RX_GET_SIGNAL = "app_canRx_{msg}_{signal}_getValue"
+    APP_RX_INIT = "App_CanRx_Init"
+    APP_RX_SET_SIGNAL = "App_CanRx_{msg}_{signal}_UpdateValue"
+    APP_RX_GET_SIGNAL = "App_CanRx_{msg}_{signal}_GetValue"
 
     # Utils
-    UTILS_PACK = ("app_canUtils_{msg}_pack",)
-    UTILS_UNPACK = ("app_canUtils_{msg}_unpack",)
+    UTILS_PACK = ("App_CanUtils_{msg}_Pack",)
+    UTILS_UNPACK = ("App_CanUtils_{msg}_Unpack",)
 
 
 class CVarsCfg(str, Enum):
