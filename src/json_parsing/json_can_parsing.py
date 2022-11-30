@@ -6,7 +6,12 @@ from typing import Dict, Tuple
 import json
 from math import ceil
 from ..can_database import *
-from .schema_validation import validate_bus_json, validate_enum_json, validate_tx_json, validate_alerts_json
+from .schema_validation import (
+    validate_bus_json,
+    validate_enum_json,
+    validate_tx_json,
+    validate_alerts_json,
+)
 from ..utils import max_uint_for_bits, pascal_to_screaming_snake_case
 
 
@@ -133,8 +138,10 @@ class JsonCanParser:
                 self._messages[tx_msg_name] = can_msg
 
             # Parse node's alerts
-            if(len(node_alerts_json_data) > 0):
-                alert_set_msg, alert_cleared_msg = self._parse_node_alerts(node, node_alerts_json_data)
+            if len(node_alerts_json_data) > 0:
+                alert_set_msg, alert_cleared_msg = self._parse_node_alerts(
+                    node, node_alerts_json_data
+                )
                 self._messages[alert_set_msg.name] = alert_set_msg
                 self._messages[alert_cleared_msg.name] = alert_cleared_msg
 
@@ -348,11 +355,13 @@ class JsonCanParser:
                 )
 
             items.append(CanEnumItem(name=name, value=value))
-        
-        items.append(CanEnumItem(
-            name=f"NUM_{pascal_to_screaming_snake_case(enum_name)}_CHOICES",
-            value=len(items)
-        ))
+
+        items.append(
+            CanEnumItem(
+                name=f"NUM_{pascal_to_screaming_snake_case(enum_name)}_CHOICES",
+                value=len(items),
+            )
+        )
 
         if 0 not in {item.value for item in items}:
             raise InvalidCanJson(f"Enum '{enum_name}' must start at 0.")
@@ -361,7 +370,7 @@ class JsonCanParser:
 
     def _parse_node_alerts(self, node: str, alerts_json: Dict) -> None:
         """
-        Parse JSON data dictionary representing a node's alerts, and return the 
+        Parse JSON data dictionary representing a node's alerts, and return the
         created set and cleared CAN messages.
         """
         alerts = alerts_json["alerts"]
@@ -374,7 +383,7 @@ class JsonCanParser:
         # Make enum for the alerts
         alerts_enum = CanEnum(
             name=f"{node}_Alert",
-            items=[CanEnumItem(alert, idx) for idx, alert in enumerate(alerts)]
+            items=[CanEnumItem(alert, idx) for idx, alert in enumerate(alerts)],
         )
         alerts_enum.items.append(CanEnumItem(f"NUM_{node}_ALERTS", len(alerts)))
 
@@ -390,7 +399,7 @@ class JsonCanParser:
             enum=alerts_enum,
             unit="",
             signed=False,
-        )   
+        )
         cleared_signal = CanSignal(
             f"{node}_AlertCleared",
             start_bit=0,
@@ -408,11 +417,13 @@ class JsonCanParser:
         # Check if alert message ID is unique
         set_id = alerts_json["alert_set_msg_id"]
         cleared_id = alerts_json["alert_cleared_msg_id"]
-        if set_id in {msg.id for msg in self._messages.values()} or cleared_id in {msg.id for msg in self._messages.values()}:
+        if set_id in {msg.id for msg in self._messages.values()} or cleared_id in {
+            msg.id for msg in self._messages.values()
+        }:
             raise InvalidCanJson(
                 f"ID for alerts message transmitted by '{node}' is a duplicate, messages must have unique IDs."
             )
-        
+
         # Check if message name is unique
         set_msg_name = f"{node}_AlertSet"
         cleared_msg_name = f"{node}_AlertCleared"
@@ -428,7 +439,7 @@ class JsonCanParser:
             cycle_time=None,
             signals=[set_signal],
             tx_node=node,
-            rx_nodes=[self._bus_cfg.default_receiver]
+            rx_nodes=[self._bus_cfg.default_receiver],
         )
         cleared_msg = CanMessage(
             name=cleared_msg_name,
@@ -437,11 +448,11 @@ class JsonCanParser:
             cycle_time=None,
             signals=[cleared_signal],
             tx_node=node,
-            rx_nodes=[self._bus_cfg.default_receiver]
+            rx_nodes=[self._bus_cfg.default_receiver],
         )
 
         return set_msg, cleared_msg
-        
+
     def _get_raw_json_data_from_file(self, file_path: str) -> Dict:
         """
         Load an individual JSON file from specified path.

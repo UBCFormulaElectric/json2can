@@ -5,6 +5,8 @@
 
 /* ------------------------- Function Definitions ------------------------- */
 
+#include <math.h>
+#include <string.h>
 #include "App_CanTx.h"
 
 /* -------------------------- Private Variables --------------------------- */
@@ -73,14 +75,20 @@ void App_CanTx_JCT_status_contactorsClosed_Set(AirState value)
 
 void App_CanTx_JCT_status_current_Set(float value)
 {
-    const float tmp = value < CANSIG_JCT_status_current_MIN ? CANSIG_JCT_status_current_MIN : value;
-    tx_table.JCT_status_signals.current_value = tmp > CANSIG_JCT_status_current_MAX ? CANSIG_JCT_status_current_MAX : tmp;
+    if (value != NAN)
+    {
+        const float tmp = value < CANSIG_JCT_status_current_MIN ? CANSIG_JCT_status_current_MIN : value;
+        tx_table.JCT_status_signals.current_value = tmp > CANSIG_JCT_status_current_MAX ? CANSIG_JCT_status_current_MAX : tmp;
+    }
 }
 
 void App_CanTx_JCT_status_voltage_Set(float value)
 {
-    const float tmp = value < CANSIG_JCT_status_voltage_MIN ? CANSIG_JCT_status_voltage_MIN : value;
-    tx_table.JCT_status_signals.voltage_value = tmp > CANSIG_JCT_status_voltage_MAX ? CANSIG_JCT_status_voltage_MAX : tmp;
+    if (value != NAN)
+    {
+        const float tmp = value < CANSIG_JCT_status_voltage_MIN ? CANSIG_JCT_status_voltage_MIN : value;
+        tx_table.JCT_status_signals.voltage_value = tmp > CANSIG_JCT_status_voltage_MAX ? CANSIG_JCT_status_voltage_MAX : tmp;
+    }
 }
 
 void App_CanTx_JCT_status_unsigned_tester_Set(int value)

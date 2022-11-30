@@ -9,8 +9,8 @@ PACK_SHIFT_RIGHT_FUNC = "packShiftRight"
 UNPACK_SHIFT_LEFT_FUNC = "unpackShiftLeft"
 UNPACK_SHIFT_RIGHT_FUNC = "unpackShiftRight"
 
-ENCODE_MACRO = "ENCODE_SIGNAL"
-DECODE_MACRO = "DECODE_SIGNAL"
+ENCODE_MACRO = "CAN_ENCODE"
+DECODE_MACRO = "CAN_DECODE"
 
 PACK_TEMPLATE = "out_data[{byte_index}] |= {func}({value}, {shift}, {mask});   // Packs bits {bits_comment} of byte {byte_index}"
 UNPACK_TEMPLATE = "{var_name} |= {func}({value}, {shift}, {mask});   // Unpacks bits {bits_comment} of msg byte {byte_index}"
@@ -263,7 +263,7 @@ class AppCanUtilsModule(CModule):
                 CVar("mask", "uint8_t"),
             ],
             comment="Shift input left and apply mask, for packing.",
-            qualifier="static",
+            qualifier="static inline",
         )
         pack_left.body.add_code(
             "return (uint8_t)((uint8_t)(input << shift) & (uint8_t)mask);"
@@ -278,7 +278,7 @@ class AppCanUtilsModule(CModule):
                 CVar("mask", "uint8_t"),
             ],
             comment="Shift input right and apply mask, for packing.",
-            qualifier="static",
+            qualifier="static inline",
         )
         pack_right.body.add_code(
             "return (uint8_t)((uint8_t)(input >> shift) & (uint8_t)mask);"
@@ -293,7 +293,7 @@ class AppCanUtilsModule(CModule):
                 CVar("mask", "uint8_t"),
             ],
             comment="Apply mask, then shift input left by shift bits, for unpacking.",
-            qualifier="static",
+            qualifier="static inline",
         )
         unpack_left.body.add_code(
             "return (uint32_t)((uint32_t)(input & mask) << shift);"
@@ -308,7 +308,7 @@ class AppCanUtilsModule(CModule):
                 CVar("mask", "uint8_t"),
             ],
             comment="Apply mask, then shift input left by shift bits, for unpacking.",
-            qualifier="static",
+            qualifier="static inline",
         )
         unpack_right.body.add_code(
             "return (uint32_t)((uint32_t)(input & mask) >> shift);"

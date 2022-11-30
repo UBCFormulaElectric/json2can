@@ -241,6 +241,15 @@ class CWriter:
         self.unindent()
         self.add_line("}")
 
+    def start_if(self, condition: str) -> None:
+        self.add_line(f"if ({condition})")
+        self.add_line("{")
+        self.indent()
+
+    def end_if(self) -> None:
+        self.unindent()
+        self.add_line("}")
+
 
 def clamp_signal_code(signal: CanSignal, msg: CanMessage, dest: str, src: str) -> str:
     """
@@ -248,8 +257,13 @@ def clamp_signal_code(signal: CanSignal, msg: CanMessage, dest: str, src: str) -
     Used by TX and RX signal value setters.
     """
     cw = CWriter()
-    min = CMacrosCfgs.MIN.format(msg=msg.name, signal=signal.name)
-    max = CMacrosCfgs.MAX.format(msg=msg.name, signal=signal.name)
+
+    # If a float, don't set anything if the value is NaN
+    if signal.datatype() == CanSignalDatatype.FLOAT:
+        cw.start_if(f"{src} != NAN")
+
+    min_val = CMacrosCfgs.MIN.format(msg=msg.name, signal=signal.name)
+    max_val = CMacrosCfgs.MAX.format(msg=msg.name, signal=signal.name)
 
     if any(
         [
@@ -264,11 +278,16 @@ def clamp_signal_code(signal: CanSignal, msg: CanMessage, dest: str, src: str) -
 
     # Uints set a warning if clamping > 0 (since they're >0 by definition)
     elif signal.representation() == CanSignalDatatype.UINT and signal.min_val == 0:
-        cw.add_line(f"{dest} = ({src} > {max}) ? {max} : {src};")
+        cw.add_line(f"{dest} = ({src} > {max_val}) ? {max_val} : {src};")
 
     # Otherwise, clamp between min and max
     else:
-        cw.add_line(f"const {signal.datatype()} tmp = {src} < {min} ? {min} : {src};")
-        cw.add_line(f"{dest} = tmp > {max} ? {max} : tmp;")
+        cw.add_line(
+            f"const {signal.datatype()} tmp = {src} < {min_val} ? {min_val} : {src};"
+        )
+        cw.add_line(f"{dest} = tmp > {max_val} ? {max_val} : tmp;")
+
+    if signal.datatype() == CanSignalDatatype.FLOAT:
+        cw.end_if()
 
     return str(cw)

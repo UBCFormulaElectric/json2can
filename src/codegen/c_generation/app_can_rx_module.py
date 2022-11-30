@@ -125,6 +125,7 @@ class AppCanRxModule(CModule):
         cw.add_line()
         cw.add_header_comment("Includes")
         cw.add_line()
+        cw.add_include("<math.h>")
         cw.add_include("<string.h>")
         cw.add_include('"App_CanRx.h"')
 

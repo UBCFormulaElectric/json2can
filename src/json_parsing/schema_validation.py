@@ -107,9 +107,10 @@ alerts_schema = Schema(
             "alert_cleared_msg_id": And(int, lambda x: x >= 0),
             "alerts": [str],
         },
-        {}
+        {},
     )
 )
+
 
 def validate_tx_json(json: Dict) -> Dict:
     return tx_schema.validate(json)
@@ -125,6 +126,7 @@ def validate_enum_json(json: Dict) -> Dict:
 
 def validate_bus_json(json: Dict) -> Dict:
     return bus_schema.validate(json)
+
 
 def validate_alerts_json(json: Dict) -> Dict:
     return alerts_schema.validate(json)

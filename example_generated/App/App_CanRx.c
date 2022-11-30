@@ -6,6 +6,7 @@
 
 /* ------------------------------- Includes ------------------------------- */
 
+#include <math.h>
 #include <string.h>
 #include "App_CanRx.h"
 
@@ -40,14 +41,20 @@ void App_CanRx_Init()
 
 void App_CanRx_FSM_apps_pappsMappedPedalPercentage_UpdateValue(float value)
 {
-    const float tmp = value < CANSIG_FSM_apps_pappsMappedPedalPercentage_MIN ? CANSIG_FSM_apps_pappsMappedPedalPercentage_MIN : value;
-    rx_table.FSM_apps_signals.pappsMappedPedalPercentage_value = tmp > CANSIG_FSM_apps_pappsMappedPedalPercentage_MAX ? CANSIG_FSM_apps_pappsMappedPedalPercentage_MAX : tmp;
+    if (value != NAN)
+    {
+        const float tmp = value < CANSIG_FSM_apps_pappsMappedPedalPercentage_MIN ? CANSIG_FSM_apps_pappsMappedPedalPercentage_MIN : value;
+        rx_table.FSM_apps_signals.pappsMappedPedalPercentage_value = tmp > CANSIG_FSM_apps_pappsMappedPedalPercentage_MAX ? CANSIG_FSM_apps_pappsMappedPedalPercentage_MAX : tmp;
+    }
 }
 
 void App_CanRx_FSM_apps_sappsMappedPedalPercentage_UpdateValue(float value)
 {
-    const float tmp = value < CANSIG_FSM_apps_sappsMappedPedalPercentage_MIN ? CANSIG_FSM_apps_sappsMappedPedalPercentage_MIN : value;
-    rx_table.FSM_apps_signals.sappsMappedPedalPercentage_value = tmp > CANSIG_FSM_apps_sappsMappedPedalPercentage_MAX ? CANSIG_FSM_apps_sappsMappedPedalPercentage_MAX : tmp;
+    if (value != NAN)
+    {
+        const float tmp = value < CANSIG_FSM_apps_sappsMappedPedalPercentage_MIN ? CANSIG_FSM_apps_sappsMappedPedalPercentage_MIN : value;
+        rx_table.FSM_apps_signals.sappsMappedPedalPercentage_value = tmp > CANSIG_FSM_apps_sappsMappedPedalPercentage_MAX ? CANSIG_FSM_apps_sappsMappedPedalPercentage_MAX : tmp;
+    }
 }
 
 void App_CanRx_FSM_noncriticalErrors_pappsOutOfRange_UpdateValue(bool value)

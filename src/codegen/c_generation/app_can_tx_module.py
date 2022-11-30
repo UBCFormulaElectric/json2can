@@ -97,7 +97,6 @@ class AppCanTxModule(CModule):
         cw.add_line()
         cw.add_header_comment("Includes")
         cw.add_line()
-        cw.add_include("<string.h>")
         cw.add_include('"App_CanUtils.h"')
 
         # TX table struct
@@ -139,7 +138,8 @@ class AppCanTxModule(CModule):
         # Add includes
         cw.add_header_comment("Function Definitions")
         cw.add_line()
-
+        cw.add_include("<math.h>")
+        cw.add_include("<string.h>")
         cw.add_include('"App_CanTx.h"')
         cw.add_line()
 
