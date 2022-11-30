@@ -169,12 +169,12 @@ class JsonCanParser:
         """
         Parse JSON data dictionary representing a CAN message.
         """
-        id = msg_json_data["msg_id"]
+        msg_id = msg_json_data["msg_id"]
         description, _ = self._get_optional_value(msg_json_data, "description", "")
         msg_cycle_time, _ = self._get_optional_value(msg_json_data, "cycle_time", None)
 
         # Check if message ID is unique
-        if id in {msg.id for msg in self._messages.values()}:
+        if msg_id in {msg.id for msg in self._messages.values()}:
             raise InvalidCanJson(
                 f"ID for message '{msg_name}' transmitted by '{node}' is a duplicate, messages must have unique IDs."
             )
@@ -190,6 +190,7 @@ class JsonCanParser:
                 signal_name=name,
                 signal_json_data=data,
                 next_available_bit=next_available_bit,
+                msg_name=name,
             )
 
             # If we specify one start bit, we require that the rest of the message specify start bit too
@@ -218,7 +219,7 @@ class JsonCanParser:
 
         return CanMessage(
             name=msg_name,
-            id=id,
+            id=msg_id,
             description=description,
             signals=signals,
             cycle_time=msg_cycle_time,
@@ -229,11 +230,18 @@ class JsonCanParser:
         )
 
     def _get_parsed_can_signal(
-        self, signal_name: str, signal_json_data: Dict, next_available_bit: int
+        self, signal_name: str, signal_json_data: Dict, next_available_bit: int, msg_name: str
     ) -> CanSignal:
         """
         Parse JSON data dictionary representing a CAN signal.
         """
+        # # Signal name must be unique!
+        # if signal_name in [signal.name for msg in self._messages.values() for signal in msg.signals]:
+        #     raise InvalidCanJson(
+        #         f"Signal name '{signal_name}' for message '{msg_name}' is a duplicate, signals must have unique names."
+        #     )
+        # TODO: Decide if signals must be unique?
+
         max_val = 0
         min_val = 0
         scale = 0
