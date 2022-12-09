@@ -262,8 +262,8 @@ def clamp_signal_code(signal: CanSignal, msg: CanMessage, dest: str, src: str) -
     if signal.datatype() == CanSignalDatatype.FLOAT:
         cw.start_if(f"{src} != NAN")
 
-    min_val = CMacrosCfgs.MIN.format(msg=msg.name, signal=signal.name)
-    max_val = CMacrosCfgs.MAX.format(msg=msg.name, signal=signal.name)
+    min_val = CMacrosConfig.min(msg.name, signal.name)
+    max_val = CMacrosConfig.max(msg.name, signal.name)
 
     if any(
         [

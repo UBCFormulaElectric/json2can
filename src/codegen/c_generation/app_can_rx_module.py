@@ -15,18 +15,18 @@ class AppCanRxModule(CModule):
 
         # Init function
         init_func = CFunc(
-            CFuncsCfg.APP_RX_INIT,
+            CFuncsConfig.APP_RX_INIT,
             "void",
             args=[],
             comment="Initialize RX signals to their starting values.",
         )
         init_func.body.add_line(
-            f"memset(&{CVarsCfg.RX_TABLE}, 0, sizeof({CStructsCfg.RX_TABLE.format(node=self._node)}));"
+            f"memset(&{CVarsConfig.RX_TABLE}, 0, sizeof({CStructsConfig.RX_TABLE.format(node=self._node)}));"
         )
         for msg in self._db.rx_msgs_for_node(self._node):
             for signal in msg.signals:
                 init_func.body.add_line(
-                    f"{CFuncsCfg.APP_RX_SET_SIGNAL.format(msg=msg.name, signal=signal.name)}({CMacrosCfgs.START_VAL.format(msg=msg.name, signal=signal.name)});"
+                    f"{CFuncsConfig.APP_RX_SET_SIGNAL.format(msg=msg.name, signal=signal.name)}({CMacrosConfig.start_val(msg.name, signal.name)});"
                 )
         funcs.append(init_func)
 
@@ -34,7 +34,7 @@ class AppCanRxModule(CModule):
         for msg in self._db.rx_msgs_for_node(self._node):
             for signal in msg.signals:
                 func = CFunc(
-                    CFuncsCfg.APP_RX_SET_SIGNAL.format(
+                    CFuncsConfig.APP_RX_SET_SIGNAL.format(
                         msg=msg.name, signal=signal.name
                     ),
                     "void",
@@ -48,7 +48,7 @@ class AppCanRxModule(CModule):
                     clamp_signal_code(
                         signal,
                         msg,
-                        f"{CVarsCfg.RX_TABLE}.{CVarsCfg.MSG_STRUCT.format(msg=msg.name)}.{CVarsCfg.SIGNAL_VALUE.format(signal=signal.name)}",
+                        f"{CVarsConfig.RX_TABLE}.{CVarsConfig.MSG_STRUCT.format(msg=msg.name)}.{CVarsConfig.SIGNAL_VALUE.format(signal=signal.name)}",
                         "value",
                     )
                 )
@@ -58,7 +58,7 @@ class AppCanRxModule(CModule):
         for msg in self._db.rx_msgs_for_node(self._node):
             for signal in msg.signals:
                 func = CFunc(
-                    CFuncsCfg.APP_RX_GET_SIGNAL.format(
+                    CFuncsConfig.APP_RX_GET_SIGNAL.format(
                         msg=msg.name, signal=signal.name
                     ),
                     signal.datatype(),
@@ -67,7 +67,7 @@ class AppCanRxModule(CModule):
                 )
 
                 func.body.add_line(
-                    f"return {CVarsCfg.RX_TABLE}.{CVarsCfg.MSG_STRUCT.format(msg=msg.name)}.{CVarsCfg.SIGNAL_VALUE.format(signal=signal.name)};"
+                    f"return {CVarsConfig.RX_TABLE}.{CVarsConfig.MSG_STRUCT.format(msg=msg.name)}.{CVarsConfig.SIGNAL_VALUE.format(signal=signal.name)};"
                 )
                 funcs.append(func)
 
@@ -91,14 +91,14 @@ class AppCanRxModule(CModule):
         cw.add_line()
 
         rx_table_struct = CStruct(
-            CStructsCfg.RX_TABLE.format(node=self._node),
+            CStructsConfig.RX_TABLE.format(node=self._node),
             comment=f"Struct for holding all messages received by {self._node} (i.e. the RX table).",
         )
         for msg in self._db.rx_msgs_for_node(self._node):
             rx_table_struct.add_member(
                 CVar(
-                    CVarsCfg.MSG_STRUCT.format(msg=msg.name),
-                    CStructsCfg.MSG_STRUCT.format(msg=msg.name),
+                    CVarsConfig.MSG_STRUCT.format(msg=msg.name),
+                    CStructsConfig.MSG_STRUCT.format(msg=msg.name),
                 )
             )
 
@@ -134,7 +134,7 @@ class AppCanRxModule(CModule):
         cw.add_header_comment("Private Variables")
         cw.add_line()
         cw.add_var_declaration(
-            CVar(CVarsCfg.RX_TABLE, CStructsCfg.RX_TABLE.format(node=self._node)),
+            CVar(CVarsConfig.RX_TABLE, CStructsConfig.RX_TABLE.format(node=self._node)),
             qualifier="static",
         )
 

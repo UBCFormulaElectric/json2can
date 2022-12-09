@@ -177,9 +177,9 @@ class DbcGenerator:
         """
         Format and return DBC value table.
         """
-        entries_text = ""
-        for enum_entry in signal.enum.items:
-            entries_text += f'{enum_entry.value} "{enum_entry.name}"'
+        entries_text = " ".join(
+            [f'{entry.value} "{entry.name}"' for entry in signal.enum.items]
+        )
 
         return DBC_VALUE_TABLE_TEMPLATE.format(
             id=msg_id, signal_name=signal.name, entries=entries_text

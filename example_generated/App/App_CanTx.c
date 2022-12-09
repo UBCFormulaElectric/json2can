@@ -3,11 +3,28 @@
  */
 // clang-format off
 
-/* ------------------------- Function Definitions ------------------------- */
+/* ------------------------------- Includes ------------------------------- */
 
 #include <math.h>
 #include <string.h>
 #include "App_CanTx.h"
+
+
+/* ------------------------------- Structs -------------------------------- */
+
+/**
+ * Struct for holding all messages transmitted by JCT (i.e. the TX table).
+ */
+typedef struct
+{
+    JctVitals_Signals JctVitals_signals;
+    JctWarnings_Signals JctWarnings_signals;
+    JctAirShutdownErrors_Signals JctAirShutdownErrors_signals;
+    JctMotorShutdownErrors_Signals JctMotorShutdownErrors_signals;
+    JctStatus_Signals JctStatus_signals;
+    JCT_AlertSet_Signals JCT_AlertSet_signals;
+    JCT_AlertCleared_Signals JCT_AlertCleared_signals;
+} JCT_TxMsgs;
 
 /* -------------------------- Private Variables --------------------------- */
 
@@ -18,148 +35,148 @@ static JCT_TxMsgs tx_table;
 void App_CanTx_Init()
 {
     memset(&tx_table, 0, sizeof(JCT_TxMsgs));
-    App_CanTx_JCT_vitals_heartbeat_Set(CANSIG_JCT_vitals_heartbeat_START_VAL);
-    App_CanTx_JCT_vitals_timestamp_Set(CANSIG_JCT_vitals_timestamp_START_VAL);
-    App_CanTx_JCT_noncriticalErrors_watchdogTimeout_Set(CANSIG_JCT_noncriticalErrors_watchdogTimeout_START_VAL);
-    App_CanTx_JCT_noncriticalErrors_boardOvertemp_Set(CANSIG_JCT_noncriticalErrors_boardOvertemp_START_VAL);
-    App_CanTx_JCT_noncriticalErrors_boardOvervoltage_Set(CANSIG_JCT_noncriticalErrors_boardOvervoltage_START_VAL);
-    App_CanTx_JCT_AIRShutdownErrors_dummyAirShutdown_Set(CANSIG_JCT_AIRShutdownErrors_dummyAirShutdown_START_VAL);
-    App_CanTx_JCT_motorShutdownErrors_dummyMotorShutdown_Set(CANSIG_JCT_motorShutdownErrors_dummyMotorShutdown_START_VAL);
-    App_CanTx_JCT_status_contactorsClosed_Set(CANSIG_JCT_status_contactorsClosed_START_VAL);
-    App_CanTx_JCT_status_current_Set(CANSIG_JCT_status_current_START_VAL);
-    App_CanTx_JCT_status_voltage_Set(CANSIG_JCT_status_voltage_START_VAL);
-    App_CanTx_JCT_status_unsigned_tester_Set(CANSIG_JCT_status_unsigned_tester_START_VAL);
-    App_CanTx_JCT_AlertSet_JCT_AlertSet_Set(CANSIG_JCT_AlertSet_JCT_AlertSet_START_VAL);
-    App_CanTx_JCT_AlertCleared_JCT_AlertCleared_Set(CANSIG_JCT_AlertCleared_JCT_AlertCleared_START_VAL);
+    App_CanTx_JctVitals_Heartbeat_Set(CANSIG_JCT_VITALS_HEARTBEAT_START_VAL);
+    App_CanTx_JctVitals_Timestamp_Set(CANSIG_JCT_VITALS_TIMESTAMP_START_VAL);
+    App_CanTx_JctWarnings_WatchdogTimeout_Set(CANSIG_JCT_WARNINGS_WATCHDOG_TIMEOUT_START_VAL);
+    App_CanTx_JctWarnings_BoardOvertemp_Set(CANSIG_JCT_WARNINGS_BOARD_OVERTEMP_START_VAL);
+    App_CanTx_JctWarnings_BoardOvervoltage_Set(CANSIG_JCT_WARNINGS_BOARD_OVERVOLTAGE_START_VAL);
+    App_CanTx_JctAirShutdownErrors_DummyAirShutdown_Set(CANSIG_JCT_AIR_SHUTDOWN_ERRORS_DUMMY_AIR_SHUTDOWN_START_VAL);
+    App_CanTx_JctMotorShutdownErrors_DummyMotorShutdown_Set(CANSIG_JCT_MOTOR_SHUTDOWN_ERRORS_DUMMY_MOTOR_SHUTDOWN_START_VAL);
+    App_CanTx_JctStatus_ContactorsClosed_Set(CANSIG_JCT_STATUS_CONTACTORS_CLOSED_START_VAL);
+    App_CanTx_JctStatus_Current_Set(CANSIG_JCT_STATUS_CURRENT_START_VAL);
+    App_CanTx_JctStatus_Voltage_Set(CANSIG_JCT_STATUS_VOLTAGE_START_VAL);
+    App_CanTx_JctStatus_UnsignedTester_Set(CANSIG_JCT_STATUS_UNSIGNED_TESTER_START_VAL);
+    App_CanTx_JCT_AlertSet_JCT_AlertSet_Set(CANSIG_JCT_ALERT_SET_JCT_ALERT_SET_START_VAL);
+    App_CanTx_JCT_AlertCleared_JCT_AlertCleared_Set(CANSIG_JCT_ALERT_CLEARED_JCT_ALERT_CLEARED_START_VAL);
 }
 
-void App_CanTx_JCT_vitals_heartbeat_Set(bool value)
+void App_CanTx_JctVitals_Heartbeat_Set(bool value)
 {
-    tx_table.JCT_vitals_signals.heartbeat_value = value;
+    tx_table.JctVitals_signals.Heartbeat_value = value;
 }
 
-void App_CanTx_JCT_vitals_timestamp_Set(uint32_t value)
+void App_CanTx_JctVitals_Timestamp_Set(uint32_t value)
 {
-    tx_table.JCT_vitals_signals.timestamp_value = value;
+    tx_table.JctVitals_signals.Timestamp_value = value;
 }
 
-void App_CanTx_JCT_noncriticalErrors_watchdogTimeout_Set(bool value)
+void App_CanTx_JctWarnings_WatchdogTimeout_Set(bool value)
 {
-    tx_table.JCT_noncriticalErrors_signals.watchdogTimeout_value = value;
+    tx_table.JctWarnings_signals.WatchdogTimeout_value = value;
 }
 
-void App_CanTx_JCT_noncriticalErrors_boardOvertemp_Set(bool value)
+void App_CanTx_JctWarnings_BoardOvertemp_Set(bool value)
 {
-    tx_table.JCT_noncriticalErrors_signals.boardOvertemp_value = value;
+    tx_table.JctWarnings_signals.BoardOvertemp_value = value;
 }
 
-void App_CanTx_JCT_noncriticalErrors_boardOvervoltage_Set(bool value)
+void App_CanTx_JctWarnings_BoardOvervoltage_Set(bool value)
 {
-    tx_table.JCT_noncriticalErrors_signals.boardOvervoltage_value = value;
+    tx_table.JctWarnings_signals.BoardOvervoltage_value = value;
 }
 
-void App_CanTx_JCT_AIRShutdownErrors_dummyAirShutdown_Set(bool value)
+void App_CanTx_JctAirShutdownErrors_DummyAirShutdown_Set(bool value)
 {
-    tx_table.JCT_AIRShutdownErrors_signals.dummyAirShutdown_value = value;
+    tx_table.JctAirShutdownErrors_signals.DummyAirShutdown_value = value;
 }
 
-void App_CanTx_JCT_motorShutdownErrors_dummyMotorShutdown_Set(bool value)
+void App_CanTx_JctMotorShutdownErrors_DummyMotorShutdown_Set(bool value)
 {
-    tx_table.JCT_motorShutdownErrors_signals.dummyMotorShutdown_value = value;
+    tx_table.JctMotorShutdownErrors_signals.DummyMotorShutdown_value = value;
 }
 
-void App_CanTx_JCT_status_contactorsClosed_Set(AirState value)
+void App_CanTx_JctStatus_ContactorsClosed_Set(AirState value)
 {
-    tx_table.JCT_status_signals.contactorsClosed_value = (value > CANSIG_JCT_status_contactorsClosed_MAX) ? CANSIG_JCT_status_contactorsClosed_MAX : value;
+    tx_table.JctStatus_signals.ContactorsClosed_value = (value > CANSIG_JCT_STATUS_CONTACTORS_CLOSED_MAX) ? CANSIG_JCT_STATUS_CONTACTORS_CLOSED_MAX : value;
 }
 
-void App_CanTx_JCT_status_current_Set(float value)
-{
-    if (value != NAN)
-    {
-        const float tmp = value < CANSIG_JCT_status_current_MIN ? CANSIG_JCT_status_current_MIN : value;
-        tx_table.JCT_status_signals.current_value = tmp > CANSIG_JCT_status_current_MAX ? CANSIG_JCT_status_current_MAX : tmp;
-    }
-}
-
-void App_CanTx_JCT_status_voltage_Set(float value)
+void App_CanTx_JctStatus_Current_Set(float value)
 {
     if (value != NAN)
     {
-        const float tmp = value < CANSIG_JCT_status_voltage_MIN ? CANSIG_JCT_status_voltage_MIN : value;
-        tx_table.JCT_status_signals.voltage_value = tmp > CANSIG_JCT_status_voltage_MAX ? CANSIG_JCT_status_voltage_MAX : tmp;
+        const float tmp = value < CANSIG_JCT_STATUS_CURRENT_MIN ? CANSIG_JCT_STATUS_CURRENT_MIN : value;
+        tx_table.JctStatus_signals.Current_value = tmp > CANSIG_JCT_STATUS_CURRENT_MAX ? CANSIG_JCT_STATUS_CURRENT_MAX : tmp;
     }
 }
 
-void App_CanTx_JCT_status_unsigned_tester_Set(int value)
+void App_CanTx_JctStatus_Voltage_Set(float value)
 {
-    const int tmp = value < CANSIG_JCT_status_unsigned_tester_MIN ? CANSIG_JCT_status_unsigned_tester_MIN : value;
-    tx_table.JCT_status_signals.unsigned_tester_value = tmp > CANSIG_JCT_status_unsigned_tester_MAX ? CANSIG_JCT_status_unsigned_tester_MAX : tmp;
+    if (value != NAN)
+    {
+        const float tmp = value < CANSIG_JCT_STATUS_VOLTAGE_MIN ? CANSIG_JCT_STATUS_VOLTAGE_MIN : value;
+        tx_table.JctStatus_signals.Voltage_value = tmp > CANSIG_JCT_STATUS_VOLTAGE_MAX ? CANSIG_JCT_STATUS_VOLTAGE_MAX : tmp;
+    }
+}
+
+void App_CanTx_JctStatus_UnsignedTester_Set(int value)
+{
+    const int tmp = value < CANSIG_JCT_STATUS_UNSIGNED_TESTER_MIN ? CANSIG_JCT_STATUS_UNSIGNED_TESTER_MIN : value;
+    tx_table.JctStatus_signals.UnsignedTester_value = tmp > CANSIG_JCT_STATUS_UNSIGNED_TESTER_MAX ? CANSIG_JCT_STATUS_UNSIGNED_TESTER_MAX : tmp;
 }
 
 void App_CanTx_JCT_AlertSet_JCT_AlertSet_Set(JCT_Alert value)
 {
-    tx_table.JCT_AlertSet_signals.JCT_AlertSet_value = (value > CANSIG_JCT_AlertSet_JCT_AlertSet_MAX) ? CANSIG_JCT_AlertSet_JCT_AlertSet_MAX : value;
+    tx_table.JCT_AlertSet_signals.JCT_AlertSet_value = (value > CANSIG_JCT_ALERT_SET_JCT_ALERT_SET_MAX) ? CANSIG_JCT_ALERT_SET_JCT_ALERT_SET_MAX : value;
 }
 
 void App_CanTx_JCT_AlertCleared_JCT_AlertCleared_Set(JCT_Alert value)
 {
-    tx_table.JCT_AlertCleared_signals.JCT_AlertCleared_value = (value > CANSIG_JCT_AlertCleared_JCT_AlertCleared_MAX) ? CANSIG_JCT_AlertCleared_JCT_AlertCleared_MAX : value;
+    tx_table.JCT_AlertCleared_signals.JCT_AlertCleared_value = (value > CANSIG_JCT_ALERT_CLEARED_JCT_ALERT_CLEARED_MAX) ? CANSIG_JCT_ALERT_CLEARED_JCT_ALERT_CLEARED_MAX : value;
 }
 
-bool App_CanTx_JCT_vitals_heartbeat_Get()
+bool App_CanTx_JctVitals_Heartbeat_Get()
 {
-    return tx_table.JCT_vitals_signals.heartbeat_value;
+    return tx_table.JctVitals_signals.Heartbeat_value;
 }
 
-uint32_t App_CanTx_JCT_vitals_timestamp_Get()
+uint32_t App_CanTx_JctVitals_Timestamp_Get()
 {
-    return tx_table.JCT_vitals_signals.timestamp_value;
+    return tx_table.JctVitals_signals.Timestamp_value;
 }
 
-bool App_CanTx_JCT_noncriticalErrors_watchdogTimeout_Get()
+bool App_CanTx_JctWarnings_WatchdogTimeout_Get()
 {
-    return tx_table.JCT_noncriticalErrors_signals.watchdogTimeout_value;
+    return tx_table.JctWarnings_signals.WatchdogTimeout_value;
 }
 
-bool App_CanTx_JCT_noncriticalErrors_boardOvertemp_Get()
+bool App_CanTx_JctWarnings_BoardOvertemp_Get()
 {
-    return tx_table.JCT_noncriticalErrors_signals.boardOvertemp_value;
+    return tx_table.JctWarnings_signals.BoardOvertemp_value;
 }
 
-bool App_CanTx_JCT_noncriticalErrors_boardOvervoltage_Get()
+bool App_CanTx_JctWarnings_BoardOvervoltage_Get()
 {
-    return tx_table.JCT_noncriticalErrors_signals.boardOvervoltage_value;
+    return tx_table.JctWarnings_signals.BoardOvervoltage_value;
 }
 
-bool App_CanTx_JCT_AIRShutdownErrors_dummyAirShutdown_Get()
+bool App_CanTx_JctAirShutdownErrors_DummyAirShutdown_Get()
 {
-    return tx_table.JCT_AIRShutdownErrors_signals.dummyAirShutdown_value;
+    return tx_table.JctAirShutdownErrors_signals.DummyAirShutdown_value;
 }
 
-bool App_CanTx_JCT_motorShutdownErrors_dummyMotorShutdown_Get()
+bool App_CanTx_JctMotorShutdownErrors_DummyMotorShutdown_Get()
 {
-    return tx_table.JCT_motorShutdownErrors_signals.dummyMotorShutdown_value;
+    return tx_table.JctMotorShutdownErrors_signals.DummyMotorShutdown_value;
 }
 
-AirState App_CanTx_JCT_status_contactorsClosed_Get()
+AirState App_CanTx_JctStatus_ContactorsClosed_Get()
 {
-    return tx_table.JCT_status_signals.contactorsClosed_value;
+    return tx_table.JctStatus_signals.ContactorsClosed_value;
 }
 
-float App_CanTx_JCT_status_current_Get()
+float App_CanTx_JctStatus_Current_Get()
 {
-    return tx_table.JCT_status_signals.current_value;
+    return tx_table.JctStatus_signals.Current_value;
 }
 
-float App_CanTx_JCT_status_voltage_Get()
+float App_CanTx_JctStatus_Voltage_Get()
 {
-    return tx_table.JCT_status_signals.voltage_value;
+    return tx_table.JctStatus_signals.Voltage_value;
 }
 
-int App_CanTx_JCT_status_unsigned_tester_Get()
+int App_CanTx_JctStatus_UnsignedTester_Get()
 {
-    return tx_table.JCT_status_signals.unsigned_tester_value;
+    return tx_table.JctStatus_signals.UnsignedTester_value;
 }
 
 JCT_Alert App_CanTx_JCT_AlertSet_JCT_AlertSet_Get()
@@ -172,29 +189,29 @@ JCT_Alert App_CanTx_JCT_AlertCleared_JCT_AlertCleared_Get()
     return tx_table.JCT_AlertCleared_signals.JCT_AlertCleared_value;
 }
 
-const JCT_vitals_Signals* App_CanTx_JCT_vitals_GetData()
+const JctVitals_Signals* App_CanTx_JctVitals_GetData()
 {
-    return &tx_table.JCT_vitals_signals;
+    return &tx_table.JctVitals_signals;
 }
 
-const JCT_noncriticalErrors_Signals* App_CanTx_JCT_noncriticalErrors_GetData()
+const JctWarnings_Signals* App_CanTx_JctWarnings_GetData()
 {
-    return &tx_table.JCT_noncriticalErrors_signals;
+    return &tx_table.JctWarnings_signals;
 }
 
-const JCT_AIRShutdownErrors_Signals* App_CanTx_JCT_AIRShutdownErrors_GetData()
+const JctAirShutdownErrors_Signals* App_CanTx_JctAirShutdownErrors_GetData()
 {
-    return &tx_table.JCT_AIRShutdownErrors_signals;
+    return &tx_table.JctAirShutdownErrors_signals;
 }
 
-const JCT_motorShutdownErrors_Signals* App_CanTx_JCT_motorShutdownErrors_GetData()
+const JctMotorShutdownErrors_Signals* App_CanTx_JctMotorShutdownErrors_GetData()
 {
-    return &tx_table.JCT_motorShutdownErrors_signals;
+    return &tx_table.JctMotorShutdownErrors_signals;
 }
 
-const JCT_status_Signals* App_CanTx_JCT_status_GetData()
+const JctStatus_Signals* App_CanTx_JctStatus_GetData()
 {
-    return &tx_table.JCT_status_signals;
+    return &tx_table.JctStatus_signals;
 }
 
 const JCT_AlertSet_Signals* App_CanTx_JCT_AlertSet_GetData()

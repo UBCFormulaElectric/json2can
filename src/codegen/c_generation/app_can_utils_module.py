@@ -28,12 +28,12 @@ class AppCanUtilsModule(CModule):
         # Generate all packing functions for TX CAN msgs
         for msg in self._db.tx_msgs_for_node(self._node):
             func = CFunc(
-                CFuncsCfg.UTILS_PACK.format(msg=msg.name),
+                CFuncsConfig.UTILS_PACK.format(msg=msg.name),
                 "void",
                 args=[
                     CVar(
                         "in_msg",
-                        f"const {CStructsCfg.MSG_STRUCT.format(msg=msg.name)}* const",
+                        f"const {CStructsConfig.MSG_STRUCT.format(msg=msg.name)}* const",
                     ),
                     CVar("out_data", "uint8_t* const"),
                 ],
@@ -54,13 +54,13 @@ class AppCanUtilsModule(CModule):
         # Generate all unpacking functions for RX CAN msgs
         for msg in self._db.rx_msgs_for_node(self._node):
             func = CFunc(
-                CFuncsCfg.UTILS_UNPACK.format(msg=msg.name),
+                CFuncsConfig.UTILS_UNPACK.format(msg=msg.name),
                 "void",
                 args=[
                     CVar("in_data", "const uint8_t* const"),
                     CVar(
                         "out_msg",
-                        f"{CStructsCfg.MSG_STRUCT.format(msg=msg.name)}* const",
+                        f"{CStructsConfig.MSG_STRUCT.format(msg=msg.name)}* const",
                     ),
                 ],
                 comment=f"Unpack signals from CAN payload for {msg.name}.",
@@ -86,7 +86,7 @@ class AppCanUtilsModule(CModule):
         cw.add_comment("Msg IDs")
         for msg in self._db.msgs_for_node(self._node):
             cw.add_macro(
-                CMacrosCfgs.ID.format(msg=pascal_to_screaming_snake_case(msg.name)),
+                CMacrosConfig.id(msg.name),
                 msg.id,
             )
         cw.add_line()
@@ -95,7 +95,7 @@ class AppCanUtilsModule(CModule):
         cw.add_comment("Msg lengths (in bytes)")
         for msg in self._db.tx_msgs_for_node(self._node):
             cw.add_macro(
-                CMacrosCfgs.BYTES.format(msg=pascal_to_screaming_snake_case(msg.name)),
+                CMacrosConfig.bytes(msg.name),
                 msg.bytes(),
             )
         cw.add_line()
@@ -105,9 +105,7 @@ class AppCanUtilsModule(CModule):
         for msg in self._db.tx_msgs_for_node(self._node):
             if msg.is_periodic():
                 cw.add_macro(
-                    CMacrosCfgs.CYCLE_TIME.format(
-                        msg=pascal_to_screaming_snake_case(msg.name)
-                    ),
+                    CMacrosConfig.cycle_time(msg.name),
                     msg.cycle_time,
                 )
         cw.add_line()
@@ -117,10 +115,7 @@ class AppCanUtilsModule(CModule):
         for msg in self._db.msgs_for_node(self._node):
             for signal in msg.signals:
                 cw.add_macro(
-                    CMacrosCfgs.START_VAL.format(
-                        msg=pascal_to_screaming_snake_case(msg.name),
-                        signal=pascal_to_screaming_snake_case(signal.name),
-                    ),
+                    CMacrosConfig.start_val(msg.name, signal.name),
                     str(CLiteral(signal.start_val)),
                     comment=signal.unit,
                 )
@@ -131,17 +126,11 @@ class AppCanUtilsModule(CModule):
         for msg in self._db.msgs_for_node(self._node):
             for signal in msg.signals:
                 cw.add_macro(
-                    CMacrosCfgs.SCALE.format(
-                        msg=pascal_to_screaming_snake_case(msg.name),
-                        signal=pascal_to_screaming_snake_case(signal.name),
-                    ),
+                    CMacrosConfig.scale(msg.name, signal.name),
                     str(CLiteral(signal.scale)),
                 )
                 cw.add_macro(
-                    CMacrosCfgs.OFFSET.format(
-                        msg=pascal_to_screaming_snake_case(msg.name),
-                        signal=pascal_to_screaming_snake_case(signal.name),
-                    ),
+                    CMacrosConfig.offset(msg.name, signal.name),
                     str(CLiteral(signal.offset)),
                 )
         cw.add_line()
@@ -151,18 +140,12 @@ class AppCanUtilsModule(CModule):
         for msg in self._db.msgs_for_node(self._node):
             for signal in msg.signals:
                 cw.add_macro(
-                    CMacrosCfgs.MIN.format(
-                        msg=pascal_to_screaming_snake_case(msg.name),
-                        signal=pascal_to_screaming_snake_case(signal.name),
-                    ),
+                    CMacrosConfig.min(msg.name, signal.name),
                     str(CLiteral(signal.min_val)),
                     comment=signal.unit,
                 )
                 cw.add_macro(
-                    CMacrosCfgs.MAX.format(
-                        msg=pascal_to_screaming_snake_case(msg.name),
-                        signal=pascal_to_screaming_snake_case(signal.name),
-                    ),
+                    CMacrosConfig.max(msg.name, signal.name),
                     str(CLiteral(signal.max_val)),
                     comment=signal.unit,
                 )
@@ -194,19 +177,25 @@ class AppCanUtilsModule(CModule):
         cw.add_header_comment("Enums")
         cw.add_line()
 
-        enums = []
+        can_enums = []
         for msg in self._db.msgs_for_node(self._node):
             for signal in msg.signals:
-                if signal.enum and signal.enum not in enums:
-                    enums.append(signal.enum)
+                if signal.enum and signal.enum not in can_enums:
+                    can_enums.append(signal.enum)
 
         # Add found enums
-        for enum in enums:
-            cenum = CEnum(enum.name)
-            for item in enum.items:
-                cenum.add_value(CVar(item.name, value=item.value))
+        for can_enum in can_enums:
+            enum = CEnum(can_enum.name)
+            for item in can_enum.items:
+                enum.add_value(CVar(item.name, value=item.value))
+            enum.add_value(
+                CVar(
+                    f"NUM_{pascal_to_screaming_snake_case(can_enum.name)}_CHOICES",
+                    value=len(can_enum.items),
+                )
+            )
 
-            cw.add_enum(cenum)
+            cw.add_enum(enum)
             cw.add_line()
 
         # Add message structs
@@ -216,14 +205,14 @@ class AppCanUtilsModule(CModule):
 
         for msg in self._db.msgs_for_node(self._node):
             struct = CStruct(
-                CStructsCfg.MSG_STRUCT.format(msg=msg.name),
+                CStructsConfig.MSG_STRUCT.format(msg=msg.name),
                 comment=f"Signals in CAN msg {msg.name}.",
             )
             for signal in msg.signals:
                 signal_comment = f"Range: {signal.min_val}{signal.unit} to {signal.max_val}{signal.unit}"
                 struct.add_member(
                     CVar(
-                        CVarsCfg.SIGNAL_VALUE.format(signal=signal.name),
+                        CVarsConfig.SIGNAL_VALUE.format(signal=signal.name),
                         signal.datatype(),
                         comment=signal_comment,
                     )
@@ -389,8 +378,8 @@ def pack_signal_code(signal: CanSignal, msg: CanMessage):
     )
 
     # Encode signal value
-    scale_macro = CMacrosCfgs.SCALE.format(msg=msg.name, signal=signal.name)
-    offset_macro = CMacrosCfgs.OFFSET.format(msg=msg.name, signal=signal.name)
+    scale_macro = CMacrosConfig.scale(msg.name, signal.name)
+    offset_macro = CMacrosConfig.offset(msg.name, signal.name)
     cw.add_line(
         f"const uint32_t {signal_raw_var_name} = {ENCODE_MACRO}({signal_val_var_name}, {scale_macro}, {offset_macro}, {signal.representation()});"
     )
@@ -491,8 +480,8 @@ def unpack_signal_code(signal: CanSignal, msg: CanMessage):
         starting_byte += 1
 
     # Decode raw payload bits
-    scale_macro = CMacrosCfgs.SCALE.format(msg=msg.name, signal=signal.name)
-    offset_macro = CMacrosCfgs.OFFSET.format(msg=msg.name, signal=signal.name)
+    scale_macro = CMacrosConfig.scale(msg.name, signal.name)
+    offset_macro = CMacrosConfig.offset(msg.name, signal.name)
     cw.add_line(
         f"const {signal.datatype()} {signal_val_var_name} = {DECODE_MACRO}({signal_raw_var_name}, {scale_macro}, {offset_macro}, {signal.representation()});"
     )

@@ -1,6 +1,6 @@
 {
     "messages": [
-        "FSM_apps",
-        "FSM_noncriticalErrors"
+        "FsmApps",
+        "FsmWarnings"
     ]
 }

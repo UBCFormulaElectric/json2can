@@ -9,23 +9,6 @@
 
 #include "App_CanUtils.h"
 
-/* ------------------------------- Structs -------------------------------- */
-
-/**
- * Struct for holding all messages transmitted by JCT (i.e. the TX table).
- */
-typedef struct
-{
-    JCT_vitals_Signals JCT_vitals_signals;
-    JCT_noncriticalErrors_Signals JCT_noncriticalErrors_signals;
-    JCT_AIRShutdownErrors_Signals JCT_AIRShutdownErrors_signals;
-    JCT_motorShutdownErrors_Signals JCT_motorShutdownErrors_signals;
-    JCT_status_Signals JCT_status_signals;
-    JCT_AlertSet_Signals JCT_AlertSet_signals;
-    JCT_AlertCleared_Signals JCT_AlertCleared_signals;
-} JCT_TxMsgs;
-
-
 /* ------------------------- Function Prototypes -------------------------- */
 
 /**
@@ -34,59 +17,59 @@ typedef struct
 void App_CanTx_Init();
 
 /**
- * Update value stored in TX table of signal heartbeat in msg JCT_vitals.
+ * Update value stored in TX table of signal Heartbeat in msg JctVitals.
  */
-void App_CanTx_JCT_vitals_heartbeat_Set(bool value);
+void App_CanTx_JctVitals_Heartbeat_Set(bool value);
 
 /**
- * Update value stored in TX table of signal timestamp in msg JCT_vitals.
+ * Update value stored in TX table of signal Timestamp in msg JctVitals.
  */
-void App_CanTx_JCT_vitals_timestamp_Set(uint32_t value);
+void App_CanTx_JctVitals_Timestamp_Set(uint32_t value);
 
 /**
- * Update value stored in TX table of signal watchdogTimeout in msg JCT_noncriticalErrors.
+ * Update value stored in TX table of signal WatchdogTimeout in msg JctWarnings.
  */
-void App_CanTx_JCT_noncriticalErrors_watchdogTimeout_Set(bool value);
+void App_CanTx_JctWarnings_WatchdogTimeout_Set(bool value);
 
 /**
- * Update value stored in TX table of signal boardOvertemp in msg JCT_noncriticalErrors.
+ * Update value stored in TX table of signal BoardOvertemp in msg JctWarnings.
  */
-void App_CanTx_JCT_noncriticalErrors_boardOvertemp_Set(bool value);
+void App_CanTx_JctWarnings_BoardOvertemp_Set(bool value);
 
 /**
- * Update value stored in TX table of signal boardOvervoltage in msg JCT_noncriticalErrors.
+ * Update value stored in TX table of signal BoardOvervoltage in msg JctWarnings.
  */
-void App_CanTx_JCT_noncriticalErrors_boardOvervoltage_Set(bool value);
+void App_CanTx_JctWarnings_BoardOvervoltage_Set(bool value);
 
 /**
- * Update value stored in TX table of signal dummyAirShutdown in msg JCT_AIRShutdownErrors.
+ * Update value stored in TX table of signal DummyAirShutdown in msg JctAirShutdownErrors.
  */
-void App_CanTx_JCT_AIRShutdownErrors_dummyAirShutdown_Set(bool value);
+void App_CanTx_JctAirShutdownErrors_DummyAirShutdown_Set(bool value);
 
 /**
- * Update value stored in TX table of signal dummyMotorShutdown in msg JCT_motorShutdownErrors.
+ * Update value stored in TX table of signal DummyMotorShutdown in msg JctMotorShutdownErrors.
  */
-void App_CanTx_JCT_motorShutdownErrors_dummyMotorShutdown_Set(bool value);
+void App_CanTx_JctMotorShutdownErrors_DummyMotorShutdown_Set(bool value);
 
 /**
- * Update value stored in TX table of signal contactorsClosed in msg JCT_status.
+ * Update value stored in TX table of signal ContactorsClosed in msg JctStatus.
  */
-void App_CanTx_JCT_status_contactorsClosed_Set(AirState value);
+void App_CanTx_JctStatus_ContactorsClosed_Set(AirState value);
 
 /**
- * Update value stored in TX table of signal current in msg JCT_status.
+ * Update value stored in TX table of signal Current in msg JctStatus.
  */
-void App_CanTx_JCT_status_current_Set(float value);
+void App_CanTx_JctStatus_Current_Set(float value);
 
 /**
- * Update value stored in TX table of signal voltage in msg JCT_status.
+ * Update value stored in TX table of signal Voltage in msg JctStatus.
  */
-void App_CanTx_JCT_status_voltage_Set(float value);
+void App_CanTx_JctStatus_Voltage_Set(float value);
 
 /**
- * Update value stored in TX table of signal unsigned_tester in msg JCT_status.
+ * Update value stored in TX table of signal UnsignedTester in msg JctStatus.
  */
-void App_CanTx_JCT_status_unsigned_tester_Set(int value);
+void App_CanTx_JctStatus_UnsignedTester_Set(int value);
 
 /**
  * Update value stored in TX table of signal JCT_AlertSet in msg JCT_AlertSet.
@@ -99,59 +82,59 @@ void App_CanTx_JCT_AlertSet_JCT_AlertSet_Set(JCT_Alert value);
 void App_CanTx_JCT_AlertCleared_JCT_AlertCleared_Set(JCT_Alert value);
 
 /**
- * Return value from TX table of signal heartbeat in msg JCT_vitals.
+ * Return value from TX table of signal Heartbeat in msg JctVitals.
  */
-bool App_CanTx_JCT_vitals_heartbeat_Get();
+bool App_CanTx_JctVitals_Heartbeat_Get();
 
 /**
- * Return value from TX table of signal timestamp in msg JCT_vitals.
+ * Return value from TX table of signal Timestamp in msg JctVitals.
  */
-uint32_t App_CanTx_JCT_vitals_timestamp_Get();
+uint32_t App_CanTx_JctVitals_Timestamp_Get();
 
 /**
- * Return value from TX table of signal watchdogTimeout in msg JCT_noncriticalErrors.
+ * Return value from TX table of signal WatchdogTimeout in msg JctWarnings.
  */
-bool App_CanTx_JCT_noncriticalErrors_watchdogTimeout_Get();
+bool App_CanTx_JctWarnings_WatchdogTimeout_Get();
 
 /**
- * Return value from TX table of signal boardOvertemp in msg JCT_noncriticalErrors.
+ * Return value from TX table of signal BoardOvertemp in msg JctWarnings.
  */
-bool App_CanTx_JCT_noncriticalErrors_boardOvertemp_Get();
+bool App_CanTx_JctWarnings_BoardOvertemp_Get();
 
 /**
- * Return value from TX table of signal boardOvervoltage in msg JCT_noncriticalErrors.
+ * Return value from TX table of signal BoardOvervoltage in msg JctWarnings.
  */
-bool App_CanTx_JCT_noncriticalErrors_boardOvervoltage_Get();
+bool App_CanTx_JctWarnings_BoardOvervoltage_Get();
 
 /**
- * Return value from TX table of signal dummyAirShutdown in msg JCT_AIRShutdownErrors.
+ * Return value from TX table of signal DummyAirShutdown in msg JctAirShutdownErrors.
  */
-bool App_CanTx_JCT_AIRShutdownErrors_dummyAirShutdown_Get();
+bool App_CanTx_JctAirShutdownErrors_DummyAirShutdown_Get();
 
 /**
- * Return value from TX table of signal dummyMotorShutdown in msg JCT_motorShutdownErrors.
+ * Return value from TX table of signal DummyMotorShutdown in msg JctMotorShutdownErrors.
  */
-bool App_CanTx_JCT_motorShutdownErrors_dummyMotorShutdown_Get();
+bool App_CanTx_JctMotorShutdownErrors_DummyMotorShutdown_Get();
 
 /**
- * Return value from TX table of signal contactorsClosed in msg JCT_status.
+ * Return value from TX table of signal ContactorsClosed in msg JctStatus.
  */
-AirState App_CanTx_JCT_status_contactorsClosed_Get();
+AirState App_CanTx_JctStatus_ContactorsClosed_Get();
 
 /**
- * Return value from TX table of signal current in msg JCT_status.
+ * Return value from TX table of signal Current in msg JctStatus.
  */
-float App_CanTx_JCT_status_current_Get();
+float App_CanTx_JctStatus_Current_Get();
 
 /**
- * Return value from TX table of signal voltage in msg JCT_status.
+ * Return value from TX table of signal Voltage in msg JctStatus.
  */
-float App_CanTx_JCT_status_voltage_Get();
+float App_CanTx_JctStatus_Voltage_Get();
 
 /**
- * Return value from TX table of signal unsigned_tester in msg JCT_status.
+ * Return value from TX table of signal UnsignedTester in msg JctStatus.
  */
-int App_CanTx_JCT_status_unsigned_tester_Get();
+int App_CanTx_JctStatus_UnsignedTester_Get();
 
 /**
  * Return value from TX table of signal JCT_AlertSet in msg JCT_AlertSet.
@@ -164,29 +147,29 @@ JCT_Alert App_CanTx_JCT_AlertSet_JCT_AlertSet_Get();
 JCT_Alert App_CanTx_JCT_AlertCleared_JCT_AlertCleared_Get();
 
 /**
- * Returns pointer to the struct of msg JCT_vitals signals in the TX table.
+ * Returns pointer to the struct of msg JctVitals signals in the TX table.
  */
-const JCT_vitals_Signals* App_CanTx_JCT_vitals_GetData();
+const JctVitals_Signals* App_CanTx_JctVitals_GetData();
 
 /**
- * Returns pointer to the struct of msg JCT_noncriticalErrors signals in the TX table.
+ * Returns pointer to the struct of msg JctWarnings signals in the TX table.
  */
-const JCT_noncriticalErrors_Signals* App_CanTx_JCT_noncriticalErrors_GetData();
+const JctWarnings_Signals* App_CanTx_JctWarnings_GetData();
 
 /**
- * Returns pointer to the struct of msg JCT_AIRShutdownErrors signals in the TX table.
+ * Returns pointer to the struct of msg JctAirShutdownErrors signals in the TX table.
  */
-const JCT_AIRShutdownErrors_Signals* App_CanTx_JCT_AIRShutdownErrors_GetData();
+const JctAirShutdownErrors_Signals* App_CanTx_JctAirShutdownErrors_GetData();
 
 /**
- * Returns pointer to the struct of msg JCT_motorShutdownErrors signals in the TX table.
+ * Returns pointer to the struct of msg JctMotorShutdownErrors signals in the TX table.
  */
-const JCT_motorShutdownErrors_Signals* App_CanTx_JCT_motorShutdownErrors_GetData();
+const JctMotorShutdownErrors_Signals* App_CanTx_JctMotorShutdownErrors_GetData();
 
 /**
- * Returns pointer to the struct of msg JCT_status signals in the TX table.
+ * Returns pointer to the struct of msg JctStatus signals in the TX table.
  */
-const JCT_status_Signals* App_CanTx_JCT_status_GetData();
+const JctStatus_Signals* App_CanTx_JctStatus_GetData();
 
 /**
  * Returns pointer to the struct of msg JCT_AlertSet signals in the TX table.

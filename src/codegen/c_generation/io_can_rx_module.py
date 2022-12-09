@@ -12,7 +12,7 @@ class IoCanRxModule(CModule):
 
     def _filter_id_func(self) -> CFunc:
         func = CFunc(
-            CFuncsCfg.IO_RX_FILTER_ID,
+            CFuncsConfig.IO_RX_FILTER_ID,
             "bool",
             args=[
                 CVar("std_id", "uint32_t"),
@@ -24,7 +24,7 @@ class IoCanRxModule(CModule):
         func.body.add_line("bool is_found = false;")
         func.body.start_switch("std_id")
         for msg in self._db.rx_msgs_for_node(self._node):
-            func.body.add_switch_case(CMacrosCfgs.ID.format(msg=msg.name))
+            func.body.add_switch_case(CMacrosConfig.id(msg.name))
 
         # If found msg, set is_found to true
         func.body.start_switch_case()
@@ -45,7 +45,7 @@ class IoCanRxModule(CModule):
 
     def _update_rx_table_func(self) -> CFunc:
         func = CFunc(
-            CFuncsCfg.IO_RX_UPDATE_TABLE,
+            CFuncsConfig.IO_RX_UPDATE_TABLE,
             "void",
             args=[
                 CVar("msg", "struct CanMsg*"),
@@ -55,22 +55,22 @@ class IoCanRxModule(CModule):
 
         func.body.start_switch("msg->std_id")
         for msg in self._db.rx_msgs_for_node(self._node):
-            func.body.add_switch_case(CMacrosCfgs.ID.format(msg=msg.name))
+            func.body.add_switch_case(CMacrosConfig.id(msg.name))
             func.body.start_switch_case()
 
             # Unpack RXed message
             func.body.add_var_declaration(
-                CVar("out_msg", CStructsCfg.MSG_STRUCT.format(msg=msg.name))
+                CVar("out_msg", CStructsConfig.MSG_STRUCT.format(msg=msg.name))
             )
             func.body.add_line(
-                f"{CFuncsCfg.UTILS_UNPACK.format(msg=msg.name)}(msg->data, &out_msg);"
+                f"{CFuncsConfig.UTILS_UNPACK.format(msg=msg.name)}(msg->data, &out_msg);"
             )
             func.body.add_line()
 
             # Update RX table signals
             for signal in msg.signals:
                 func.body.add_line(
-                    f"{CFuncsCfg.APP_RX_SET_SIGNAL.format(msg=msg.name, signal=signal.name)}(out_msg.{CVarsCfg.SIGNAL_VALUE.format(signal=signal.name)});"
+                    f"{CFuncsConfig.APP_RX_SET_SIGNAL.format(msg=msg.name, signal=signal.name)}(out_msg.{CVarsConfig.SIGNAL_VALUE.format(signal=signal.name)});"
                 )
             func.body.add_switch_break()
 

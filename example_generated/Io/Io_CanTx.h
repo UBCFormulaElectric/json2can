@@ -27,9 +27,9 @@ void Io_CanTx_Enqueue10HzMsgs();
 void Io_CanTx_Enqueue1HzMsgs();
 
 /**
- * Pack and send the aperiodic TX msg JCT_noncriticalErrors.
+ * Pack and send the aperiodic TX msg JctWarnings.
  */
-void App_CanTx_JCT_noncriticalErrors_SendAperiodic();
+void App_CanTx_JctWarnings_SendAperiodic();
 
 /**
  * Pack and send the aperiodic TX msg JCT_AlertSet.

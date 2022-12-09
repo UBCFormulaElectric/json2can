@@ -25,7 +25,7 @@ class IoCanTxModule(CModule):
         # Generate periodic message sending functions
         for cycle_time, freq in MSG_CYCLE_TIME_2_FREQ.items():
             func = CFunc(
-                CFuncsCfg.IO_TX_ENQUEUE_PERIODIC.format(freq=freq),
+                CFuncsConfig.IO_TX_ENQUEUE_PERIODIC.format(freq=freq),
                 "void",
                 args=[],
                 comment=f"Enqeue periodic CAN msgs of period {cycle_time}ms.",
@@ -34,7 +34,7 @@ class IoCanTxModule(CModule):
             for msg in self._db.tx_msgs_for_node(self._node):
                 if msg.is_periodic() and msg.cycle_time == cycle_time:
                     func.body.add_line(
-                        f"{CFuncsCfg.IO_TX_SEND.format(msg=msg.name, mode=freq)}();"
+                        f"{CFuncsConfig.IO_TX_SEND.format(msg=msg.name, mode=freq)}();"
                     )
 
             public_funcs.append(func)
@@ -47,7 +47,7 @@ class IoCanTxModule(CModule):
                 else "Aperiodic"
             )
             func = CFunc(
-                CFuncsCfg.IO_TX_SEND.format(msg=msg.name, mode=mode),
+                CFuncsConfig.IO_TX_SEND.format(msg=msg.name, mode=mode),
                 "void",
                 args=[],
                 comment=f'Pack and send the {"aperiodic" if not msg.is_periodic() else ""} TX msg {msg.name}.',
@@ -56,12 +56,8 @@ class IoCanTxModule(CModule):
             # Prepare header
             func.body.add_comment("Prepare msg header")
             func.body.add_var_declaration(CVar("tx_msg", "struct CanMsg"))
-            func.body.add_line(
-                f"tx_msg.std_id = {CMacrosCfgs.ID.format(msg=msg.name)};"
-            )
-            func.body.add_line(
-                f"tx_msg.dlc = {CMacrosCfgs.BYTES.format(msg=msg.name)};"
-            )
+            func.body.add_line(f"tx_msg.std_id = {CMacrosConfig.id(msg.name)};")
+            func.body.add_line(f"tx_msg.dlc = {CMacrosConfig.bytes(msg.name),};")
             func.body.add_line()
 
             # Pack payload
@@ -70,7 +66,7 @@ class IoCanTxModule(CModule):
             )
             func.body.add_line("vPortEnterCritical();")
             func.body.add_line(
-                f"{CFuncsCfg.UTILS_PACK.format(msg=msg.name)}({CFuncsCfg.APP_TX_GET_MSG.format(msg=msg.name)}(), tx_msg.data);"
+                f"{CFuncsConfig.UTILS_PACK.format(msg=msg.name)}({CFuncsConfig.APP_TX_GET_MSG.format(msg=msg.name)}(), tx_msg.data);"
             )
             func.body.add_line("vPortExitCritical();")
             func.body.add_line()

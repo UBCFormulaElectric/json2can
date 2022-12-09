@@ -230,12 +230,16 @@ class JsonCanParser:
         )
 
     def _get_parsed_can_signal(
-        self, signal_name: str, signal_json_data: Dict, next_available_bit: int, msg_name: str
+        self,
+        signal_name: str,
+        signal_json_data: Dict,
+        next_available_bit: int,
+        msg_name: str,
     ) -> CanSignal:
         """
         Parse JSON data dictionary representing a CAN signal.
         """
-        # # Signal name must be unique!
+        # # Signal name must be unique
         # if signal_name in [signal.name for msg in self._messages.values() for signal in msg.signals]:
         #     raise InvalidCanJson(
         #         f"Signal name '{signal_name}' for message '{msg_name}' is a duplicate, signals must have unique names."
@@ -363,13 +367,6 @@ class JsonCanParser:
                 )
 
             items.append(CanEnumItem(name=name, value=value))
-
-        items.append(
-            CanEnumItem(
-                name=f"NUM_{pascal_to_screaming_snake_case(enum_name)}_CHOICES",
-                value=len(items),
-            )
-        )
 
         if 0 not in {item.value for item in items}:
             raise InvalidCanJson(f"Enum '{enum_name}' must start at 0.")
