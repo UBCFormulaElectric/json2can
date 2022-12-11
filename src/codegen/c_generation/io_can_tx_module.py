@@ -53,7 +53,7 @@ class IoCanTxModule(CModule):
             func.body.add_comment("Prepare msg header")
             func.body.add_var_declaration(CVar("tx_msg", "struct CanMsg"))
             func.body.add_line(f"tx_msg.std_id = {CMacrosConfig.id(msg.name)};")
-            func.body.add_line(f"tx_msg.dlc = {CMacrosConfig.bytes(msg.name),};")
+            func.body.add_line(f"tx_msg.dlc = {CMacrosConfig.bytes(msg.name)};")
             func.body.add_line()
 
             # Pack payload

@@ -59,7 +59,7 @@ void App_CanTx_JctWarnings_SendAperiodic()
     // Prepare msg header
     struct CanMsg tx_msg;
     tx_msg.std_id = CAN_MSG_JCT_WARNINGS_ID;
-    tx_msg.dlc = ('CAN_MSG_JCT_WARNINGS_BYTES',);
+    tx_msg.dlc = CAN_MSG_JCT_WARNINGS_BYTES;
     
     // Prepare CAN msg payload (The packing function isn't thread-safe so we must guard it)
     vPortEnterCritical();
@@ -75,7 +75,7 @@ void App_CanTx_JCT_AlertSet_SendAperiodic()
     // Prepare msg header
     struct CanMsg tx_msg;
     tx_msg.std_id = CAN_MSG_JCT_ALERT_SET_ID;
-    tx_msg.dlc = ('CAN_MSG_JCT_ALERT_SET_BYTES',);
+    tx_msg.dlc = CAN_MSG_JCT_ALERT_SET_BYTES;
     
     // Prepare CAN msg payload (The packing function isn't thread-safe so we must guard it)
     vPortEnterCritical();
@@ -91,7 +91,7 @@ void App_CanTx_JCT_AlertCleared_SendAperiodic()
     // Prepare msg header
     struct CanMsg tx_msg;
     tx_msg.std_id = CAN_MSG_JCT_ALERT_CLEARED_ID;
-    tx_msg.dlc = ('CAN_MSG_JCT_ALERT_CLEARED_BYTES',);
+    tx_msg.dlc = CAN_MSG_JCT_ALERT_CLEARED_BYTES;
     
     // Prepare CAN msg payload (The packing function isn't thread-safe so we must guard it)
     vPortEnterCritical();
@@ -109,7 +109,7 @@ static void App_CanTx_JctVitals_SendPeriodic()
     // Prepare msg header
     struct CanMsg tx_msg;
     tx_msg.std_id = CAN_MSG_JCT_VITALS_ID;
-    tx_msg.dlc = ('CAN_MSG_JCT_VITALS_BYTES',);
+    tx_msg.dlc = CAN_MSG_JCT_VITALS_BYTES;
     
     // Prepare CAN msg payload (The packing function isn't thread-safe so we must guard it)
     vPortEnterCritical();
@@ -125,7 +125,7 @@ static void App_CanTx_JctAirShutdownErrors_SendPeriodic()
     // Prepare msg header
     struct CanMsg tx_msg;
     tx_msg.std_id = CAN_MSG_JCT_AIR_SHUTDOWN_ERRORS_ID;
-    tx_msg.dlc = ('CAN_MSG_JCT_AIR_SHUTDOWN_ERRORS_BYTES',);
+    tx_msg.dlc = CAN_MSG_JCT_AIR_SHUTDOWN_ERRORS_BYTES;
     
     // Prepare CAN msg payload (The packing function isn't thread-safe so we must guard it)
     vPortEnterCritical();
@@ -141,7 +141,7 @@ static void App_CanTx_JctMotorShutdownErrors_SendPeriodic()
     // Prepare msg header
     struct CanMsg tx_msg;
     tx_msg.std_id = CAN_MSG_JCT_MOTOR_SHUTDOWN_ERRORS_ID;
-    tx_msg.dlc = ('CAN_MSG_JCT_MOTOR_SHUTDOWN_ERRORS_BYTES',);
+    tx_msg.dlc = CAN_MSG_JCT_MOTOR_SHUTDOWN_ERRORS_BYTES;
     
     // Prepare CAN msg payload (The packing function isn't thread-safe so we must guard it)
     vPortEnterCritical();
@@ -157,7 +157,7 @@ static void App_CanTx_JctStatus_SendPeriodic()
     // Prepare msg header
     struct CanMsg tx_msg;
     tx_msg.std_id = CAN_MSG_JCT_STATUS_ID;
-    tx_msg.dlc = ('CAN_MSG_JCT_STATUS_BYTES',);
+    tx_msg.dlc = CAN_MSG_JCT_STATUS_BYTES;
     
     // Prepare CAN msg payload (The packing function isn't thread-safe so we must guard it)
     vPortEnterCritical();
