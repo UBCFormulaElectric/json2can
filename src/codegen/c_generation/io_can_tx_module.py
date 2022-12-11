@@ -34,18 +34,14 @@ class IoCanTxModule(CModule):
             for msg in self._db.tx_msgs_for_node(self._node):
                 if msg.is_periodic() and msg.cycle_time == cycle_time:
                     func.body.add_line(
-                        f"{CFuncsConfig.IO_TX_SEND.format(msg=msg.name, mode=freq)}();"
+                        f"{CFuncsConfig.IO_TX_SEND.format(msg=msg.name, mode='Periodic')}();"
                     )
 
             public_funcs.append(func)
 
         # Generate msg sending functions
         for msg in self._db.tx_msgs_for_node(self._node):
-            mode = (
-                MSG_CYCLE_TIME_2_FREQ[msg.cycle_time]
-                if msg.is_periodic()
-                else "Aperiodic"
-            )
+            mode = "Periodic" if msg.is_periodic() else "Aperiodic"
             func = CFunc(
                 CFuncsConfig.IO_TX_SEND.format(msg=msg.name, mode=mode),
                 "void",
@@ -72,7 +68,7 @@ class IoCanTxModule(CModule):
             func.body.add_line()
 
             # Push to TX FIFO
-            func.body.add_comment("Enqueue msg in TX FIFO")
+            func.body.add_comment("Append msg to TX FIFO")
             func.body.add_line("Io_SharedCan_TxMessageQueueSendtoBack(&tx_msg);")
 
             # If aperiodic, make function public. Otherwise it can be static.

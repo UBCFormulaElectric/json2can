@@ -19,22 +19,22 @@
 /**
  * Pack and send the  TX msg JctVitals.
  */
-static void App_CanTx_JctVitals_Send1Hz();
+static void App_CanTx_JctVitals_SendPeriodic();
 
 /**
  * Pack and send the  TX msg JctAirShutdownErrors.
  */
-static void App_CanTx_JctAirShutdownErrors_Send1Hz();
+static void App_CanTx_JctAirShutdownErrors_SendPeriodic();
 
 /**
  * Pack and send the  TX msg JctMotorShutdownErrors.
  */
-static void App_CanTx_JctMotorShutdownErrors_Send1Hz();
+static void App_CanTx_JctMotorShutdownErrors_SendPeriodic();
 
 /**
  * Pack and send the  TX msg JctStatus.
  */
-static void App_CanTx_JctStatus_Send1Hz();
+static void App_CanTx_JctStatus_SendPeriodic();
 
 /* --------------------- Public Function Definitions ---------------------- */
 
@@ -48,10 +48,10 @@ void Io_CanTx_Enqueue10HzMsgs()
 
 void Io_CanTx_Enqueue1HzMsgs()
 {
-    App_CanTx_JctVitals_Send1Hz();
-    App_CanTx_JctAirShutdownErrors_Send1Hz();
-    App_CanTx_JctMotorShutdownErrors_Send1Hz();
-    App_CanTx_JctStatus_Send1Hz();
+    App_CanTx_JctVitals_SendPeriodic();
+    App_CanTx_JctAirShutdownErrors_SendPeriodic();
+    App_CanTx_JctMotorShutdownErrors_SendPeriodic();
+    App_CanTx_JctStatus_SendPeriodic();
 }
 
 void App_CanTx_JctWarnings_SendAperiodic()
@@ -66,7 +66,7 @@ void App_CanTx_JctWarnings_SendAperiodic()
     App_CanUtils_JctWarnings_Pack(App_CanTx_JctWarnings_GetData(), tx_msg.data);
     vPortExitCritical();
     
-    // Enqueue msg in TX FIFO
+    // Append msg to TX FIFO
     Io_SharedCan_TxMessageQueueSendtoBack(&tx_msg);
 }
 
@@ -82,7 +82,7 @@ void App_CanTx_JCT_AlertSet_SendAperiodic()
     App_CanUtils_JCT_AlertSet_Pack(App_CanTx_JCT_AlertSet_GetData(), tx_msg.data);
     vPortExitCritical();
     
-    // Enqueue msg in TX FIFO
+    // Append msg to TX FIFO
     Io_SharedCan_TxMessageQueueSendtoBack(&tx_msg);
 }
 
@@ -98,13 +98,13 @@ void App_CanTx_JCT_AlertCleared_SendAperiodic()
     App_CanUtils_JCT_AlertCleared_Pack(App_CanTx_JCT_AlertCleared_GetData(), tx_msg.data);
     vPortExitCritical();
     
-    // Enqueue msg in TX FIFO
+    // Append msg to TX FIFO
     Io_SharedCan_TxMessageQueueSendtoBack(&tx_msg);
 }
 
 /* --------------------- Static Function Definitions ---------------------- */
 
-static void App_CanTx_JctVitals_Send1Hz()
+static void App_CanTx_JctVitals_SendPeriodic()
 {
     // Prepare msg header
     struct CanMsg tx_msg;
@@ -116,11 +116,11 @@ static void App_CanTx_JctVitals_Send1Hz()
     App_CanUtils_JctVitals_Pack(App_CanTx_JctVitals_GetData(), tx_msg.data);
     vPortExitCritical();
     
-    // Enqueue msg in TX FIFO
+    // Append msg to TX FIFO
     Io_SharedCan_TxMessageQueueSendtoBack(&tx_msg);
 }
 
-static void App_CanTx_JctAirShutdownErrors_Send1Hz()
+static void App_CanTx_JctAirShutdownErrors_SendPeriodic()
 {
     // Prepare msg header
     struct CanMsg tx_msg;
@@ -132,11 +132,11 @@ static void App_CanTx_JctAirShutdownErrors_Send1Hz()
     App_CanUtils_JctAirShutdownErrors_Pack(App_CanTx_JctAirShutdownErrors_GetData(), tx_msg.data);
     vPortExitCritical();
     
-    // Enqueue msg in TX FIFO
+    // Append msg to TX FIFO
     Io_SharedCan_TxMessageQueueSendtoBack(&tx_msg);
 }
 
-static void App_CanTx_JctMotorShutdownErrors_Send1Hz()
+static void App_CanTx_JctMotorShutdownErrors_SendPeriodic()
 {
     // Prepare msg header
     struct CanMsg tx_msg;
@@ -148,11 +148,11 @@ static void App_CanTx_JctMotorShutdownErrors_Send1Hz()
     App_CanUtils_JctMotorShutdownErrors_Pack(App_CanTx_JctMotorShutdownErrors_GetData(), tx_msg.data);
     vPortExitCritical();
     
-    // Enqueue msg in TX FIFO
+    // Append msg to TX FIFO
     Io_SharedCan_TxMessageQueueSendtoBack(&tx_msg);
 }
 
-static void App_CanTx_JctStatus_Send1Hz()
+static void App_CanTx_JctStatus_SendPeriodic()
 {
     // Prepare msg header
     struct CanMsg tx_msg;
@@ -164,7 +164,7 @@ static void App_CanTx_JctStatus_Send1Hz()
     App_CanUtils_JctStatus_Pack(App_CanTx_JctStatus_GetData(), tx_msg.data);
     vPortExitCritical();
     
-    // Enqueue msg in TX FIFO
+    // Append msg to TX FIFO
     Io_SharedCan_TxMessageQueueSendtoBack(&tx_msg);
 }
 
