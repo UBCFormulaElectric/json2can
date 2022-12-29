@@ -256,7 +256,10 @@ class JsonCanParser:
 
         # Get signal value data. Method depends on which data provided in JSON file.
         # Option 1: Provide DBC data
-        if all(datum in signal_json_data for datum in ("min", "max", "scale", "offset", "bits")):
+        if all(
+            datum in signal_json_data
+            for datum in ("min", "max", "scale", "offset", "bits")
+        ):
             bits = signal_json_data["bits"]
             max_val = signal_json_data["max"]
             min_val = signal_json_data["min"]

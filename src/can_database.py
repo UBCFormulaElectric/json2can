@@ -155,7 +155,7 @@ class CanMessage:
         """
         If this signal is periodic, i.e. should be continuously transmitted at a certain cycle time.
         """
-        return self.cycle_time != None 
+        return self.cycle_time != None
 
 
 @dataclass(frozen=True)

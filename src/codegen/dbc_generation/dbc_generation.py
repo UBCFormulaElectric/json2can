@@ -42,6 +42,7 @@ DBC_VALUE_TABLE_TEMPLATE = "VAL_ {id} {signal_name} {entries};\n"
 # BA_DEF_DEF_  "GenMsgCycleTime" {cycle_time_default};
 # BA_DEF_DEF_  "GenSigStartValue" {start_value_default};
 
+
 class DbcGenerator:
     """
     Class for generating a DBC file from a CanDatabase object.
