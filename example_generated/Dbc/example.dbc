@@ -88,6 +88,13 @@ SG_ BrakePressure : 0|32@1+ (5.820766092701993e-07,0) [0|2500] "psi" DEBUG
 SG_ BrakeIsActuated : 32|1@1+ (1,0) [0|1] "" DEBUG
 SG_ PressureSensorIsOcOrSc : 33|1@1+ (1,0) [0|1] "" DEBUG
 
+BO_ 400 FsmSensors: 4 FSM
+SG_ BrakeIsAcuated : 0|1@1+ (1,0) [0|1] "" DEBUG
+SG_ BrakePressure : 1|10@1+ (2.4437927663734116,0) [0|2500] "psi" DEBUG
+SG_ SteeringAngle : 11|8@1+ (1,-120) [-120|120] "" DEBUG
+SG_ State : 19|1@1+ (1,0) [0|1] "" DEBUG
+SG_ PappsPercentage : 20|7@1- (1,0) [0|100] "%" DEBUG
+
 BO_ 310 FsmAirShutdownErrors: 1 FSM
 SG_ MissingHeartbeat : 0|1@1+ (1,0) [0|1] "" DEBUG
 
@@ -141,13 +148,7 @@ SG_ JCT_AlertCleared : 0|3@1+ (1,0) [0|7] "" DEBUG
 
 
 BA_DEF_  "BusType" STRING ;
-BA_DEF_ BO_  "GenMsgCycleTime" INT 0 65535;
-BA_DEF_ SG_  "GenSigStartValue" INT 0 10000;
-
 BA_DEF_DEF_  "BusType" "CAN";
-BA_DEF_DEF_  "GenMsgCycleTime" 0;
-BA_DEF_DEF_  "GenSigStartValue" 0;
-
 BA_ "BusType" "CAN";
 
 
@@ -197,6 +198,11 @@ BA_ "GenSigStartValue" SG_ 307 FlowRate 0;
 BA_ "GenSigStartValue" SG_ 14 BrakePressure 0;
 BA_ "GenSigStartValue" SG_ 14 BrakeIsActuated 0;
 BA_ "GenSigStartValue" SG_ 14 PressureSensorIsOcOrSc 0;
+BA_ "GenSigStartValue" SG_ 400 BrakeIsAcuated 0;
+BA_ "GenSigStartValue" SG_ 400 BrakePressure 0;
+BA_ "GenSigStartValue" SG_ 400 SteeringAngle -120;
+BA_ "GenSigStartValue" SG_ 400 State 0;
+BA_ "GenSigStartValue" SG_ 400 PappsPercentage 0;
 BA_ "GenSigStartValue" SG_ 310 MissingHeartbeat 0;
 BA_ "GenSigStartValue" SG_ 315 AppsHasDisagreement 0;
 BA_ "GenSigStartValue" SG_ 315 PappsAlarmIsActive 0;
@@ -205,7 +211,7 @@ BA_ "GenSigStartValue" SG_ 315 FlowMeterHasUnderflow 0;
 BA_ "GenSigStartValue" SG_ 315 TorquePlausibilityCheckFailed 0;
 BA_ "GenSigStartValue" SG_ 317 LeftWheelSpeed 0;
 BA_ "GenSigStartValue" SG_ 317 RightWheelSpeed 0;
-BA_ "GenSigStartValue" SG_ 318 SteeringAngle 0;
+BA_ "GenSigStartValue" SG_ 318 SteeringAngle -110;
 BA_ "GenSigStartValue" SG_ 42 FSM_AlertSet 0;
 BA_ "GenSigStartValue" SG_ 43 FSM_AlertCleared 0;
 BA_ "GenSigStartValue" SG_ 601 Heartbeat 0;
@@ -218,7 +224,7 @@ BA_ "GenSigStartValue" SG_ 604 DummyMotorShutdown 0;
 BA_ "GenSigStartValue" SG_ 608 ContactorsClosed 0;
 BA_ "GenSigStartValue" SG_ 608 Current 50;
 BA_ "GenSigStartValue" SG_ 608 Voltage 0;
-BA_ "GenSigStartValue" SG_ 608 UnsignedTester 0;
+BA_ "GenSigStartValue" SG_ 608 UnsignedTester -2047;
 BA_ "GenSigStartValue" SG_ 40 JCT_AlertSet 0;
 BA_ "GenSigStartValue" SG_ 41 JCT_AlertCleared 0;
 
@@ -241,23 +247,20 @@ BA_ "GenMsgCycleTime" BO_ 304  1000;
 BA_ "GenMsgCycleTime" BO_ 305  1000;
 BA_ "GenMsgCycleTime" BO_ 307  1000;
 BA_ "GenMsgCycleTime" BO_ 14  1000;
+BA_ "GenMsgCycleTime" BO_ 400  1000;
 BA_ "GenMsgCycleTime" BO_ 310  1000;
 BA_ "GenMsgCycleTime" BO_ 315  1000;
 BA_ "GenMsgCycleTime" BO_ 317  1000;
 BA_ "GenMsgCycleTime" BO_ 318  1000;
-BA_ "GenMsgCycleTime" BO_ 42  None;
-BA_ "GenMsgCycleTime" BO_ 43  None;
 BA_ "GenMsgCycleTime" BO_ 601  1000;
-BA_ "GenMsgCycleTime" BO_ 602  None;
 BA_ "GenMsgCycleTime" BO_ 603  1000;
 BA_ "GenMsgCycleTime" BO_ 604  1000;
 BA_ "GenMsgCycleTime" BO_ 608  1000;
-BA_ "GenMsgCycleTime" BO_ 40  None;
-BA_ "GenMsgCycleTime" BO_ 41  None;
 
 
 VAL_ 200 Heartbeat 0 "FALSE" 1 "TRUE";
 VAL_ 301 Heartbeat 0 "FALSE" 1 "TRUE";
+VAL_ 400 State 0 "STATE_IDLE" 1 "STATE_DRIVE";
 VAL_ 42 FSM_AlertSet 0 "FSM_BSPD" 1 "NUM_FSM_ALERTS";
 VAL_ 43 FSM_AlertCleared 0 "FSM_BSPD" 1 "NUM_FSM_ALERTS";
 VAL_ 608 ContactorsClosed 0 "AIR_OPEN" 1 "AIR_CLOSED";

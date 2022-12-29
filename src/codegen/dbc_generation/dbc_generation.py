@@ -29,13 +29,7 @@ DBC_MESSAGE_TEMPLATE = "BO_ {id} {name}: {num_bytes} {tx_node}\n"
 DBC_SIGNAL_TEMPLATE = 'SG_ {name} : {bit_start}|{num_bits}{endianness}{signed} ({scale},{offset}) [{min_val}|{max_val}] "{unit}" {rx_node_names}\n'
 DBC_ATTRIBUTE_DEFINITONS_TEMPLATE = """\
 BA_DEF_  "BusType" STRING ;
-BA_DEF_ BO_  "GenMsgCycleTime" INT {cycle_time_min} {cycle_time_max};
-BA_DEF_ SG_  "GenSigStartValue" INT {start_value_min} {start_value_max};
-
 BA_DEF_DEF_  "BusType" "CAN";
-BA_DEF_DEF_  "GenMsgCycleTime" {cycle_time_default};
-BA_DEF_DEF_  "GenSigStartValue" {start_value_default};
-
 BA_ "BusType" "CAN";
 """
 DBC_ATTRIBUTE_TEMPLATE = (
@@ -43,6 +37,10 @@ DBC_ATTRIBUTE_TEMPLATE = (
 )
 DBC_VALUE_TABLE_TEMPLATE = "VAL_ {id} {signal_name} {entries};\n"
 
+# BA_DEF_ BO_  "GenMsgCycleTime" INT {cycle_time_min} {cycle_time_max};
+# BA_DEF_ SG_  "GenSigStartValue" INT {start_value_min} {start_value_max};
+# BA_DEF_DEF_  "GenMsgCycleTime" {cycle_time_default};
+# BA_DEF_DEF_  "GenSigStartValue" {start_value_default};
 
 class DbcGenerator:
     """
@@ -67,8 +65,8 @@ class DbcGenerator:
             # Generate text for CAN message
             msgs_text += self._dbc_message(msg=msg, tx_node=msg.tx_node)
 
-            # If message has non-default cycle time, generate text
-            if msg.is_periodic:
+            # If message has cycle time, generate text
+            if msg.is_periodic():
                 cycle_time_attributes_text += self._dbc_msg_cycle_time_attribute(
                     value=msg.cycle_time,
                     msg_id=msg.id,
@@ -140,14 +138,15 @@ class DbcGenerator:
         Format and attribute definitions and defaults.
         """
         bus = self._db.bus_config
-        return DBC_ATTRIBUTE_DEFINITONS_TEMPLATE.format(
-            cycle_time_min=bus.cycle_time_min,
-            cycle_time_max=bus.cycle_time_max,
-            cycle_time_default=bus.cycle_time_default,
-            start_value_min=bus.start_value_min,
-            start_value_max=bus.start_value_max,
-            start_value_default=bus.start_value_default,
-        )
+        # return DBC_ATTRIBUTE_DEFINITONS_TEMPLATE.format(
+        #     cycle_time_min=bus.cycle_time_min,
+        #     cycle_time_max=bus.cycle_time_max,
+        #     cycle_time_default=bus.cycle_time_default,
+        #     start_value_min=bus.start_value_min,
+        #     start_value_max=bus.start_value_max,
+        #     start_value_default=bus.start_value_default,
+        # )
+        return DBC_ATTRIBUTE_DEFINITONS_TEMPLATE
 
     def _dbc_msg_cycle_time_attribute(self, value: int, msg_id: int) -> str:
         """

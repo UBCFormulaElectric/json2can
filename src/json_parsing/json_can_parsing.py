@@ -71,12 +71,6 @@ class JsonCanParser:
         self._bus_cfg = CanBusConfig(
             default_receiver=bus_json_data["default_receiver"],
             bus_speed=bus_json_data["bus_speed"],
-            cycle_time_min=bus_json_data["cycle_time_min"],
-            cycle_time_max=bus_json_data["cycle_time_max"],
-            cycle_time_default=bus_json_data["cycle_time_default"],
-            start_value_min=bus_json_data["start_value_min"],
-            start_value_max=bus_json_data["start_value_max"],
-            start_value_default=bus_json_data["start_value_default"],
         )
 
         # Parse shared enum JSON
@@ -253,19 +247,24 @@ class JsonCanParser:
         bits = 0
         enum = None
 
-        # Parse unit, default start value, and starting bit position
+        # Parse unit and starting bit position
         unit, _ = self._get_optional_value(signal_json_data, "unit", "")
-        start_val, _ = self._get_optional_value(
-            signal_json_data, "start_value", self._bus_cfg.start_value_default
-        )
         start_bit, specified_start_bit = self._get_optional_value(
             signal_json_data, "start_bit", next_available_bit
         )
         signed, _ = self._get_optional_value(signal_json_data, "signed", False)
 
         # Get signal value data. Method depends on which data provided in JSON file.
-        # Option 1: Provide min, max, and bit length. Scale and offset are calculated.
-        if all(datum in signal_json_data for datum in ("min", "max", "bits")):
+        # Option 1: Provide DBC data
+        if all(datum in signal_json_data for datum in ("min", "max", "scale", "offset", "bits")):
+            bits = signal_json_data["bits"]
+            max_val = signal_json_data["max"]
+            min_val = signal_json_data["min"]
+            scale = signal_json_data["scale"]
+            offset = signal_json_data["offset"]
+
+        # Option 2: Provide min, max, and bit length. Scale and offset are calculated.
+        elif all(datum in signal_json_data for datum in ("min", "max", "bits")):
             max_val = signal_json_data["max"]
             min_val = signal_json_data["min"]
             bits = signal_json_data["bits"]
@@ -274,7 +273,7 @@ class JsonCanParser:
                 max_val=max_val, min_val=min_val, num_bits=bits
             )
 
-        # Option 2: Provide min, max, and resolution (scale). Offset and bit length are calculated.
+        # Option 3: Provide min, max, and resolution (scale). Offset and bit length are calculated.
         elif all(datum in signal_json_data for datum in ("min", "max", "resolution")):
             max_val = signal_json_data["max"]
             min_val = signal_json_data["min"]
@@ -285,7 +284,7 @@ class JsonCanParser:
             max_raw_val = ceil((max_val - min_val) / sig_resolution)
             bits = max_raw_val.bit_length()
 
-        # Option 3: Provide an enum. Min, max, bits, have to be calculated.
+        # Option 4: Provide an enum. Min, max, bits, have to be calculated.
         # Scale and offset are assumed to be 1 and 0, respectively (so start your enums at 0!)
         elif "enum" in signal_json_data:
             enum_name = signal_json_data["enum"]
@@ -301,7 +300,7 @@ class JsonCanParser:
             scale = 1
             offset = 0
 
-        # Option 4: Just provide bits, and will be considered to be an unsigned int of however many bits.
+        # Option 5: Just provide bits, and will be considered to be an unsigned int of however many bits.
         elif "bits" in signal_json_data:
             bits = signal_json_data["bits"]
             if signed:
@@ -313,19 +312,16 @@ class JsonCanParser:
             scale = 1
             offset = 0
 
-        # Option 5: Provide DBC data
-        elif "bits" in signal_json_data:
-            bits = signal_json_data["bits"]
-            max_val = signal_json_data["max"]
-            min_val = signal_json_data["min"]
-            scale = signal_json_data["scale"]
-            offset = signal_json_data["offset"]
-
         # Otherwise, payload data was not inputted correctly
         else:
             raise InvalidCanJson(
                 f"Signal '{signal_name}' has invalid payload representation, and could not be parsed."
             )
+
+        # Parse start value
+        start_val, _ = self._get_optional_value(
+            signal_json_data, "start_value", min_val
+        )
 
         # Signals can"t be longer than 32 bits, to maintain atomic read/write
         if bits < 1 or bits > 32:

@@ -155,7 +155,7 @@ class CanMessage:
         """
         If this signal is periodic, i.e. should be continuously transmitted at a certain cycle time.
         """
-        return self.cycle_time is not None
+        return self.cycle_time != None 
 
 
 @dataclass(frozen=True)
@@ -166,12 +166,6 @@ class CanBusConfig:
 
     default_receiver: str
     bus_speed: int
-    cycle_time_min: int
-    cycle_time_max: int
-    cycle_time_default: int
-    start_value_min: int
-    start_value_max: int
-    start_value_default: int
 
 
 @dataclass(frozen=True)

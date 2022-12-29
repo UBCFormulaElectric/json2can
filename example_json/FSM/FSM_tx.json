@@ -120,6 +120,38 @@
             "PressureSensorIsOcOrSc": { "bits": 1 }
         }
     },
+    "FsmSensors": {
+        "msg_id": 400,
+        "cycle_time": 1000,
+        "signals": {
+            "BrakeIsAcuated": { 
+                "bits": 1 
+            },
+            "BrakePressure": {
+                "min": 0, 
+                "max": 2500,
+                "bits": 10, 
+                "unit": "psi"        
+            },
+            "SteeringAngle": {
+                "min": -120, 
+                "max": 120, 
+                "resolution": 1 
+            },
+            "State": {
+                "enum": "FsmState"
+            },
+            "PappsPercentage": {
+                "min": 0,
+                "max": 100, 
+                "scale": 1,
+                "offset": 0, 
+                "bits": 7,
+                "signed": true,
+                "unit": "%"
+            }
+        }
+    },
     "FsmAirShutdownErrors": {
         "msg_id": 310, 
         "cycle_time": 1000,

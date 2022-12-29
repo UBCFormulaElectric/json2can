@@ -52,6 +52,7 @@ tx_signal_schema = Schema(
             Optional("start_value"): str,
             Optional("start_bit"): int,
             Optional("signed"): bool,
+            Optional("unit"): str,
         },
     )
 )
@@ -87,13 +88,6 @@ bus_schema = Schema(
     {
         "default_receiver": str,
         "bus_speed": int,
-        "default_endianness": str,
-        "cycle_time_min": int,
-        "cycle_time_max": int,
-        "cycle_time_default": int,
-        "start_value_min": int,
-        "start_value_max": int,
-        "start_value_default": int,
     }
 )
 
