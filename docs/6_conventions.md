@@ -13,4 +13,4 @@ TBD
 
 ## Misc Conventions
 
-1. All signals representing a physical value, such as `m/s`, `degC`, `rad`, etc.
+1. All signals representing a physical value will include a unit, such as `m/s`, `degC`, `rad`, etc.
