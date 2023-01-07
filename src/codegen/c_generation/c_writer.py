@@ -260,7 +260,10 @@ def clamp_signal_code(signal: CanSignal, msg: CanMessage, dest: str, src: str) -
 
     # If a float, don't set anything if the value is NaN
     if signal.datatype() == CanSignalDatatype.FLOAT:
-        cw.start_if(f"{src} != NAN")
+        cw.start_if(f"{src} == NAN")
+        cw.add_line("return;")
+        cw.end_if()
+        cw.add_line()
 
     min_val = CMacrosConfig.min(msg.name, signal.name)
     max_val = CMacrosConfig.max(msg.name, signal.name)
@@ -286,8 +289,5 @@ def clamp_signal_code(signal: CanSignal, msg: CanMessage, dest: str, src: str) -
             f"const {signal.datatype()} tmp = {src} < {min_val} ? {min_val} : {src};"
         )
         cw.add_line(f"{dest} = tmp > {max_val} ? {max_val} : tmp;")
-
-    if signal.datatype() == CanSignalDatatype.FLOAT:
-        cw.end_if()
 
     return str(cw)

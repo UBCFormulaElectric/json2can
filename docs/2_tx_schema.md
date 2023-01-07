@@ -197,3 +197,5 @@ SG_ SteeringAngle : 11|8@1+ (1,-120) [-120|120] "" DEBUG
 SG_ State : 19|1@1+ (1,0) [0|1] "" DEBUG
 SG_ PappsPercentage : 20|7@1- (1,0) [0|100] "%" DEBUG
 ```
+
+NOTE: This is just an example and does not follow best practices. For example, there is no reason for `PappsPercentage` to be signed.

@@ -60,6 +60,11 @@ void App_CanUtils_JctVitals_Pack(const JctVitals_Signals* const in_msg, uint8_t*
     // Pack 5-byte payload for message JctVitals.
     // |xxxxxxxx|xxxxxxxx|xxxxxxxx|_______B|BBBBBBBB|BBBBBBBB|BBBBBBBB|BBBBBBBA|
     
+    if (in_msg == NULL || out_data == NULL)
+    {
+        return;
+    }
+    
     // Pack 1-bit signal Heartbeat into payload (at bit 0 to bit 1).
     const bool Heartbeat_val = in_msg->Heartbeat_value;
     const uint32_t Heartbeat_raw = CAN_ENCODE(Heartbeat_val, CANSIG_JCT_VITALS_HEARTBEAT_SCALE, CANSIG_JCT_VITALS_HEARTBEAT_OFFSET, uint32_t);
@@ -80,6 +85,11 @@ void App_CanUtils_JctWarnings_Pack(const JctWarnings_Signals* const in_msg, uint
 {
     // Pack 1-byte payload for message JctWarnings.
     // |xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|_____CBA|
+    
+    if (in_msg == NULL || out_data == NULL)
+    {
+        return;
+    }
     
     // Pack 1-bit signal WatchdogTimeout into payload (at bit 0 to bit 1).
     const bool WatchdogTimeout_val = in_msg->WatchdogTimeout_value;
@@ -103,6 +113,11 @@ void App_CanUtils_JctAirShutdownErrors_Pack(const JctAirShutdownErrors_Signals* 
     // Pack 1-byte payload for message JctAirShutdownErrors.
     // |xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|_______A|
     
+    if (in_msg == NULL || out_data == NULL)
+    {
+        return;
+    }
+    
     // Pack 1-bit signal DummyAirShutdown into payload (at bit 0 to bit 1).
     const bool DummyAirShutdown_val = in_msg->DummyAirShutdown_value;
     const uint32_t DummyAirShutdown_raw = CAN_ENCODE(DummyAirShutdown_val, CANSIG_JCT_AIR_SHUTDOWN_ERRORS_DUMMY_AIR_SHUTDOWN_SCALE, CANSIG_JCT_AIR_SHUTDOWN_ERRORS_DUMMY_AIR_SHUTDOWN_OFFSET, uint32_t);
@@ -115,6 +130,11 @@ void App_CanUtils_JctMotorShutdownErrors_Pack(const JctMotorShutdownErrors_Signa
     // Pack 1-byte payload for message JctMotorShutdownErrors.
     // |xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|_______A|
     
+    if (in_msg == NULL || out_data == NULL)
+    {
+        return;
+    }
+    
     // Pack 1-bit signal DummyMotorShutdown into payload (at bit 0 to bit 1).
     const bool DummyMotorShutdown_val = in_msg->DummyMotorShutdown_value;
     const uint32_t DummyMotorShutdown_raw = CAN_ENCODE(DummyMotorShutdown_val, CANSIG_JCT_MOTOR_SHUTDOWN_ERRORS_DUMMY_MOTOR_SHUTDOWN_SCALE, CANSIG_JCT_MOTOR_SHUTDOWN_ERRORS_DUMMY_MOTOR_SHUTDOWN_OFFSET, uint32_t);
@@ -126,6 +146,11 @@ void App_CanUtils_JctStatus_Pack(const JctStatus_Signals* const in_msg, uint8_t*
 {
     // Pack 5-byte payload for message JctStatus.
     // |xxxxxxxx|xxxxxxxx|xxxxxxxx|___DDDDD|DDDDDDDC|CCCCCCCC|CCCBBBBB|BBBBBBBA|
+    
+    if (in_msg == NULL || out_data == NULL)
+    {
+        return;
+    }
     
     // Pack 1-bit signal ContactorsClosed into payload (at bit 0 to bit 1).
     const AirState ContactorsClosed_val = in_msg->ContactorsClosed_value;
@@ -158,6 +183,11 @@ void App_CanUtils_JCT_AlertSet_Pack(const JCT_AlertSet_Signals* const in_msg, ui
     // Pack 1-byte payload for message JCT_AlertSet.
     // |xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|_____AAA|
     
+    if (in_msg == NULL || out_data == NULL)
+    {
+        return;
+    }
+    
     // Pack 3-bit signal JCT_AlertSet into payload (at bit 0 to bit 3).
     const JCT_Alert JCT_AlertSet_val = in_msg->JCT_AlertSet_value;
     const uint32_t JCT_AlertSet_raw = CAN_ENCODE(JCT_AlertSet_val, CANSIG_JCT_ALERT_SET_JCT_ALERT_SET_SCALE, CANSIG_JCT_ALERT_SET_JCT_ALERT_SET_OFFSET, uint32_t);
@@ -170,6 +200,11 @@ void App_CanUtils_JCT_AlertCleared_Pack(const JCT_AlertCleared_Signals* const in
     // Pack 1-byte payload for message JCT_AlertCleared.
     // |xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|_____AAA|
     
+    if (in_msg == NULL || out_data == NULL)
+    {
+        return;
+    }
+    
     // Pack 3-bit signal JCT_AlertCleared into payload (at bit 0 to bit 3).
     const JCT_Alert JCT_AlertCleared_val = in_msg->JCT_AlertCleared_value;
     const uint32_t JCT_AlertCleared_raw = CAN_ENCODE(JCT_AlertCleared_val, CANSIG_JCT_ALERT_CLEARED_JCT_ALERT_CLEARED_SCALE, CANSIG_JCT_ALERT_CLEARED_JCT_ALERT_CLEARED_OFFSET, uint32_t);
@@ -181,6 +216,11 @@ void App_CanUtils_FsmApps_Unpack(const uint8_t* const in_data, FsmApps_Signals* 
 {
     // Unpack 8-byte payload for message FsmApps.
     // |BBBBBBBB|BBBBBBBB|BBBBBBBB|BBBBBBBB|AAAAAAAA|AAAAAAAA|AAAAAAAA|AAAAAAAA|
+    
+    if (in_data == NULL || out_msg == NULL)
+    {
+        return;
+    }
     
     // Unpack 32-bit signal PappsMappedPedalPercentage from payload (at bit 0 to bit 32).
     uint32_t PappsMappedPedalPercentage_raw = 0;
@@ -206,6 +246,11 @@ void App_CanUtils_FsmWarnings_Unpack(const uint8_t* const in_data, FsmWarnings_S
 {
     // Unpack 3-byte payload for message FsmWarnings.
     // |xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|xxxxxxxx|___PONMM|LLKKJJII|HGFEDCBA|
+    
+    if (in_data == NULL || out_msg == NULL)
+    {
+        return;
+    }
     
     // Unpack 1-bit signal PappsOutOfRange from payload (at bit 0 to bit 1).
     uint32_t PappsOutOfRange_raw = 0;

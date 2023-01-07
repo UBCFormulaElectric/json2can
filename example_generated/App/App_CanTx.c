@@ -92,20 +92,24 @@ void App_CanTx_JctStatus_ContactorsClosed_Set(AirState value)
 
 void App_CanTx_JctStatus_Current_Set(float value)
 {
-    if (value != NAN)
+    if (value == NAN)
     {
-        const float tmp = value < CANSIG_JCT_STATUS_CURRENT_MIN ? CANSIG_JCT_STATUS_CURRENT_MIN : value;
-        tx_table.JctStatus_signals.Current_value = tmp > CANSIG_JCT_STATUS_CURRENT_MAX ? CANSIG_JCT_STATUS_CURRENT_MAX : tmp;
+        return;
     }
+    
+    const float tmp = value < CANSIG_JCT_STATUS_CURRENT_MIN ? CANSIG_JCT_STATUS_CURRENT_MIN : value;
+    tx_table.JctStatus_signals.Current_value = tmp > CANSIG_JCT_STATUS_CURRENT_MAX ? CANSIG_JCT_STATUS_CURRENT_MAX : tmp;
 }
 
 void App_CanTx_JctStatus_Voltage_Set(float value)
 {
-    if (value != NAN)
+    if (value == NAN)
     {
-        const float tmp = value < CANSIG_JCT_STATUS_VOLTAGE_MIN ? CANSIG_JCT_STATUS_VOLTAGE_MIN : value;
-        tx_table.JctStatus_signals.Voltage_value = tmp > CANSIG_JCT_STATUS_VOLTAGE_MAX ? CANSIG_JCT_STATUS_VOLTAGE_MAX : tmp;
+        return;
     }
+    
+    const float tmp = value < CANSIG_JCT_STATUS_VOLTAGE_MIN ? CANSIG_JCT_STATUS_VOLTAGE_MIN : value;
+    tx_table.JctStatus_signals.Voltage_value = tmp > CANSIG_JCT_STATUS_VOLTAGE_MAX ? CANSIG_JCT_STATUS_VOLTAGE_MAX : tmp;
 }
 
 void App_CanTx_JctStatus_UnsignedTester_Set(int value)

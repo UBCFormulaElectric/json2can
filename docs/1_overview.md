@@ -1,6 +1,6 @@
 # Schema Overview
 
-These next few files provide documentation on how to configure CAN messages via JSON CAN. 
+These next few files provide documentation on the schema used by JSON CAN to configure CAN messages.
 
 The file structure looks like: 
 

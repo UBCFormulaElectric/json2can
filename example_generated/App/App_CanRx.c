@@ -41,20 +41,24 @@ void App_CanRx_Init()
 
 void App_CanRx_FsmApps_PappsMappedPedalPercentage_UpdateValue(float value)
 {
-    if (value != NAN)
+    if (value == NAN)
     {
-        const float tmp = value < CANSIG_FSM_APPS_PAPPS_MAPPED_PEDAL_PERCENTAGE_MIN ? CANSIG_FSM_APPS_PAPPS_MAPPED_PEDAL_PERCENTAGE_MIN : value;
-        rx_table.FsmApps_signals.PappsMappedPedalPercentage_value = tmp > CANSIG_FSM_APPS_PAPPS_MAPPED_PEDAL_PERCENTAGE_MAX ? CANSIG_FSM_APPS_PAPPS_MAPPED_PEDAL_PERCENTAGE_MAX : tmp;
+        return;
     }
+    
+    const float tmp = value < CANSIG_FSM_APPS_PAPPS_MAPPED_PEDAL_PERCENTAGE_MIN ? CANSIG_FSM_APPS_PAPPS_MAPPED_PEDAL_PERCENTAGE_MIN : value;
+    rx_table.FsmApps_signals.PappsMappedPedalPercentage_value = tmp > CANSIG_FSM_APPS_PAPPS_MAPPED_PEDAL_PERCENTAGE_MAX ? CANSIG_FSM_APPS_PAPPS_MAPPED_PEDAL_PERCENTAGE_MAX : tmp;
 }
 
 void App_CanRx_FsmApps_SappsMappedPedalPercentage_UpdateValue(float value)
 {
-    if (value != NAN)
+    if (value == NAN)
     {
-        const float tmp = value < CANSIG_FSM_APPS_SAPPS_MAPPED_PEDAL_PERCENTAGE_MIN ? CANSIG_FSM_APPS_SAPPS_MAPPED_PEDAL_PERCENTAGE_MIN : value;
-        rx_table.FsmApps_signals.SappsMappedPedalPercentage_value = tmp > CANSIG_FSM_APPS_SAPPS_MAPPED_PEDAL_PERCENTAGE_MAX ? CANSIG_FSM_APPS_SAPPS_MAPPED_PEDAL_PERCENTAGE_MAX : tmp;
+        return;
     }
+    
+    const float tmp = value < CANSIG_FSM_APPS_SAPPS_MAPPED_PEDAL_PERCENTAGE_MIN ? CANSIG_FSM_APPS_SAPPS_MAPPED_PEDAL_PERCENTAGE_MIN : value;
+    rx_table.FsmApps_signals.SappsMappedPedalPercentage_value = tmp > CANSIG_FSM_APPS_SAPPS_MAPPED_PEDAL_PERCENTAGE_MAX ? CANSIG_FSM_APPS_SAPPS_MAPPED_PEDAL_PERCENTAGE_MAX : tmp;
 }
 
 void App_CanRx_FsmWarnings_PappsOutOfRange_UpdateValue(bool value)

@@ -45,6 +45,11 @@ class AppCanUtilsModule(CModule):
             func.body.add_comment(signal_placement_comment(msg))
             func.body.add_line()
 
+            func.body.start_if("in_msg == NULL || out_data == NULL")
+            func.body.add_line("return;")
+            func.body.end_if()
+            func.body.add_line()
+
             for signal in msg.signals:
                 func.body.add_lines(pack_signal_code(signal, msg))
                 func.body.add_line()
@@ -69,6 +74,11 @@ class AppCanUtilsModule(CModule):
                 f"Unpack {msg.bytes()}-byte payload for message {msg.name}."
             )
             func.body.add_comment(signal_placement_comment(msg))
+            func.body.add_line()
+
+            func.body.start_if("in_data == NULL || out_msg == NULL")
+            func.body.add_line("return;")
+            func.body.end_if()
             func.body.add_line()
 
             for signal in msg.signals:
