@@ -1,0 +1,7 @@
+{
+    "alert_set_msg_id": 42,
+    "alert_cleared_msg_id": 43,
+    "alerts": [
+        "FSM_BSPD"
+    ]
+}
