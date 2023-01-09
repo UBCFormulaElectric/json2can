@@ -362,7 +362,7 @@ class JsonCanParser:
 
             if value in {item.value for item in items}:
                 raise InvalidCanJson(
-                    f"Repeated value {value} for enum '{enum_name}', which is not allowed."
+                    f"Repeated value {value} for enum '{enum_name}', which is not allowed (values must be unique)."
                 )
 
             items.append(CanEnumItem(name=name, value=value))
