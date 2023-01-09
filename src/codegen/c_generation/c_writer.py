@@ -197,6 +197,9 @@ class CWriter:
             self.end_comment()
 
         arguments = ", ".join(f"{arg.type} {arg.name}" for arg in func.arguments)
+        if arguments == "":
+            arguments = "void"
+
         qualifier = f"{func.qualifier} " if func.qualifier else ""
         self.add_line(f"{qualifier}{func.return_type} {func.name}({arguments});")
 

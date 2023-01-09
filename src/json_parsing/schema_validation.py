@@ -69,7 +69,7 @@ tx_msg_schema = Schema(
     }
 )
 
-tx_schema = Schema({str: tx_msg_schema})
+tx_schema = Schema(Or({str: tx_msg_schema}, {}))
 
 """
 Rx file schema

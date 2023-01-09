@@ -6,9 +6,8 @@ from .c_config import *
 from .c_writer import *
 
 MSG_CYCLE_TIME_2_FREQ = {
-    10: "100Hz",
-    100: "10Hz",
     1000: "1Hz",
+    10: "100Hz",
 }
 
 
@@ -38,6 +37,23 @@ class IoCanTxModule(CModule):
                     )
 
             public_funcs.append(func)
+
+        # Generate 1kHz sending function
+        func_1khz = CFunc(
+                CFuncsConfig.IO_TX_ENQUEUE_OTHER_PERIODIC,
+                "void",
+                args=[CVar("time_ms", "uint32_t")],
+                comment=f"Enqueue periodic CAN messages whose cycle time does is not suitable for other periodic sending functions.",
+            )
+        for msg in self._db.tx_msgs_for_node(self._node):
+            if msg.is_periodic() and msg.cycle_time not in MSG_CYCLE_TIME_2_FREQ:
+                func_1khz.body.start_if(f"time_ms % {CMacrosConfig.cycle_time(msg.name)} == 0")
+                func_1khz.body.add_line(
+                    f"{CFuncsConfig.IO_TX_SEND.format(msg=msg.name, mode='Periodic')}();"
+                )
+                func_1khz.body.end_if()
+                func_1khz.body.add_line()
+        public_funcs.append(func_1khz)
 
         # Generate msg sending functions
         for msg in self._db.tx_msgs_for_node(self._node):

@@ -8,6 +8,7 @@ from ...utils import *
 class CFuncsConfig(str, Enum):
     # Io Tx
     IO_TX_ENQUEUE_PERIODIC = "Io_CanTx_Enqueue{freq}Msgs"
+    IO_TX_ENQUEUE_OTHER_PERIODIC = "Io_CanTx_EnqueueOtherPeriodicMsgs"
     IO_TX_SEND = "App_CanTx_{msg}_Send{mode}"
 
     # App Tx

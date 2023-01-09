@@ -23,13 +23,15 @@ class IoCanRxModule(CModule):
         # Add cases
         func.body.add_line("bool is_found = false;")
         func.body.start_switch("std_id")
-        for msg in self._db.rx_msgs_for_node(self._node):
-            func.body.add_switch_case(CMacrosConfig.id(msg.name))
 
-        # If found msg, set is_found to true
-        func.body.start_switch_case()
-        func.body.add_line("is_found = true;")
-        func.body.add_switch_break()
+        if len(self._db.rx_msgs_for_node(self._node)) > 0:
+            for msg in self._db.rx_msgs_for_node(self._node):
+                func.body.add_switch_case(CMacrosConfig.id(msg.name))
+
+            # If found msg, set is_found to true
+            func.body.start_switch_case()
+            func.body.add_line("is_found = true;")
+            func.body.add_switch_break()
 
         # Otherwise, do nothing
         func.body.add_switch_default()

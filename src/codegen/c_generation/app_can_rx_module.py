@@ -20,9 +20,10 @@ class AppCanRxModule(CModule):
             args=[],
             comment="Initialize RX signals to their starting values.",
         )
-        init_func.body.add_line(
-            f"memset(&{CVarsConfig.RX_TABLE}, 0, sizeof({CStructsConfig.RX_TABLE.format(node=self._node)}));"
-        )
+        if self._db.node_has_rx_msgs(self._node):
+            init_func.body.add_line(
+                f"memset(&{CVarsConfig.RX_TABLE}, 0, sizeof({CStructsConfig.RX_TABLE.format(node=self._node)}));"
+            )
         for msg in self._db.rx_msgs_for_node(self._node):
             for signal in msg.signals:
                 init_func.body.add_line(
@@ -85,26 +86,6 @@ class AppCanRxModule(CModule):
         cw.add_line()
         cw.add_include('"App_CanUtils.h"')
 
-        # RX table struct
-        cw.add_line()
-        cw.add_header_comment("Structs")
-        cw.add_line()
-
-        rx_table_struct = CStruct(
-            CStructsConfig.RX_TABLE.format(node=self._node),
-            comment=f"Struct for holding all messages received by {self._node} (i.e. the RX table).",
-        )
-        for msg in self._db.rx_msgs_for_node(self._node):
-            rx_table_struct.add_member(
-                CVar(
-                    CVarsConfig.MSG_STRUCT.format(msg=msg.name),
-                    CStructsConfig.MSG_STRUCT.format(msg=msg.name),
-                )
-            )
-
-        cw.add_struct(rx_table_struct)
-        cw.add_line()
-
         # Add function prototypes
         cw.add_line()
         cw.add_header_comment("Function Prototypes")
@@ -129,14 +110,35 @@ class AppCanRxModule(CModule):
         cw.add_include("<string.h>")
         cw.add_include('"App_CanRx.h"')
 
-        # Private vars (RX table)
-        cw.add_line()
-        cw.add_header_comment("Private Variables")
-        cw.add_line()
-        cw.add_var_declaration(
-            CVar(CVarsConfig.RX_TABLE, CStructsConfig.RX_TABLE.format(node=self._node)),
-            qualifier="static",
-        )
+        if self._db.node_has_rx_msgs(self._node):
+            # RX table struct
+            cw.add_line()
+            cw.add_header_comment("Structs")
+            cw.add_line()
+
+            rx_table_struct = CStruct(
+                CStructsConfig.RX_TABLE.format(node=self._node),
+                comment=f"Struct for holding all messages received by {self._node} (i.e. the RX table).",
+            )
+            for msg in self._db.rx_msgs_for_node(self._node):
+                rx_table_struct.add_member(
+                    CVar(
+                        CVarsConfig.MSG_STRUCT.format(msg=msg.name),
+                        CStructsConfig.MSG_STRUCT.format(msg=msg.name),
+                    )
+                )
+
+            cw.add_struct(rx_table_struct)
+            cw.add_line()
+
+            # Private vars (RX table)
+            cw.add_line()
+            cw.add_header_comment("Private Variables")
+            cw.add_line()
+            cw.add_var_declaration(
+                CVar(CVarsConfig.RX_TABLE, CStructsConfig.RX_TABLE.format(node=self._node)),
+                qualifier="static",
+            )
 
         # Add function definitions
         cw.add_line()

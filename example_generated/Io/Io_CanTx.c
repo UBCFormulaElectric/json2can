@@ -19,39 +19,47 @@
 /**
  * Pack and send the  TX msg JctVitals.
  */
-static void App_CanTx_JctVitals_SendPeriodic();
+static void App_CanTx_JctVitals_SendPeriodic(void);
 
 /**
  * Pack and send the  TX msg JctAirShutdownErrors.
  */
-static void App_CanTx_JctAirShutdownErrors_SendPeriodic();
+static void App_CanTx_JctAirShutdownErrors_SendPeriodic(void);
 
 /**
  * Pack and send the  TX msg JctMotorShutdownErrors.
  */
-static void App_CanTx_JctMotorShutdownErrors_SendPeriodic();
+static void App_CanTx_JctMotorShutdownErrors_SendPeriodic(void);
 
 /**
  * Pack and send the  TX msg JctStatus.
  */
-static void App_CanTx_JctStatus_SendPeriodic();
+static void App_CanTx_JctStatus_SendPeriodic(void);
 
 /* --------------------- Public Function Definitions ---------------------- */
-
-void Io_CanTx_Enqueue100HzMsgs()
-{
-}
-
-void Io_CanTx_Enqueue10HzMsgs()
-{
-}
 
 void Io_CanTx_Enqueue1HzMsgs()
 {
     App_CanTx_JctVitals_SendPeriodic();
     App_CanTx_JctAirShutdownErrors_SendPeriodic();
-    App_CanTx_JctMotorShutdownErrors_SendPeriodic();
-    App_CanTx_JctStatus_SendPeriodic();
+}
+
+void Io_CanTx_Enqueue100HzMsgs()
+{
+}
+
+void Io_CanTx_EnqueueOtherPeriodicMsgs(uint32_t time_ms)
+{
+    if (time_ms % CAN_MSG_JCT_MOTOR_SHUTDOWN_ERRORS_CYCLE_TIME_MS == 0)
+    {
+        App_CanTx_JctMotorShutdownErrors_SendPeriodic();
+    }
+    
+    if (time_ms % CAN_MSG_JCT_STATUS_CYCLE_TIME_MS == 0)
+    {
+        App_CanTx_JctStatus_SendPeriodic();
+    }
+    
 }
 
 void App_CanTx_JctWarnings_SendAperiodic()

@@ -10,6 +10,18 @@
 #include <string.h>
 #include "App_CanRx.h"
 
+/* ------------------------------- Structs -------------------------------- */
+
+/**
+ * Struct for holding all messages received by JCT (i.e. the RX table).
+ */
+typedef struct
+{
+    FsmApps_Signals FsmApps_signals;
+    FsmWarnings_Signals FsmWarnings_signals;
+} JCT_RxMsgs;
+
+
 /* -------------------------- Private Variables --------------------------- */
 
 static JCT_RxMsgs rx_table;

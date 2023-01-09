@@ -196,3 +196,9 @@ class CanDatabase:
         Return list of all CAN messages either transmitted or received by a specific node.
         """
         return self.tx_msgs_for_node(tx_node=node) + self.rx_msgs_for_node(rx_node=node)
+
+    def node_has_tx_msgs(self, node: str) -> bool: 
+        return len(self.tx_msgs_for_node(node)) > 0
+
+    def node_has_rx_msgs(self, node: str) -> bool: 
+        return len(self.rx_msgs_for_node(node)) > 0

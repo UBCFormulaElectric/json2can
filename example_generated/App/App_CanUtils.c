@@ -3,6 +3,7 @@
  */
 // clang-format off
 
+#include <stddef.h>
 #include "App_CanUtils.h"
 
 /* ------------------ Static Packing/Unpacking Functions ------------------ */

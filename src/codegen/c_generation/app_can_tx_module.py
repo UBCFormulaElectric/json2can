@@ -20,9 +20,10 @@ class AppCanTxModule(CModule):
             args=[],
             comment="Initialize TX signals to their starting values.",
         )
-        init_func.body.add_line(
-            f"memset(&{CVarsConfig.TX_TABLE}, 0, sizeof({CStructsConfig.TX_TABLE.format(node=self._node)}));"
-        )
+        if self._db.node_has_rx_msgs(self._node):
+            init_func.body.add_line(
+                f"memset(&{CVarsConfig.TX_TABLE}, 0, sizeof({CStructsConfig.TX_TABLE.format(node=self._node)}));"
+            )
         for msg in self._db.tx_msgs_for_node(self._node):
             for signal in msg.signals:
                 init_func.body.add_line(
@@ -124,33 +125,34 @@ class AppCanTxModule(CModule):
         cw.add_include('"App_CanTx.h"')
         cw.add_line()
 
-        # TX table struct
-        cw.add_line()
-        cw.add_header_comment("Structs")
-        cw.add_line()
+        if self._db.node_has_tx_msgs(self._node):
+            # TX table struct
+            cw.add_line()
+            cw.add_header_comment("Structs")
+            cw.add_line()
 
-        tx_table_struct = CStruct(
-            CStructsConfig.TX_TABLE.format(node=self._node),
-            comment=f"Struct for holding all messages transmitted by {self._node} (i.e. the TX table).",
-        )
-        for msg in self._db.tx_msgs_for_node(self._node):
-            tx_table_struct.add_member(
-                CVar(
-                    CVarsConfig.MSG_STRUCT.format(msg=msg.name),
-                    CStructsConfig.MSG_STRUCT.format(msg=msg.name),
-                )
+            tx_table_struct = CStruct(
+                CStructsConfig.TX_TABLE.format(node=self._node),
+                comment=f"Struct for holding all messages transmitted by {self._node} (i.e. the TX table).",
             )
+            for msg in self._db.tx_msgs_for_node(self._node):
+                tx_table_struct.add_member(
+                    CVar(
+                        CVarsConfig.MSG_STRUCT.format(msg=msg.name),
+                        CStructsConfig.MSG_STRUCT.format(msg=msg.name),
+                    )
+                )
 
-        cw.add_struct(tx_table_struct)
-        cw.add_line()
+            cw.add_struct(tx_table_struct)
+            cw.add_line()
 
-        # Private vars (TX table)
-        cw.add_header_comment("Private Variables")
-        cw.add_line()
-        cw.add_var_declaration(
-            CVar(CVarsConfig.TX_TABLE, CStructsConfig.TX_TABLE.format(node=self._node)),
-            qualifier="static",
-        )
+            # Private vars (TX table)
+            cw.add_header_comment("Private Variables")
+            cw.add_line()
+            cw.add_var_declaration(
+                CVar(CVarsConfig.TX_TABLE, CStructsConfig.TX_TABLE.format(node=self._node)),
+                qualifier="static",
+            )
 
         # Add function definitions
         cw.add_line()

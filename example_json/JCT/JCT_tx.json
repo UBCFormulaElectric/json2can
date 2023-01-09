@@ -33,7 +33,7 @@
     },
     "JctMotorShutdownErrors": {
         "msg_id": 604,
-        "cycle_time": 1000, 
+        "cycle_time": 100, 
         "description": "Motor shutdown.",
         "num_bytes": 8,
         "signals": {
@@ -42,7 +42,7 @@
     },
     "JctStatus": {
         "msg_id": 608,
-        "cycle_time": 1000, 
+        "cycle_time": 100, 
         "description": "Message for debugging.",
         "signals": {
             "ContactorsClosed": {

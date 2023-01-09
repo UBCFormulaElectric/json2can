@@ -254,8 +254,8 @@ BA_ "GenMsgCycleTime" BO_ 317  1000;
 BA_ "GenMsgCycleTime" BO_ 318  1000;
 BA_ "GenMsgCycleTime" BO_ 601  1000;
 BA_ "GenMsgCycleTime" BO_ 603  1000;
-BA_ "GenMsgCycleTime" BO_ 604  1000;
-BA_ "GenMsgCycleTime" BO_ 608  1000;
+BA_ "GenMsgCycleTime" BO_ 604  100;
+BA_ "GenMsgCycleTime" BO_ 608  100;
 
 
 VAL_ 200 Heartbeat 0 "FALSE" 1 "TRUE";
